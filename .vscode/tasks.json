@@ -1,0 +1,45 @@
+{
+    "tasks": [
+        {
+            "label": "GenerateCMakeConfigs",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "-H.",
+                "-Bbuild"
+            ]
+        },
+        {
+            "label": "BuildDebug",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build",
+                "."
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+            },
+            "dependsOn": "GenerateCMakeConfigs",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Test",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "--build bin/debug",
+                "-- -j3"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+            },
+            "problemMatcher": []
+        }
+    ],
+    "version": "2.0.0"
+}
