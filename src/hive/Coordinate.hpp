@@ -5,7 +5,9 @@ namespace Hive {
     private:
         int x, y;
         int layer;
-    public:
 
+    public:
+        Coordinate();
+        Coordinate(int x, int y, int layer);
     };
 }  // namespace Hive
