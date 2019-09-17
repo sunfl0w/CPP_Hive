@@ -1,8 +1,7 @@
 #include "GamingPiece.hpp"
 
 namespace Hive::Piece {
-    GamingPiece::GamingPiece(Coordinate& coordinate, FieldColor fieldColor) {
-        this->coordinate = Coordinate(coordinate);
+    GamingPiece::GamingPiece(FieldColor fieldColor) {
         this->fieldColor = fieldColor;
     }
 }
