@@ -1,7 +1,7 @@
 #pragma once
 
-namespace Hive {
-    enum class FieldColor {
+namespace Hive::Piece {
+    enum class PieceColor {
         Red,
         Blue,
         None,

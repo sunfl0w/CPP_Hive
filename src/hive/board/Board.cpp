@@ -1,10 +1,5 @@
 #include "Board.hpp"
 
-#include <algorithm>
-#include <random>
-
-#include "RandomNumberGenerator.hpp"
-
 namespace Hive {
     Board::Board() {
         PlaceObstacles();
@@ -12,76 +7,76 @@ namespace Hive {
         randomNumberGenerator.GetRandomInt(-4, 4);
     }
 
-    bool GamingPeaceExistsAtCoordinate(int x, int y, int layer) {
+    bool Board::GamingPieceStackExistsAtPosition(AxialPosition& position) {
         //For unordered_map
-        Coordinate coordinate(x, y, layer);
-        if (gamingPieces.find(coordinate.ToHash()) == gamingPieces.end()) {
+        if (gamingPieceStacks.find(position.GetHashValue()) == gamingPieceStacks.end()) {
             return false;
         } else {
             return true;
         }
     }
 
-    bool Board::GamingPeaceExistsAtCoordinate(Coordinate& coordinate) {
+    bool Board::GamingPieceStackExistsAtPosition(int x, int y) {
         //For unordered_map
-        if (gamingPieces.find(coordinate.ToHash()) == gamingPieces.end()) {
-            return false;
-        } else {
-            return true;
+        AxialPosition position(x, y);
+        return GamingPieceStackExistsAtPosition(position);
+    }
+
+    Piece::GamingPieceStack& Board::GetGamingPieceStackAtPosition(AxialPosition& position) {
+        return gamingPieceStacks[position.GetHashValue()];
+    }
+
+    Piece::GamingPieceStack& Board::GetGamingPieceStackAtPosition(int x, int y) {
+        AxialPosition position(x, y);
+        return GetGamingPieceStackAtPosition(position);
+    }
+
+    Piece::GamingPiece& Board::GetGamingPieceAtPositionAndLayer(AxialPosition& position, int layer) {
+        //For unordered_map
+        return GetGamingPieceStackAtPosition(position).GetGamingPieceByLayer(layer);
+    }
+
+    Piece::GamingPiece& Board::GetGamingPieceAtPositionAndLayer(int x, int y, int layer) {
+        AxialPosition position(x, y);
+        return GetGamingPieceAtPositionAndLayer(position, layer);
+    }
+
+    std::vector<Piece::GamingPieceStack> Board::GetNeighbouringGamingPieceStacksAtPosition(AxialPosition& position) {
+        //For unordered_map
+        std::vector<Piece::GamingPieceStack> neighbouringGamingPieceStacks;
+        std::vector<AxialPosition> neighbouringPositions = position.GetNeighbouringPositions();
+
+        for(AxialPosition neighbouringPosition : neighbouringPositions) {
+            neighbouringGamingPieceStacks.push_back(GetGamingPieceStackAtPosition(neighbouringPosition));
         }
+        return neighbouringGamingPieceStacks;
     }
 
-    Piece::GamingPiece& Board::GetGamingPieceAtCoordinate(int x, int y, int layer) {
-        //For unordered_map
-        Coordinate coordinate(x, y, layer);
-        return gamingPieces[coordinate.ToHash()];
+    void Board::AddGamingPieceOnTopAtPosition(Piece::GamingPiece& gamingPiece, AxialPosition& position) {
+        GetGamingPieceStackAtPosition(position).AddGamingPieceOnTop(gamingPiece);
     }
 
-    Piece::GamingPiece& Board::GetGamingPieceAtCoordinate(Coordinate& coordinate) {
-        //For unordered_map
-        return gamingPieces[coordinate.ToHash()];
-    }
-
-    std::vector<Piece::GamingPiece> Board::GetNeighbouringGamingPiecesAtCoordinate(Coordinate& coordinate) {
-        //For unordered_map
-        std::vector<Piece::GamingPiece> neighbouringPieces;
-        std::vector<Coordinate> neighbouringCoordinates = coordinate.GetNeighbouringCoordinates_ZeroLayer();
-
-        bool isLayerEmpty = false;
-
-        while (!isLayerEmpty) {
-            for (int layer = 0; layer < 5; layer++) {
-                for (int i = 0; i < neighbouringCoordinates.size(); i++) {
-                    if (GamingPeaceExistsAtCoordinate(neighbouringCoordinates[i].x, neighbouringCoordinates[i].y, layer)) {
-                        neighbouringPieces.push_back(GetGamingPieceAtCoordinate(neighbouringCoordinates[i].x, neighbouringCoordinates[i].y, layer));
-                    }
-                }
-            }
-        }
-    }
-
-    void Board::AddGamingPiece(Piece::GamingPiece& gamingPiece) {
-        //For unordered_map
-        gamingPieces[gamingPiece.GetCoordinate().ToHash()] = gamingPiece;
+    void Board::RemoveUpmostGamingPieceAtPosition(AxialPosition& position) {
+        GetGamingPieceStackAtPosition(position).RemoveGamingPieceOnTop();
     }
 
     void Board::PlaceObstacles() {
         Util::RandomNumberGenerator randomNumberGenerator;
-        std::vector<Coordinate> obstacleCoordinates;
+        std::vector<AxialPosition> obstaclePositions;
 
-        while (obstacleCoordinates.size() < 3) {
-            int randXPos = randomNumberGenerator.GetRandomInt(-4, 4);
-            int randYPos = randomNumberGenerator.GetRandomInt(-4, 4);
-            Coordinate obstacleCoordinate = Coordinate(randXPos, randYPos, 0);
+        while (obstaclePositions.size() < 3) {
+            int randXPos = randomNumberGenerator.GetRandomInt(-5, 5);
+            int randYPos = randomNumberGenerator.GetRandomInt(-5, 5);
+            AxialPosition obstaclePosition = AxialPosition(randXPos, randYPos);
 
-            if (std::find(obstacleCoordinates.begin(), obstacleCoordinates.end(), obstacleCoordinate) == obstacleCoordinates.end()) {
-                obstacleCoordinates.push_back(obstacleCoordinate);
+            if (std::find(obstaclePositions.begin(), obstaclePositions.end(), obstaclePosition) == obstaclePositions.end()) {
+                obstaclePositions.push_back(obstaclePosition);
             }
         }
 
         for (int i = 0; i < 3; i++) {
-            Piece::GamingPiece obstaclePiece(obstacleCoordinates[i], FieldColor::None);
-            AddGamingPiece(obstaclePiece);
+            Piece::GamingPiece obstaclePiece(Piece::PieceType::Obstacle, Piece::PieceColor::None);
+            AddGamingPieceOnTopAtPosition(obstaclePiece, obstaclePositions[i]);
         }
     }
 }  // namespace Hive

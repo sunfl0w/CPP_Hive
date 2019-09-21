@@ -1,13 +1,15 @@
 #pragma once
 
-#include "FieldColor.hpp"
+#include "PieceColor.hpp"
+#include "PieceType.hpp"
 
 namespace Hive::Piece {
     class GamingPiece {
     private:
-        FieldColor fieldColor;
+        PieceType peiceType;
+        PieceColor pieceColor;
 
     public:
-        GamingPiece(FieldColor fieldColor);
+        GamingPiece(PieceType pieceType, PieceColor pieceColor);
     };
 }  // namespace Hive::Piece

@@ -11,7 +11,15 @@ namespace Hive::Piece {
         gamingPieces.erase(gamingPieces.begin() + gamingPieces.size() - 1);
     }
 
-    GamingPiece& GamingPieceStack::GetUpmostGamingPiece() {
+    GamingPiece& GamingPieceStack::GetGamingPieceByLayer(int layer) {
+        return gamingPieces[layer];
+    }
 
+    GamingPiece& GamingPieceStack::GetGamingPieceOnTop() {
+        return gamingPieces[gamingPieces.size() - 1];
+    }
+
+    std::vector<GamingPiece>& GamingPieceStack::GetGamingPieces() {
+        return gamingPieces;
     }
 }  // namespace Hive::Piece

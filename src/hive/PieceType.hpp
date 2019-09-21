@@ -7,5 +7,6 @@ namespace Hive::Piece {
         Beetle,
         Grasshopper,
         Ant,
+        Obstacle,
     };
 }

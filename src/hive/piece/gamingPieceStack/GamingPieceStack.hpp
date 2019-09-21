@@ -2,7 +2,6 @@
 
 #include <vector>
 
-#include "FlatPosition.hpp"
 #include "GamingPiece.hpp"
 
 namespace Hive::Piece {
@@ -14,6 +13,7 @@ namespace Hive::Piece {
 
         void AddGamingPieceOnTop(GamingPiece& gamingPiece);
         void RemoveGamingPieceOnTop();
+        GamingPiece& GetGamingPieceByLayer(int layer);
         GamingPiece& GetGamingPieceOnTop();
         std::vector<GamingPiece>& GetGamingPieces();
     };
