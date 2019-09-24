@@ -1,26 +1,12 @@
 {
+    "version": "2.0.0",
     "tasks": [
         {
-            "label": "GenerateCMakeConfigs",
+            "label": "build",
             "type": "shell",
-            "command": "cmake",
-            "args": [
-                "-H.",
-                "-Bbuild"
-            ]
-        },
-        {
-            "label": "BuildDebug",
-            "type": "shell",
-            "command": "cmake",
-            "args": [
-                "-DCMAKE_BUILD_TYPE=Debug",
-                "."
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}/build"
-            },
-            "dependsOn": "GenerateCMakeConfigs",
+            "command": "make",
+            "dependsOn": "clean",
+            "options": {},
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -28,23 +14,16 @@
             "problemMatcher": []
         },
         {
-            "label": "BuildRelease",
+            "label": "clean",
             "type": "shell",
-            "command": "cmake",
-            "args": [
-                "-DCMAKE_BUILD_TYPE=Release",
-                "."
-            ],
+            "command": "make clean",
             "options": {
-                "cwd": "${workspaceFolder}/build"
+                "cwd": "${workspaceFolder}"
             },
-            "dependsOn": "GenerateCMakeConfigs",
             "group": {
                 "kind": "build",
                 "isDefault": true
-            },
-            "problemMatcher": []
-        },
-    ],
-    "version": "2.0.0"
+            }
+        }
+    ]
 }

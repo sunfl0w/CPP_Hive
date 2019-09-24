@@ -8,7 +8,7 @@
 #include "RandomNumberGenerator.hpp"
 #include "GamePiece.hpp"
 #include "GamePieceStack.hpp"
-#include "Move.hpp"
+#include "HiveMove.hpp"
 #include "AxialPosition.hpp"
 #include "PieceType.hpp"
 
@@ -20,10 +20,10 @@ namespace Hive {
 
     public:
         Board();
-        void PerformMove(Move& move);
+        void PerformMove(Move::HiveMove& move);
 
-        bool GamePieceStackExistsAtPosition(AxialPosition& coordinate);
-        bool GamePieceStackExistsAtPosition(int x, int y);
+        bool GamePieceStackExistsAtPosition(const AxialPosition& coordinate) const;
+        bool GamePieceStackExistsAtPosition(int x, int y) const;
 
         Piece::GamePieceStack& GetGamePieceStackAtPosition(AxialPosition& position);
         Piece::GamePieceStack& GetGamePieceStackAtPosition(int x, int y);
@@ -35,6 +35,11 @@ namespace Hive {
 
         void AddGamePieceOnTopAtPosition(Piece::GamePiece& gamePiece, AxialPosition& position);
         void RemoveUpmostGamePieceAtPosition(AxialPosition& position);
+
+        bool IsAxialPositionAtBorderOfBoard(AxialPosition& position) const;
+        bool IsAxialPositionOnBoard(AxialPosition& position) const;
+
+        std::vector<AxialPosition> GetEmptyAxialPositionsOnBoard() const;
 
     private:
         void PlaceObstacles();

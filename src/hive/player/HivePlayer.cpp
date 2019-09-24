@@ -15,6 +15,10 @@ namespace Hive::Player {
         }
     }
 
+    const std::vector<Piece::GamePiece>& HivePlayer::GetUndeployedGamePieces() const {
+        return undeployedGamingPieces;
+    }
+
     void HivePlayer::InitializeUndeployedGamePieces() {
         undeployedGamingPieces.push_back(Piece::GamePiece(Piece::PieceType::QueenBee, GetPieceColorFromPlayerColor()));
 

@@ -8,7 +8,7 @@
             "name": "RunDebug",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/bin/CPP_Hive",
+            "program": "${workspaceFolder}/HiveClientCPP",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

@@ -1,20 +1,23 @@
 #include "Board.hpp"
 
 namespace Hive {
+    //Public Functions
+
     Board::Board() {
         PlaceObstacles();
     }
 
-    bool Board::GamePieceStackExistsAtPosition(AxialPosition& position) {
+    bool Board::GamePieceStackExistsAtPosition(const AxialPosition& position) const {
         //For unordered_map
-        if (gamePieceStacks.find(position.GetHashValue()) == gamePieceStacks.end()) {
+        int hashValue = position.GetHashValue();
+        if (gamePieceStacks.find(hashValue) == gamePieceStacks.end()) {
             return false;
         } else {
             return true;
         }
     }
 
-    bool Board::GamePieceStackExistsAtPosition(int x, int y) {
+    bool Board::GamePieceStackExistsAtPosition(int x, int y) const {
         //For unordered_map
         AxialPosition position(x, y);
         return GamePieceStackExistsAtPosition(position);
@@ -44,7 +47,7 @@ namespace Hive {
         std::vector<Piece::GamePieceStack> neighbouringGamingPieceStacks;
         std::vector<AxialPosition> neighbouringPositions = position.GetNeighbouringPositions();
 
-        for(AxialPosition neighbouringPosition : neighbouringPositions) {
+        for (AxialPosition neighbouringPosition : neighbouringPositions) {
             neighbouringGamingPieceStacks.push_back(GetGamePieceStackAtPosition(neighbouringPosition));
         }
         return neighbouringGamingPieceStacks;
@@ -57,6 +60,39 @@ namespace Hive {
     void Board::RemoveUpmostGamePieceAtPosition(AxialPosition& position) {
         GetGamePieceStackAtPosition(position).RemoveGamePieceOnTop();
     }
+
+    bool Board::IsAxialPositionAtBorderOfBoard(AxialPosition& position) const {
+        int z = 0 - position.x - position.y;
+        if (std::abs(position.x) + std::abs(position.y) + std::abs(z) == 10) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    bool Board::IsAxialPositionOnBoard(AxialPosition& position) const {
+        int z = 0 - position.x - position.y;
+        if (std::abs(position.x) + std::abs(position.y) + std::abs(z) <= 10) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    std::vector<AxialPosition> Board::GetEmptyAxialPositionsOnBoard() const {
+        std::vector<AxialPosition> emptyAxialPositions;
+        for (int x = -5; x <= 5; x++) {
+            for (int y = -5; y <= 5; y++) {
+                AxialPosition possiblyEmptyPositionOnBoard = AxialPosition(x, y);
+                if (IsAxialPositionOnBoard(possiblyEmptyPositionOnBoard) && !GamePieceStackExistsAtPosition(possiblyEmptyPositionOnBoard)) {
+                    emptyAxialPositions.push_back(possiblyEmptyPositionOnBoard);
+                }
+            }
+        }
+        return emptyAxialPositions;
+    }
+
+    //Private Functions
 
     void Board::PlaceObstacles() {
         Util::RandomNumberGenerator randomNumberGenerator;

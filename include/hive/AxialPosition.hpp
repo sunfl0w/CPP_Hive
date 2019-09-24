@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 namespace Hive {
     class AxialPosition {
     public:
@@ -8,7 +10,9 @@ namespace Hive {
         AxialPosition();
         AxialPosition(int x, int y);
 
-        int GetHashValue();
+        bool operator==(const AxialPosition &axialPosition) const;
+
+        int GetHashValue() const;
         std::vector<AxialPosition> GetNeighbouringPositions();
         bool IsAtBorderOfBoard();
     };
