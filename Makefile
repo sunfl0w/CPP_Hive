@@ -26,7 +26,7 @@ DEPS = $(OBJECTS:.o=.d)
 
 # flags #
 COMPILE_FLAGS = -std=c++14 -Wall -Wextra -Ofast
-COMPILE_FLAGS_DEBUG = -std=c++14 -Wall -Wextra -g -Og
+COMPILE_FLAGS_DEBUG = -std=c++14 -Wall -Wextra -g
 INCLUDES = -I include/ -I include/hive/ -I include/hive/move/ -I include/hive/piece/ -I include/hive/player/ -I include/util/
 # Space-separated pkg-config libraries used by this project
 LIBS = -static -L /usr/lib/ -lboost_system -lboost_thread -lpthread -lboost_program_options

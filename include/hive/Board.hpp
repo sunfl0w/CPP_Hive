@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <algorithm>
 #include <random>
+#include <iostream>
 
 #include "RandomNumberGenerator.hpp"
 #include "GamePiece.hpp"

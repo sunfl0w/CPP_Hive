@@ -36,6 +36,7 @@ namespace Hive {
                 }
             }
         }
+        
         return possibleDeployMoves;
     }
 }  // namespace Hive

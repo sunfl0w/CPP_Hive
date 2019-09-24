@@ -89,6 +89,7 @@ namespace Hive {
                 }
             }
         }
+        //std::cout << emptyAxialPositions.size() << std::endl;
         return emptyAxialPositions;
     }
 

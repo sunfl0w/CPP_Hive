@@ -23,7 +23,8 @@ namespace Hive {
     }
 
     int AxialPosition::GetHashValue() const {
-        int hashValue = (x * 31) + (y * 37);
+        //int hashValue = (x * 31) + (y * 37);
+        int hashValue = (x + 5) << 16 | ((y + 5)&0xFFFF);
         return hashValue;
     }
 
