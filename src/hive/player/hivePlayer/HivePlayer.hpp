@@ -1,6 +1,5 @@
 #pragma once
 
-#include <string>
 #include <vector>
 
 #include "PlayerColor.hpp"
@@ -9,14 +8,15 @@
 namespace Hive::Player {
     class HivePlayer {
     private:
-        std::string playerName;
         PlayerColor playerColor;
 
-        std::vector<Piece::GamePiece> undeplyedGamingPieces;
+        std::vector<Piece::GamePiece> undeployedGamingPieces;
     public:
-        HivePlayer(std::string playerName, PlayerColor playerColor);
+        HivePlayer(PlayerColor playerColor);
+
+        Piece::PieceColor GetPieceColorFromPlayerColor();
 
     private:
-        AddUndeployedGamePieces
+        void InitializeUndeployedGamePieces();
     };
 }  // namespace Hive::Player
