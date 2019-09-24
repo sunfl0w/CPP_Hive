@@ -3,61 +3,59 @@
 namespace Hive {
     Board::Board() {
         PlaceObstacles();
-        Util::RandomNumberGenerator randomNumberGenerator;
-        randomNumberGenerator.GetRandomInt(-4, 4);
     }
 
-    bool Board::GamingPieceStackExistsAtPosition(AxialPosition& position) {
+    bool Board::GamePieceStackExistsAtPosition(AxialPosition& position) {
         //For unordered_map
-        if (gamingPieceStacks.find(position.GetHashValue()) == gamingPieceStacks.end()) {
+        if (gamePieceStacks.find(position.GetHashValue()) == gamePieceStacks.end()) {
             return false;
         } else {
             return true;
         }
     }
 
-    bool Board::GamingPieceStackExistsAtPosition(int x, int y) {
+    bool Board::GamePieceStackExistsAtPosition(int x, int y) {
         //For unordered_map
         AxialPosition position(x, y);
-        return GamingPieceStackExistsAtPosition(position);
+        return GamePieceStackExistsAtPosition(position);
     }
 
-    Piece::GamingPieceStack& Board::GetGamingPieceStackAtPosition(AxialPosition& position) {
-        return gamingPieceStacks[position.GetHashValue()];
+    Piece::GamePieceStack& Board::GetGamePieceStackAtPosition(AxialPosition& position) {
+        return gamePieceStacks[position.GetHashValue()];
     }
 
-    Piece::GamingPieceStack& Board::GetGamingPieceStackAtPosition(int x, int y) {
+    Piece::GamePieceStack& Board::GetGamePieceStackAtPosition(int x, int y) {
         AxialPosition position(x, y);
-        return GetGamingPieceStackAtPosition(position);
+        return GetGamePieceStackAtPosition(position);
     }
 
-    Piece::GamingPiece& Board::GetGamingPieceAtPositionAndLayer(AxialPosition& position, int layer) {
+    Piece::GamePiece& Board::GetGamePieceAtPositionAndLayer(AxialPosition& position, int layer) {
         //For unordered_map
-        return GetGamingPieceStackAtPosition(position).GetGamingPieceByLayer(layer);
+        return GetGamePieceStackAtPosition(position).GetGamePieceByLayer(layer);
     }
 
-    Piece::GamingPiece& Board::GetGamingPieceAtPositionAndLayer(int x, int y, int layer) {
+    Piece::GamePiece& Board::GetGamePieceAtPositionAndLayer(int x, int y, int layer) {
         AxialPosition position(x, y);
-        return GetGamingPieceAtPositionAndLayer(position, layer);
+        return GetGamePieceAtPositionAndLayer(position, layer);
     }
 
-    std::vector<Piece::GamingPieceStack> Board::GetNeighbouringGamingPieceStacksAtPosition(AxialPosition& position) {
+    std::vector<Piece::GamePieceStack> Board::GetNeighbouringGamePieceStacksAtPosition(AxialPosition& position) {
         //For unordered_map
-        std::vector<Piece::GamingPieceStack> neighbouringGamingPieceStacks;
+        std::vector<Piece::GamePieceStack> neighbouringGamingPieceStacks;
         std::vector<AxialPosition> neighbouringPositions = position.GetNeighbouringPositions();
 
         for(AxialPosition neighbouringPosition : neighbouringPositions) {
-            neighbouringGamingPieceStacks.push_back(GetGamingPieceStackAtPosition(neighbouringPosition));
+            neighbouringGamingPieceStacks.push_back(GetGamePieceStackAtPosition(neighbouringPosition));
         }
         return neighbouringGamingPieceStacks;
     }
 
-    void Board::AddGamingPieceOnTopAtPosition(Piece::GamingPiece& gamingPiece, AxialPosition& position) {
-        GetGamingPieceStackAtPosition(position).AddGamingPieceOnTop(gamingPiece);
+    void Board::AddGamePieceOnTopAtPosition(Piece::GamePiece& gamePiece, AxialPosition& position) {
+        GetGamePieceStackAtPosition(position).AddGamePieceOnTop(gamePiece);
     }
 
-    void Board::RemoveUpmostGamingPieceAtPosition(AxialPosition& position) {
-        GetGamingPieceStackAtPosition(position).RemoveGamingPieceOnTop();
+    void Board::RemoveUpmostGamePieceAtPosition(AxialPosition& position) {
+        GetGamePieceStackAtPosition(position).RemoveGamePieceOnTop();
     }
 
     void Board::PlaceObstacles() {
@@ -75,8 +73,8 @@ namespace Hive {
         }
 
         for (int i = 0; i < 3; i++) {
-            Piece::GamingPiece obstaclePiece(Piece::PieceType::Obstacle, Piece::PieceColor::None);
-            AddGamingPieceOnTopAtPosition(obstaclePiece, obstaclePositions[i]);
+            Piece::GamePiece obstaclePiece(Piece::PieceType::Obstacle, Piece::PieceColor::None);
+            AddGamePieceOnTopAtPosition(obstaclePiece, obstaclePositions[i]);
         }
     }
 }  // namespace Hive

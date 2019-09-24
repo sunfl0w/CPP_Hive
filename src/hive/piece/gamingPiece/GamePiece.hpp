@@ -4,12 +4,12 @@
 #include "PieceType.hpp"
 
 namespace Hive::Piece {
-    class GamingPiece {
+    class GamePiece {
     private:
-        PieceType peiceType;
+        PieceType pieceType;
         PieceColor pieceColor;
 
     public:
-        GamingPiece(PieceType pieceType, PieceColor pieceColor);
+        GamePiece(PieceType pieceType, PieceColor pieceColor);
     };
 }  // namespace Hive::Piece
