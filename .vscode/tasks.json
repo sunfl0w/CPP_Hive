@@ -1,12 +1,32 @@
 {
-    "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
+            "label": "GenerateCMakeConfigs",
             "type": "shell",
-            "command": "make",
-            "dependsOn": "clean",
-            "options": {},
+            "command": "cmake",
+            "args": [
+                "-H.",
+                "-Bbuild"
+            ],
+            "dependsOn": "Clean",
+        },
+        {
+            "label": "Clean",
+            "type": "shell",
+            "command": "rm -rf build",
+        },
+        {
+            "label": "CMakeSetDebug",
+            "type": "shell",
+            "command": "cmake",
+            "args": [
+                "-DCMAKE_BUILD_TYPE=Debug",
+                "."
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+            },
+            "dependsOn": "GenerateCMakeConfigs",
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -14,16 +34,53 @@
             "problemMatcher": []
         },
         {
-            "label": "clean",
+            "label": "CMakeSetRelease",
             "type": "shell",
-            "command": "make clean",
+            "command": "cmake",
+            "args": [
+                "-DCMAKE_BUILD_TYPE=Release",
+                "."
+            ],
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}/build"
             },
+            "dependsOn": "GenerateCMakeConfigs",
             "group": {
                 "kind": "build",
                 "isDefault": true
-            }
-        }
-    ]
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "BuildDebug",
+            "type": "shell",
+            "command": "make",
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+            },
+            "args": [
+            ],
+            "dependsOn": "CMakeSetDebug",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "BuildRelease",
+            "type": "shell",
+            "command": "make",
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+            },
+            "dependsOn": "CMakeSetRelease",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+    ],
+    "version": "2.0.0"
 }
