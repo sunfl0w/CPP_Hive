@@ -7,7 +7,7 @@ namespace Hive {
         PlaceObstacles();
     }
 
-    bool Board::GamePieceStackExistsAtPosition(const AxialPosition& position) const {
+    bool Board::GamePieceStackExists(const AxialPosition& position) const {
         //For unordered_map
         int hashValue = position.GetHashValue();
         if (gamePieceStacks.find(hashValue) == gamePieceStacks.end()) {
@@ -17,48 +17,68 @@ namespace Hive {
         }
     }
 
-    bool Board::GamePieceStackExistsAtPosition(int x, int y) const {
+    bool Board::GamePieceStackExists(int x, int y) const {
         //For unordered_map
         AxialPosition position(x, y);
-        return GamePieceStackExistsAtPosition(position);
+        return GamePieceStackExists(position);
     }
 
-    Piece::GamePieceStack& Board::GetGamePieceStackAtPosition(AxialPosition& position) {
-        return gamePieceStacks[position.GetHashValue()];
+    Piece::GamePieceStack& Board::GetGamePieceStack(const AxialPosition& position) const {
+        Piece::GamePieceStack stack = gamePieceStacks.at(position.GetHashValue());
+        return stack;
     }
 
-    Piece::GamePieceStack& Board::GetGamePieceStackAtPosition(int x, int y) {
+    Piece::GamePieceStack& Board::GetGamePieceStack(int x, int y) const {
         AxialPosition position(x, y);
-        return GetGamePieceStackAtPosition(position);
+        return GetGamePieceStack(position);
     }
 
-    Piece::GamePiece& Board::GetGamePieceAtPositionAndLayer(AxialPosition& position, int layer) {
+    std::vector<Piece::GamePieceStack>& Board::GetGamePieceStacks() const {
+        std::vector<Piece::GamePieceStack> stacks;
+        for (std::pair<int, Piece::GamePieceStack> stack : gamePieceStacks) {
+            stacks.push_back(stack.second);
+        }
+        return stacks;
+    }
+
+    Piece::GamePiece& Board::GetGamePiece(const AxialPosition& position, int layer) const {
         //For unordered_map
-        return GetGamePieceStackAtPosition(position).GetGamePieceByLayer(layer);
+        return GetGamePieceStack(position).GetGamePieceByLayer(layer);
     }
 
-    Piece::GamePiece& Board::GetGamePieceAtPositionAndLayer(int x, int y, int layer) {
+    Piece::GamePiece& Board::GetGamePiece(int x, int y, int layer) const {
         AxialPosition position(x, y);
-        return GetGamePieceAtPositionAndLayer(position, layer);
+        return GetGamePiece(position, layer);
     }
 
-    std::vector<Piece::GamePieceStack> Board::GetNeighbouringGamePieceStacksAtPosition(AxialPosition& position) {
+    std::vector<Piece::GamePieceStack> Board::GetNeighbouringGamePieceStacks(const AxialPosition& position) const {
         //For unordered_map
         std::vector<Piece::GamePieceStack> neighbouringGamingPieceStacks;
         std::vector<AxialPosition> neighbouringPositions = position.GetNeighbouringPositions();
 
         for (AxialPosition neighbouringPosition : neighbouringPositions) {
-            neighbouringGamingPieceStacks.push_back(GetGamePieceStackAtPosition(neighbouringPosition));
+            neighbouringGamingPieceStacks.push_back(GetGamePieceStack(neighbouringPosition));
         }
         return neighbouringGamingPieceStacks;
     }
 
-    void Board::AddGamePieceOnTopAtPosition(Piece::GamePiece& gamePiece, AxialPosition& position) {
-        GetGamePieceStackAtPosition(position).AddGamePieceOnTop(gamePiece);
+    std::vector<AxialPosition> Board::GetNeighbouringEmptyAxialPositions(const AxialPosition& position) const {
+        std::vector<AxialPosition> neighbouringPositions;
+        neighbouringPositions = position.GetNeighbouringPositions();
+        for (int i = 0; i < neighbouringPositions.size(); i++) {
+            if (GamePieceStackExists(neighbouringPositions[i])) {
+                neighbouringPositions.erase(neighbouringPositions.begin() + i);
+            }
+        }
+        return neighbouringPositions;
     }
 
-    void Board::RemoveUpmostGamePieceAtPosition(AxialPosition& position) {
-        GetGamePieceStackAtPosition(position).RemoveGamePieceOnTop();
+    void Board::AddGamePieceOnTop(Piece::GamePiece& gamePiece, AxialPosition& position) {
+        GetGamePieceStack(position).AddGamePieceOnTop(gamePiece);
+    }
+
+    void Board::RemoveUpmostGamePiece(AxialPosition& position) {
+        GetGamePieceStack(position).RemoveGamePieceOnTop();
     }
 
     bool Board::IsAxialPositionAtBorderOfBoard(AxialPosition& position) const {
@@ -84,7 +104,7 @@ namespace Hive {
         for (int x = -5; x <= 5; x++) {
             for (int y = -5; y <= 5; y++) {
                 AxialPosition possiblyEmptyPositionOnBoard = AxialPosition(x, y);
-                if (IsAxialPositionOnBoard(possiblyEmptyPositionOnBoard) && !GamePieceStackExistsAtPosition(possiblyEmptyPositionOnBoard)) {
+                if (IsAxialPositionOnBoard(possiblyEmptyPositionOnBoard) && !GamePieceStackExists(possiblyEmptyPositionOnBoard)) {
                     emptyAxialPositions.push_back(possiblyEmptyPositionOnBoard);
                 }
             }
@@ -111,7 +131,7 @@ namespace Hive {
 
         for (int i = 0; i < 3; i++) {
             Piece::GamePiece obstaclePiece(Piece::PieceType::Obstacle, Piece::PieceColor::None);
-            AddGamePieceOnTopAtPosition(obstaclePiece, obstaclePositions[i]);
+            AddGamePieceOnTop(obstaclePiece, obstaclePositions[i]);
         }
     }
 }  // namespace Hive

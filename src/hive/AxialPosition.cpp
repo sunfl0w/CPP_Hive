@@ -28,7 +28,7 @@ namespace Hive {
         return hashValue;
     }
 
-    std::vector<AxialPosition> AxialPosition::GetNeighbouringPositions() {
+    std::vector<AxialPosition> AxialPosition::GetNeighbouringPositions() const {
         std::vector<AxialPosition> neighbouringAxialPositions;
 
         neighbouringAxialPositions.push_back(AxialPosition(x + 1, y - 1));
@@ -49,7 +49,7 @@ namespace Hive {
         return neighbouringAxialPositions;
     }
 
-    bool AxialPosition::IsAtBorderOfBoard() {
+    bool AxialPosition::IsAtBorderOfBoard() const {
         int z = 0 - x - y;
         if (std::abs(x) + std::abs(y) + std::abs(z) == 10) {
             return true;

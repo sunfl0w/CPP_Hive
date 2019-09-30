@@ -31,12 +31,23 @@ namespace Hive {
         if (turn == 0) {
             std::vector<AxialPosition> emptyAxialPositions = board.GetEmptyAxialPositionsOnBoard();
             for (Piece::GamePiece undeployedGamePiece : currentPlayer.GetUndeployedGamePieces()) {
-                for(AxialPosition emptyAxialPosition : emptyAxialPositions) {
+                for (AxialPosition emptyAxialPosition : emptyAxialPositions) {
                     possibleDeployMoves.push_back(Move::HiveMove(Move::MoveType::DeployMove, AxialPosition(0, 0), emptyAxialPosition));
                 }
             }
+        } else if (turn == 1) {
+            std::vector<Piece::GamePieceStack> gameSpieceStacks = board.GetGamePieceStacks();
+            std::vector<AxialPosition> neighbouringEmptyPositions = board.GetNeighbouringEmptyAxialPositions(gameSpieceStacks[0].GetAxialPosition);
+
+            for (Piece::GamePiece undeployedGamePiece : currentPlayer.GetUndeployedGamePieces()) {
+                for (AxialPosition neighbouringEmptyPosition : neighbouringEmptyPositions) {
+                    possibleDeployMoves.push_back(Move::HiveMove(Move::MoveType::DeployMove, AxialPosition(0, 0), neighbouringEmptyPosition));
+                }
+            }
+        } else {
+            
         }
-        
+
         return possibleDeployMoves;
     }
 }  // namespace Hive

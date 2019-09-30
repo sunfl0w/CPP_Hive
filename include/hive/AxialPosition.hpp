@@ -13,7 +13,7 @@ namespace Hive {
         bool operator==(const AxialPosition &axialPosition) const;
 
         int GetHashValue() const;
-        std::vector<AxialPosition> GetNeighbouringPositions();
-        bool IsAtBorderOfBoard();
+        std::vector<AxialPosition> GetNeighbouringPositions() const;
+        bool IsAtBorderOfBoard() const;
     };
 }  // namespace Hive

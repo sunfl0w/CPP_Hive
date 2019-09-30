@@ -1,7 +1,13 @@
 #include "GamePieceStack.hpp"
 
 namespace Hive::Piece {
-    GamePieceStack::GamePieceStack() {}
+    GamePieceStack::GamePieceStack(AxialPosition& position) {
+        this->position = position;
+    }
+
+    const AxialPosition& GamePieceStack::GetAxialPosition() const {
+        return position;
+    }
 
     void GamePieceStack::AddGamePieceOnTop(GamePiece& gamePiece) {
         gamePieces.push_back(gamePiece);
