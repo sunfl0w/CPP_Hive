@@ -2,6 +2,7 @@
 
 #include "PieceColor.hpp"
 #include "PieceType.hpp"
+#include "PlayerColor.hpp"
 
 namespace Hive::Piece {
     class GamePiece {
@@ -11,5 +12,9 @@ namespace Hive::Piece {
 
     public:
         GamePiece(PieceType pieceType, PieceColor pieceColor);
+
+        const PieceType& GetPieceType() const;
+        const PieceColor& GetPieceColor() const;
+        const Player::PlayerColor GetCorrespondingPlayerColor() const;
     };
 }  // namespace Hive::Piece

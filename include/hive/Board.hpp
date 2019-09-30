@@ -12,6 +12,7 @@
 #include "HiveMove.hpp"
 #include "AxialPosition.hpp"
 #include "PieceType.hpp"
+#include "PlayerColor.hpp"
 
 namespace Hive {
     class Board {
@@ -30,6 +31,7 @@ namespace Hive {
         Piece::GamePieceStack& GetGamePieceStack(int x, int y) const;
 
         std::vector<Piece::GamePieceStack>& GetGamePieceStacks() const;
+        std::vector<Piece::GamePieceStack>& GetGamePieceStacksByColor(Player::PlayerColor playerColor) const;
 
         Piece::GamePiece& GetGamePiece(const AxialPosition& position, int layer) const;
         Piece::GamePiece& GetGamePiece(int x, int y, int layer) const;

@@ -37,7 +37,7 @@ namespace Hive {
             }
         } else if (turn == 1) {
             std::vector<Piece::GamePieceStack> gameSpieceStacks = board.GetGamePieceStacks();
-            std::vector<AxialPosition> neighbouringEmptyPositions = board.GetNeighbouringEmptyAxialPositions(gameSpieceStacks[0].GetAxialPosition);
+            std::vector<AxialPosition> neighbouringEmptyPositions = board.GetNeighbouringEmptyAxialPositions(gameSpieceStacks[0].GetAxialPosition());
 
             for (Piece::GamePiece undeployedGamePiece : currentPlayer.GetUndeployedGamePieces()) {
                 for (AxialPosition neighbouringEmptyPosition : neighbouringEmptyPositions) {
@@ -45,9 +45,30 @@ namespace Hive {
                 }
             }
         } else {
-            
-        }
+            std::vector<AxialPosition> deployablePositions;
 
+            std::vector<Piece::GamePieceStack> gameSpieceStacksOfCurrentPlayer = board.GetGamePieceStacksByColor(currentPlayer.GetPlayerColor());
+            for(Piece::GamePieceStack gameSpieceStack : gameSpieceStacksOfCurrentPlayer) {
+                std::vector<AxialPosition> neighbouringEmptyPositions = board.GetNeighbouringEmptyAxialPositions(gameSpieceStack.GetAxialPosition());
+                for(AxialPosition neighbouringEmptyPosition : neighbouringEmptyPositions) {
+                    std::vector<Piece::GamePieceStack> neighbouringStacks = board.GetNeighbouringGamePieceStacks(neighbouringEmptyPosition);
+                    bool enemyStackNeighbouring = false;
+                    for(Piece::GamePieceStack neighbouringStack : neighbouringStacks) {
+                        if(neighbouringStack.GetGamePieceOnTop().GetCorrespondingPlayerColor() != currentPlayer.GetPlayerColor()) {
+                            enemyStackNeighbouring = true;
+                            break;
+                        }
+                    }
+                    if(!enemyStackNeighbouring && std::find(deployablePositions.begin(), deployablePositions.end(), neighbouringEmptyPosition) == deployablePositions.end()) {
+                        deployablePositions.push_back(neighbouringEmptyPosition);
+                    }
+                }
+            }
+
+            for(AxialPosition deployablePosition : deployablePositions) {
+                possibleDeployMoves.push_back(Move::HiveMove(Move::MoveType::DeployMove, AxialPosition(0, 0), deployablePosition));
+            }
+        }
         return possibleDeployMoves;
     }
 }  // namespace Hive

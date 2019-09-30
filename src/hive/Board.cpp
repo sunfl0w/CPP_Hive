@@ -35,8 +35,18 @@ namespace Hive {
 
     std::vector<Piece::GamePieceStack>& Board::GetGamePieceStacks() const {
         std::vector<Piece::GamePieceStack> stacks;
-        for (std::pair<int, Piece::GamePieceStack> stack : gamePieceStacks) {
-            stacks.push_back(stack.second);
+        for (std::pair<int, Piece::GamePieceStack> stackPair : gamePieceStacks) {
+            stacks.push_back(stackPair.second);
+        }
+        return stacks;
+    }
+
+    std::vector<Piece::GamePieceStack>& Board::GetGamePieceStacksByColor(Player::PlayerColor playerColor) const {
+        std::vector<Piece::GamePieceStack> stacks;
+        for (std::pair<int, Piece::GamePieceStack> stackPair : gamePieceStacks) {
+            if(stackPair.second.GetGamePieceOnTop().GetCorrespondingPlayerColor() == playerColor) {
+                stacks.push_back(stackPair.second);
+            }
         }
         return stacks;
     }

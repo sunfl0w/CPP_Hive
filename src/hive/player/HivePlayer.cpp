@@ -7,6 +7,10 @@ namespace Hive::Player {
         InitializeUndeployedGamePieces();
     }
 
+    const PlayerColor& HivePlayer::GetPlayerColor() const {
+        return playerColor;
+    }
+
     Piece::PieceColor HivePlayer::GetPieceColorFromPlayerColor() {
         if(playerColor == PlayerColor::Red) {
             return Piece::PieceColor::Red;
