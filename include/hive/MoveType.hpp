@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Hive::Move {
+namespace Hive {
     enum class MoveType {
         DeployMove,
         DragMove,

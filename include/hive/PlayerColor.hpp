@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Hive::Player {
+namespace Hive {
     enum class PlayerColor {
         Red,
         Blue,

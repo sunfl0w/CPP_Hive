@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Hive::Piece {
+namespace Hive {
     enum class PieceType {
         QueenBee,
         Spider,

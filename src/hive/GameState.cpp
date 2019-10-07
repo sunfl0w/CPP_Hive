@@ -1,7 +1,7 @@
 #include "GameState.hpp"
 
 namespace Hive {
-    GameState::GameState() : currentPlayer(Player::PlayerColor::Red), pausedPlayer(Player::PlayerColor::Blue) {
+    GameState::GameState() : currentPlayer(PlayerColor::Red), pausedPlayer(PlayerColor::Blue) {
         turn = 0;
     }
 
@@ -9,52 +9,52 @@ namespace Hive {
         turn = gameState.turn;
     }
 
-    const Player::HivePlayer& GameState::GetCurrentPlayer() const {
+    const Player& GameState::GetCurrentPlayer() const {
         return currentPlayer;
     }
 
-    const Player::HivePlayer& GameState::GetPausedPlayer() const {
+    const Player& GameState::GetPausedPlayer() const {
         return pausedPlayer;
     }
 
-    std::vector<Move::HiveMove> GameState::GetPossibleMoves() const {
+    std::vector<Move> GameState::GetPossibleMoves() const {
     }
 
-    bool GameState::IsMoveValid(const Move::HiveMove& move) const {
+    bool GameState::IsMoveValid(const Move& move) const {
     }
 
     //Private
 
-    std::vector<Move::HiveMove> GameState::GetPossibleDeployMoves() const {
-        std::vector<Move::HiveMove> possibleDeployMoves;
+    std::vector<Move> GameState::GetPossibleDeployMoves() const {
+        std::vector<Move> possibleDeployMoves;
 
         if (turn == 0) {
             std::vector<AxialPosition> emptyAxialPositions = board.GetEmptyAxialPositionsOnBoard();
-            for (Piece::GamePiece undeployedGamePiece : currentPlayer.GetUndeployedGamePieces()) {
+            for (Piece undeployedPiece : currentPlayer.GetUndeployedGamePieces()) {
                 for (AxialPosition emptyAxialPosition : emptyAxialPositions) {
-                    possibleDeployMoves.push_back(Move::HiveMove(Move::MoveType::DeployMove, AxialPosition(0, 0), emptyAxialPosition));
+                    possibleDeployMoves.push_back(Move(MoveType::DeployMove, AxialPosition(0, 0), emptyAxialPosition));
                 }
             }
         } else if (turn == 1) {
-            std::vector<Piece::GamePieceStack> gameSpieceStacks = board.GetGamePieceStacks();
-            std::vector<AxialPosition> neighbouringEmptyPositions = board.GetNeighbouringEmptyAxialPositions(gameSpieceStacks[0].GetAxialPosition());
+            std::vector<PieceStack> pieceStacks = board.GetPieceStacks();
+            std::vector<AxialPosition> neighbouringEmptyPositions = board.GetNeighbouringEmptyAxialPositions(pieceStacks[0].GetAxialPosition());
 
-            for (Piece::GamePiece undeployedGamePiece : currentPlayer.GetUndeployedGamePieces()) {
+            for (Piece undeployedPiece : currentPlayer.GetUndeployedGamePieces()) {
                 for (AxialPosition neighbouringEmptyPosition : neighbouringEmptyPositions) {
-                    possibleDeployMoves.push_back(Move::HiveMove(Move::MoveType::DeployMove, AxialPosition(0, 0), neighbouringEmptyPosition));
+                    possibleDeployMoves.push_back(Move(MoveType::DeployMove, AxialPosition(0, 0), neighbouringEmptyPosition));
                 }
             }
         } else {
             std::vector<AxialPosition> deployablePositions;
 
-            std::vector<Piece::GamePieceStack> gameSpieceStacksOfCurrentPlayer = board.GetGamePieceStacksByColor(currentPlayer.GetPlayerColor());
-            for(Piece::GamePieceStack gameSpieceStack : gameSpieceStacksOfCurrentPlayer) {
+            std::vector<PieceStack> pieceStacksOfCurrentPlayer = board.GetPieceStacksByColor(currentPlayer.GetPlayerColor());
+            for(PieceStack gameSpieceStack : pieceStacksOfCurrentPlayer) {
                 std::vector<AxialPosition> neighbouringEmptyPositions = board.GetNeighbouringEmptyAxialPositions(gameSpieceStack.GetAxialPosition());
                 for(AxialPosition neighbouringEmptyPosition : neighbouringEmptyPositions) {
-                    std::vector<Piece::GamePieceStack> neighbouringStacks = board.GetNeighbouringGamePieceStacks(neighbouringEmptyPosition);
+                    std::vector<PieceStack> neighbouringStacks = board.GetNeighbouringPieceStacks(neighbouringEmptyPosition);
                     bool enemyStackNeighbouring = false;
-                    for(Piece::GamePieceStack neighbouringStack : neighbouringStacks) {
-                        if(neighbouringStack.GetGamePieceOnTop().GetCorrespondingPlayerColor() != currentPlayer.GetPlayerColor()) {
+                    for(PieceStack neighbouringStack : neighbouringStacks) {
+                        if(neighbouringStack.GetPieceOnTop().GetCorrespondingPlayerColor() != currentPlayer.GetPlayerColor()) {
                             enemyStackNeighbouring = true;
                             break;
                         }
@@ -66,9 +66,13 @@ namespace Hive {
             }
 
             for(AxialPosition deployablePosition : deployablePositions) {
-                possibleDeployMoves.push_back(Move::HiveMove(Move::MoveType::DeployMove, AxialPosition(0, 0), deployablePosition));
+                possibleDeployMoves.push_back(Move(MoveType::DeployMove, AxialPosition(0, 0), deployablePosition));
             }
         }
         return possibleDeployMoves;
+    }
+
+    std::vector<Move> GameState::GetPossibleDragMoves() const {
+        std::vector<Move>
     }
 }  // namespace Hive
