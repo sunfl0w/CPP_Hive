@@ -73,6 +73,16 @@ namespace Hive {
     }
 
     std::vector<Move> GameState::GetPossibleDragMoves() const {
-        std::vector<Move>
+        std::vector<Move> possibleDragMoves;
+
+        std::vector<Move> possibleQueenBeeDragMoves = GetPossibleQueenBeeDragMoves();
+        possibleDragMoves.insert(possibleDragMoves.end(), possibleQueenBeeDragMoves.begin(), possibleQueenBeeDragMoves.end());
+    }
+
+    std::vector<Move> GameState::GetPossibleQueenBeeDragMoves() const {
+        std::vector<Move> possibleQueenBeeDragMoves;
+        
+
+        return possibleQueenBeeDragMoves;
     }
 }  // namespace Hive

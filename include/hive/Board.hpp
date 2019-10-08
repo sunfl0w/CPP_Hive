@@ -39,7 +39,7 @@ namespace Hive {
         std::vector<PieceStack> GetNeighbouringPieceStacks(const AxialPosition& position) const;
         std::vector<AxialPosition> GetNeighbouringEmptyAxialPositions(const AxialPosition& position) const;
 
-        void AddPieceOnTop(Piece& gamePiece, AxialPosition& position);
+        void AddPieceOnTop(Piece& piece, AxialPosition& position);
         void RemoveUpmostPiece(AxialPosition& position);
 
         bool IsAxialPositionAtBorderOfBoard(AxialPosition& position) const;
@@ -47,7 +47,11 @@ namespace Hive {
 
         std::vector<AxialPosition> GetEmptyAxialPositionsOnBoard() const;
 
+        bool IsHiveCoherentIfPieceMoves(const Piece& piece) const;
+
     private:
         void PlaceObstacles();
+
+        int GetCoherentHiveSize() const;
     };
 }  // namespace Hive
