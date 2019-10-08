@@ -81,7 +81,10 @@ namespace Hive {
 
     std::vector<Move> GameState::GetPossibleQueenBeeDragMoves() const {
         std::vector<Move> possibleQueenBeeDragMoves;
-        
+        Piece moveableQueenBeeOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayer.GetPlayerColor(), PieceType::QueenBee)[0].GetPieceOnTop();
+        if(board.IsHiveCoherentIfPieceMoves(moveableQueenBeeOfCurrentPlayer)) {
+            
+        }
 
         return possibleQueenBeeDragMoves;
     }

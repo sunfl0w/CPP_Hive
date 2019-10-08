@@ -32,6 +32,7 @@ namespace Hive {
 
         std::vector<PieceStack>& GetPieceStacks() const;
         std::vector<PieceStack>& GetPieceStacksByColor(PlayerColor playerColor) const;
+        std::vector<PieceStack>& GetPieceStacksByColorAndType(PlayerColor playerColor, PieceType pieceType) const;
 
         Piece& GetPiece(const AxialPosition& position, int layer) const;
         Piece& GetPiece(int x, int y, int layer) const;
@@ -47,11 +48,18 @@ namespace Hive {
 
         std::vector<AxialPosition> GetEmptyAxialPositionsOnBoard() const;
 
-        bool IsHiveCoherentIfPieceMoves(const Piece& piece) const;
+        bool IsHiveCoherentIfPieceMovesFromPosition(const AxialPosition& position) const;
+
+        std::unordered_map<int, AxialPosition> GetMoveableBorderPositionsOfHive(const AxialPosition& moveStartPos) const;
+
+        bool CanSlide(const AxialPosition& slideStartPos, const AxialPosition& slideEndPos) const;
 
     private:
         void PlaceObstacles();
 
         int GetCoherentHiveSize() const;
+        int GetCoherentHiveSize(const AxialPosition& ignorePosition) const;
+
+        int GetDirectionOfNeighbouringPositions(const AxialPosition& startPos, const AxialPosition& destinationPos) const;
     };
 }  // namespace Hive

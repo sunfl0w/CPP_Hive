@@ -28,6 +28,19 @@ namespace Hive {
         return hashValue;
     }
 
+    int AxialPosition::GetDistanceTo(const AxialPosition& otherPosition) const {
+        int z = 0 - x - y;
+        int zOther = 0 - otherPosition.x - otherPosition.y;
+        return (std::abs(x - otherPosition.x) + std::abs(y - otherPosition.y) + std::abs(z - zOther)) / 2;
+    }
+
+    AxialPosition AxialPosition::Subtract(const AxialPosition& otherPosition) const {
+        //int z = 0 - x - y;
+        //int zOther = 0 - otherPosition.x - otherPosition.y;
+        AxialPosition result = AxialPosition(x - otherPosition.x, y - otherPosition.y);
+        return result;
+    }
+
     std::vector<AxialPosition> AxialPosition::GetNeighbouringPositions() const {
         std::vector<AxialPosition> neighbouringAxialPositions;
 
