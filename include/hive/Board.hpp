@@ -13,6 +13,7 @@
 #include "AxialPosition.hpp"
 #include "PieceType.hpp"
 #include "PlayerColor.hpp"
+#include "SlidePath.hpp"
 
 namespace Hive {
     class Board {
@@ -38,7 +39,8 @@ namespace Hive {
         Piece& GetPiece(int x, int y, int layer) const;
 
         std::vector<PieceStack> GetNeighbouringPieceStacks(const AxialPosition& position) const;
-        std::vector<AxialPosition> GetNeighbouringEmptyAxialPositions(const AxialPosition& position) const;
+        std::vector<AxialPosition> GetEmptyNeighbouringAxialPositions(const AxialPosition& position) const;
+        std::vector<AxialPosition> GetEmptySlideableNeighbouringAxialPositions(const AxialPosition& position) const;
 
         void AddPieceOnTop(Piece& piece, AxialPosition& position);
         void RemoveUpmostPiece(AxialPosition& position);
@@ -50,7 +52,7 @@ namespace Hive {
 
         bool IsHiveCoherentIfPieceMovesFromPosition(const AxialPosition& position) const;
 
-        std::unordered_map<int, AxialPosition> GetMoveableBorderPositionsOfHive(const AxialPosition& moveStartPos) const;
+        std::vector<std::vector<AxialPosition>>& GetMoveableBorderPositionsOfHive() const;
 
         bool CanSlide(const AxialPosition& slideStartPos, const AxialPosition& slideEndPos) const;
 

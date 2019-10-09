@@ -82,11 +82,22 @@ namespace Hive {
         return neighbouringPieceStacks;
     }
 
-    std::vector<AxialPosition> Board::GetNeighbouringEmptyAxialPositions(const AxialPosition& position) const {
+    std::vector<AxialPosition> Board::GetEmptyNeighbouringAxialPositions(const AxialPosition& position) const {
         std::vector<AxialPosition> neighbouringPositions;
         neighbouringPositions = position.GetNeighbouringPositions();
         for (int i = 0; i < neighbouringPositions.size(); i++) {
             if (PieceStackExists(neighbouringPositions[i])) {
+                neighbouringPositions.erase(neighbouringPositions.begin() + i);
+            }
+        }
+        return neighbouringPositions;
+    }
+
+    std::vector<AxialPosition> Board::GetEmptySlideableNeighbouringAxialPositions(const AxialPosition& position) const {
+        std::vector<AxialPosition> neighbouringPositions;
+        neighbouringPositions = position.GetNeighbouringPositions();
+        for (int i = 0; i < neighbouringPositions.size(); i++) {
+            if (PieceStackExists(neighbouringPositions[i]) || !CanSlide(position, neighbouringPositions[i])) {
                 neighbouringPositions.erase(neighbouringPositions.begin() + i);
             }
         }
@@ -147,15 +158,12 @@ namespace Hive {
         }
     }
 
-    std::unordered_map<int, AxialPosition> Board::GetMoveableBorderPositionsOfHive(const AxialPosition& moveStartPos) const {
-        std::unordered_map<int, AxialPosition> moveableBorderPositions;
-        std::unordered_map<int, AxialPosition> borderPositionsToSearch;
-        borderPositionsToSearch[moveStartPos.GetHashValue()] = moveStartPos;
+    std::vector<std::vector<AxialPosition>>& Board::GetMoveableBorderPositionsOfHive() const {
+        std::vector<std::vector<AxialPosition>> moveableBorderPositions;
 
-        while (!borderPositionsToSearch.empty()) {
-            std::vector<AxialPosition> neighbouringEmptyPositions = GetNeighbouringEmptyAxialPositions(borderPositionsToSearch[0]);
-            for (AxialPosition neighbouringEmptyPosition : neighbouringEmptyPositions) {
-            }
+        for(std::pair<int, PieceStack> pieceStackPair : pieceStacks) {
+            std::vector<AxialPosition> emptySlideableNeighbouringPositions = GetEmptySlideableNeighbouringAxialPositions(pieceStackPair.second.GetAxialPosition());
+            
         }
     }
 
