@@ -158,12 +158,23 @@ namespace Hive {
         }
     }
 
-    std::vector<std::vector<AxialPosition>>& Board::GetMoveableBorderPositionsOfHive() const {
-        std::vector<std::vector<AxialPosition>> moveableBorderPositions;
+    std::vector<SlidePath> Board::GetSlidePaths() const {
+        std::vector<SlidePath> slidePaths;
 
-        for(std::pair<int, PieceStack> pieceStackPair : pieceStacks) {
+        for (std::pair<int, PieceStack> pieceStackPair : pieceStacks) {
             std::vector<AxialPosition> emptySlideableNeighbouringPositions = GetEmptySlideableNeighbouringAxialPositions(pieceStackPair.second.GetAxialPosition());
-            
+            for (AxialPosition emptySlideableNeighbouringPosition : emptySlideableNeighbouringPositions) {
+                bool isSlidePathAvailableForPosition = false;
+                for (SlidePath slidePath : slidePaths) {
+                    if (slidePath.ContainsPosition(emptySlideableNeighbouringPosition)) {
+                        isSlidePathAvailableForPosition = true;
+                        break;
+                    }
+                }
+                if(!isSlidePathAvailableForPosition) {
+                    slidePaths.push_back(SlidePath())
+                }
+            }
         }
     }
 
@@ -173,16 +184,16 @@ namespace Hive {
 
         bool slideBlockedFromRight = false;
         bool slideBlockedFromLeft = false;
-        for(PieceStack neighbouringPieceStack : neighbouringPieceStacks) {
+        for (PieceStack neighbouringPieceStack : neighbouringPieceStacks) {
             int directionToNeighbour = GetDirectionOfNeighbouringPositions(slideStartPos, neighbouringPieceStack.GetAxialPosition());
-            if(directionToNeighbour == slideDirection - 1 || (slideDirection == 0 && directionToNeighbour == 6)) {
+            if (directionToNeighbour == slideDirection - 1 || (slideDirection == 0 && directionToNeighbour == 6)) {
                 slideBlockedFromLeft = true;
-            } else if(directionToNeighbour == slideDirection + 1 || (slideDirection == 6 && directionToNeighbour == 0)) {
+            } else if (directionToNeighbour == slideDirection + 1 || (slideDirection == 6 && directionToNeighbour == 0)) {
                 slideBlockedFromRight = true;
             }
         }
 
-        if(slideBlockedFromLeft && slideBlockedFromRight) {
+        if (slideBlockedFromLeft && slideBlockedFromRight) {
             return false;
         } else {
             return true;
@@ -265,21 +276,21 @@ namespace Hive {
     }
 
     int Board::GetDirectionOfNeighbouringPositions(const AxialPosition& startPos, const AxialPosition& destinationPos) const {
-        if(startPos.GetDistanceTo(destinationPos) != 1) {
+        if (startPos.GetDistanceTo(destinationPos) != 1) {
             throw "Error. Unable to get direction between two positions that are not neighbours";
         }
         AxialPosition axialDirection = destinationPos.Subtract(startPos);
-        if(AxialPosition(1, -1) == axialDirection) {
+        if (AxialPosition(1, -1) == axialDirection) {
             return 0;
-        } else if(AxialPosition(1, 0) == axialDirection) {
+        } else if (AxialPosition(1, 0) == axialDirection) {
             return 1;
-        } else if(AxialPosition(0, 1) == axialDirection) {
+        } else if (AxialPosition(0, 1) == axialDirection) {
             return 2;
-        } else if(AxialPosition(-1, 1) == axialDirection) {
+        } else if (AxialPosition(-1, 1) == axialDirection) {
             return 3;
-        } else if(AxialPosition(-1, 0) == axialDirection) {
+        } else if (AxialPosition(-1, 0) == axialDirection) {
             return 4;
-        } else if(AxialPosition(0, -1) == axialDirection) {
+        } else if (AxialPosition(0, -1) == axialDirection) {
             return 5;
         }
     }

@@ -14,6 +14,7 @@ namespace Hive {
 
         int GetHashValue() const;
         int GetDistanceTo(const AxialPosition& otherPosition) const;
+        bool IsNeighbourTo(const AxialPosition& otherPosition) const;
         AxialPosition Subtract(const AxialPosition& otherPosition) const;
         std::vector<AxialPosition> GetNeighbouringPositions() const;
         bool IsAtBorderOfBoard() const;

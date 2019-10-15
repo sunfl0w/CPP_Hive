@@ -10,8 +10,8 @@ namespace Hive {
         std::vector<AxialPosition> slidePositions;
 
     public:
-        SlidePath();
-        bool IsValidForPiece(const AxialPosition& piecePosition, const Board& board) const;
-
+        SlidePath(const AxialPosition& positionInPath);
+        bool IsValidForPiece(const AxialPosition& piecePosition) const;
+        bool ContainsPosition(const AxialPosition& position) const;
     };
 }  // namespace Hive

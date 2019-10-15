@@ -52,7 +52,7 @@ namespace Hive {
 
         bool IsHiveCoherentIfPieceMovesFromPosition(const AxialPosition& position) const;
 
-        std::vector<std::vector<AxialPosition>>& GetMoveableBorderPositionsOfHive() const;
+        std::vector<SlidePath> GetSlidePaths() const;
 
         bool CanSlide(const AxialPosition& slideStartPos, const AxialPosition& slideEndPos) const;
 

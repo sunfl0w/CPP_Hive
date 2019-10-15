@@ -34,6 +34,14 @@ namespace Hive {
         return (std::abs(x - otherPosition.x) + std::abs(y - otherPosition.y) + std::abs(z - zOther)) / 2;
     }
 
+    bool AxialPosition::IsNeighbourTo(const AxialPosition& otherPosition) const {
+        if(GetDistanceTo(otherPosition) == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     AxialPosition AxialPosition::Subtract(const AxialPosition& otherPosition) const {
         //int z = 0 - x - y;
         //int zOther = 0 - otherPosition.x - otherPosition.y;
