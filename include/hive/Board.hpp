@@ -19,6 +19,9 @@ namespace Hive {
     class Board {
     private:
         std::unordered_map<int, PieceStack> pieceStacks;
+
+    public:
+        std::vector<AxialPosition> hiveBorderPositions;
         //std::vector<Piece::GamingPiece> pieces;
 
     public:

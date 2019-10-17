@@ -29,7 +29,7 @@ namespace Hive {
         std::vector<Move> GetPossibleDeployMoves() const;
         std::vector<Move> GetPossibleDragMoves() const;
 
-        std::vector<Move> GetPossibleQueenBeeDragMoves() const;
+        std::vector<Move> GetPossibleQueenBeeDragMoves(const std::vector<SlidePath>& slidePaths) const;
         std::vector<Move> GetPossibleSpiderDragMoves() const;
         std::vector<Move> GetPossibleBeetleDragMoves() const;
         std::vector<Move> GetPossibleGrasshopperDragMoves() const;

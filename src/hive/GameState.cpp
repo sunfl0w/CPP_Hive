@@ -37,7 +37,7 @@ namespace Hive {
             }
         } else if (turn == 1) {
             std::vector<PieceStack> pieceStacks = board.GetPieceStacks();
-            std::vector<AxialPosition> neighbouringEmptyPositions = board.GetNeighbouringEmptyAxialPositions(pieceStacks[0].GetAxialPosition());
+            std::vector<AxialPosition> neighbouringEmptyPositions = board.GetEmptyNeighbouringAxialPositions(pieceStacks[0].GetAxialPosition());
 
             for (Piece undeployedPiece : currentPlayer.GetUndeployedGamePieces()) {
                 for (AxialPosition neighbouringEmptyPosition : neighbouringEmptyPositions) {
@@ -49,7 +49,7 @@ namespace Hive {
 
             std::vector<PieceStack> pieceStacksOfCurrentPlayer = board.GetPieceStacksByColor(currentPlayer.GetPlayerColor());
             for(PieceStack gameSpieceStack : pieceStacksOfCurrentPlayer) {
-                std::vector<AxialPosition> neighbouringEmptyPositions = board.GetNeighbouringEmptyAxialPositions(gameSpieceStack.GetAxialPosition());
+                std::vector<AxialPosition> neighbouringEmptyPositions = board.GetEmptyNeighbouringAxialPositions(gameSpieceStack.GetAxialPosition());
                 for(AxialPosition neighbouringEmptyPosition : neighbouringEmptyPositions) {
                     std::vector<PieceStack> neighbouringStacks = board.GetNeighbouringPieceStacks(neighbouringEmptyPosition);
                     bool enemyStackNeighbouring = false;
@@ -74,16 +74,30 @@ namespace Hive {
 
     std::vector<Move> GameState::GetPossibleDragMoves() const {
         std::vector<Move> possibleDragMoves;
+        std::vector<SlidePath> slidePaths = board.GetSlidePaths();
 
         std::vector<Move> possibleQueenBeeDragMoves = GetPossibleQueenBeeDragMoves();
         possibleDragMoves.insert(possibleDragMoves.end(), possibleQueenBeeDragMoves.begin(), possibleQueenBeeDragMoves.end());
     }
 
-    std::vector<Move> GameState::GetPossibleQueenBeeDragMoves() const {
+    std::vector<Move> GameState::GetPossibleQueenBeeDragMoves(const std::vector<SlidePath>& slidePaths) const {
         std::vector<Move> possibleQueenBeeDragMoves;
-        Piece moveableQueenBeeOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayer.GetPlayerColor(), PieceType::QueenBee)[0].GetPieceOnTop();
-        if(board.IsHiveCoherentIfPieceMoves(moveableQueenBeeOfCurrentPlayer)) {
-            
+        PieceStack moveableQueenBeeOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayer.GetPlayerColor(), PieceType::QueenBee)[0];
+        if(board.IsHiveCoherentIfPieceMovesFromPosition(moveableQueenBeeOfCurrentPlayer.GetAxialPosition())) {
+            std::vector<SlidePath> availableSlidePaths; 
+            for(SlidePath slidePath : slidePaths) {
+                if(slidePath.IsValidForPiece(moveableQueenBeeOfCurrentPlayer.GetAxialPosition())) {
+                    availableSlidePaths.push_back(slidePath);
+                }
+            }
+
+            for(SlidePath slidePath : availableSlidePaths) {
+                for(AxialPosition slidePathPosition : slidePath.GetContainingPositions()) {
+                    if(slidePathPosition.IsNeighbourTo(moveableQueenBeeOfCurrentPlayer.GetAxialPosition())) {
+                        possibleQueenBeeDragMoves.push_back(Move(MoveType::DragMove, moveableQueenBeeOfCurrentPlayer.GetAxialPosition(), slidePathPosition));
+                    }
+                }
+            }
         }
 
         return possibleQueenBeeDragMoves;

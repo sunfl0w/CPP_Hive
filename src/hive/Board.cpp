@@ -172,10 +172,11 @@ namespace Hive {
                     }
                 }
                 if(!isSlidePathAvailableForPosition) {
-                    slidePaths.push_back(SlidePath())
+                    slidePaths.push_back(SlidePath(emptySlideableNeighbouringPosition, *this));
                 }
             }
         }
+        return slidePaths;
     }
 
     bool Board::CanSlide(const AxialPosition& slideStartPos, const AxialPosition& slideEndPos) const {
