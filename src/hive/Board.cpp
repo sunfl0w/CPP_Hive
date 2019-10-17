@@ -97,7 +97,14 @@ namespace Hive {
         std::vector<AxialPosition> neighbouringPositions;
         neighbouringPositions = position.GetNeighbouringPositions();
         for (int i = 0; i < neighbouringPositions.size(); i++) {
-            if (PieceStackExists(neighbouringPositions[i]) || !CanSlide(position, neighbouringPositions[i])) {
+            std::vector<PieceStack> neighbouringStacksOfNeighbour = GetNeighbouringPieceStacks(neighbouringPositions[i]);
+            bool isNeighbourAccesible = false;
+            for(PieceStack neighbouringStackOfNeighbour : neighbouringStacksOfNeighbour) {
+                if(neighbouringStackOfNeighbour.GetPieceOnTop().GetPieceType() != PieceType::Obstacle && neighbouringStackOfNeighbour.GetAxialPosition() != position) {
+                    isNeighbourAccesible = true;
+                }
+            }
+            if (PieceStackExists(neighbouringPositions[i]) || !CanSlide(position, neighbouringPositions[i]) || !isNeighbourAccesible) {
                 neighbouringPositions.erase(neighbouringPositions.begin() + i);
             }
         }
@@ -180,6 +187,10 @@ namespace Hive {
     }
 
     bool Board::CanSlide(const AxialPosition& slideStartPos, const AxialPosition& slideEndPos) const {
+        if(!slideStartPos.IsNeighbourTo(slideEndPos)) {
+            return false;
+        }
+
         int slideDirection = GetDirectionOfNeighbouringPositions(slideStartPos, slideEndPos);
         std::vector<PieceStack> neighbouringPieceStacks = GetNeighbouringPieceStacks(slideStartPos);
 

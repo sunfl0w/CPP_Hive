@@ -12,7 +12,7 @@ namespace Hive {
 
     public:
         SlidePath(const AxialPosition& positionInPath, const Board& board);
-        bool IsValidForPiece(const AxialPosition& piecePosition) const;
+        bool IsValidForPiece(const AxialPosition& piecePosition, const Board& board) const;
         bool ContainsPosition(const AxialPosition& position) const;
         const std::deque<AxialPosition>& GetContainingPositions() const;
     

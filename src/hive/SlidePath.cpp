@@ -31,10 +31,10 @@ namespace Hive {
         }
     }
 
-    bool SlidePath::IsValidForPiece(const AxialPosition& piecePosition) const {
+    bool SlidePath::IsValidForPiece(const AxialPosition& piecePosition, const Board& board) const {
         bool isValid = false;
         for (AxialPosition slidePathPosition : slidePositions) {
-            if (slidePathPosition.IsNeighbourTo(piecePosition)) {
+            if (board.CanSlide(piecePosition, slidePathPosition)) {
                 isValid = true;
                 break;
             }
