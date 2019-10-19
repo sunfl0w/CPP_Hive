@@ -121,7 +121,7 @@ namespace Hive {
         } else {
             PieceStack newPieceStack = PieceStack(position);
             newPieceStack.AddPieceOnTop(piece);
-            pieceStacks[position.GetHashValue()] = newPieceStack;
+            pieceStacks.insert({position.GetHashValue(), newPieceStack});
         }
     }
 
@@ -167,27 +167,6 @@ namespace Hive {
         } else {
             return false;
         }
-    }
-
-    std::vector<SlidePath> Board::GetSlidePaths() const {
-        std::vector<SlidePath> slidePaths;
-
-        for (std::pair<int, PieceStack> pieceStackPair : pieceStacks) {
-            std::vector<AxialPosition> emptySlideableNeighbouringPositions = GetEmptySlideableNeighbouringAxialPositions(pieceStackPair.second.GetAxialPosition());
-            for (AxialPosition emptySlideableNeighbouringPosition : emptySlideableNeighbouringPositions) {
-                bool isSlidePathAvailableForPosition = false;
-                for (SlidePath slidePath : slidePaths) {
-                    if (slidePath.ContainsPosition(emptySlideableNeighbouringPosition)) {
-                        isSlidePathAvailableForPosition = true;
-                        break;
-                    }
-                }
-                if (!isSlidePathAvailableForPosition) {
-                    slidePaths.push_back(SlidePath(emptySlideableNeighbouringPosition, *this));
-                }
-            }
-        }
-        return slidePaths;
     }
 
     bool Board::CanSlide(const AxialPosition& slideStartPos, const AxialPosition& slideEndPos) const {
@@ -268,7 +247,7 @@ namespace Hive {
             std::vector<PieceStack> neighbouringPieceStacks = GetNeighbouringPieceStacks(pieceStacksToSearch[0].GetAxialPosition());
             for (PieceStack neighbouringPieceStack : neighbouringPieceStacks) {
                 if (hive.find(neighbouringPieceStack.GetAxialPosition().GetHashValue()) == hive.end()) {
-                    hive[neighbouringPieceStack.GetAxialPosition().GetHashValue()] = neighbouringPieceStack;
+                    hive.insert({neighbouringPieceStack.GetAxialPosition().GetHashValue(), neighbouringPieceStack});
                 }
                 pieceStacksToSearch.push_back(neighbouringPieceStack);
             }
@@ -296,7 +275,7 @@ namespace Hive {
                     break;
                 }
                 if (hive.find(neighbouringPieceStack.GetAxialPosition().GetHashValue()) == hive.end()) {
-                    hive[neighbouringPieceStack.GetAxialPosition().GetHashValue()] = neighbouringPieceStack;
+                    hive.insert({neighbouringPieceStack.GetAxialPosition().GetHashValue(), neighbouringPieceStack});
                 }
                 pieceStacksToSearch.push_back(neighbouringPieceStack);
             }
@@ -322,6 +301,8 @@ namespace Hive {
             return 4;
         } else if (AxialPosition(0, -1) == axialDirection) {
             return 5;
+        } else {
+            return -1;
         }
     }
 }  // namespace Hive

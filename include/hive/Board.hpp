@@ -13,7 +13,6 @@
 #include "AxialPosition.hpp"
 #include "PieceType.hpp"
 #include "Color.hpp"
-#include "SlidePath.hpp"
 
 namespace Hive {
     class Board {
@@ -56,8 +55,6 @@ namespace Hive {
         std::vector<AxialPosition> GetEmptyAxialPositionsOnBoard() const;
 
         bool IsHiveCoherentIfPieceMovesFromPosition(const AxialPosition& position) const;
-
-        std::vector<SlidePath> GetSlidePaths() const;
 
         bool CanSlide(const AxialPosition& slideStartPos, const AxialPosition& slideEndPos) const;
 

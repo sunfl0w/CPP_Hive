@@ -10,7 +10,7 @@ namespace Hive {
     private:
         Color color;
 
-        std::vector<Piece::Piece> undeployedPieces;
+        std::vector<Piece> undeployedPieces;
     public:
         Player(Color color);
 

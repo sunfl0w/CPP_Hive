@@ -116,28 +116,28 @@ namespace Hive {
         std::vector<PieceStack> spidersOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayer.GetColor(), PieceType::Spider);
         for (PieceStack spider : spidersOfCurrentPlayer) {
             SlidePathNode startNode = SlidePathNode(spider.GetAxialPosition());
-            std::vector<SlidePathNode*> currentSlidePathNodes;
-            currentSlidePathNodes.push_back(&startNode);
+            std::vector<SlidePathNode> currentSlidePathNodes;
+            currentSlidePathNodes.push_back(startNode);
             for (int i = 0; i < 3; i++) {
-                std::vector<SlidePathNode*> newSlidePathNodes;
-                for (SlidePathNode* currentSlidePathNode : currentSlidePathNodes) {
-                    std::vector<AxialPosition> emptyNeighbouringPositions = board.GetEmptyNeighbouringAxialPositions(currentSlidePathNode->GetPosition());
+                std::vector<SlidePathNode> newSlidePathNodes;
+                for (SlidePathNode currentSlidePathNode : currentSlidePathNodes) {
+                    std::vector<AxialPosition> emptyNeighbouringPositions = board.GetEmptyNeighbouringAxialPositions(currentSlidePathNode.GetPosition());
                     for (AxialPosition emptyNeighbouringPosition : emptyNeighbouringPositions) {
-                        if (board.CanSlide(currentSlidePathNode->GetPosition(), emptyNeighbouringPosition)) {
+                        if (board.CanSlide(currentSlidePathNode.GetPosition(), emptyNeighbouringPosition)) {
                             if (i >= 1) {
-                                if (currentSlidePathNode->GetParent()->GetPosition() != emptyNeighbouringPosition) {
-                                    newSlidePathNodes.push_back(&SlidePathNode(emptyNeighbouringPosition));
+                                if (currentSlidePathNode.GetParent()->GetPosition() != emptyNeighbouringPosition) {
+                                    newSlidePathNodes.push_back(SlidePathNode(emptyNeighbouringPosition));
                                 }
                             } else {
-                                newSlidePathNodes.push_back(&SlidePathNode(emptyNeighbouringPosition));
+                                newSlidePathNodes.push_back(SlidePathNode(emptyNeighbouringPosition));
                             }
                         }
                     }
                 }
                 currentSlidePathNodes = newSlidePathNodes;
             }
-            for (SlidePathNode* validEndNodes : currentSlidePathNodes) {
-                possibleSpiderDragMoves.push_back(Move(MoveType::DragMove, spider.GetAxialPosition(), validEndNodes->GetPosition(), PieceType::Spider));
+            for (SlidePathNode validEndNodes : currentSlidePathNodes) {
+                possibleSpiderDragMoves.push_back(Move(MoveType::DragMove, spider.GetAxialPosition(), validEndNodes.GetPosition(), PieceType::Spider));
             }
         }
         return possibleSpiderDragMoves;
