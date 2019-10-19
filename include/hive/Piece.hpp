@@ -1,20 +1,18 @@
 #pragma once
 
-#include "PieceColor.hpp"
+#include "Color.hpp"
 #include "PieceType.hpp"
-#include "PlayerColor.hpp"
 
 namespace Hive {
     class Piece {
     private:
-        PieceType pieceType;
-        PieceColor pieceColor;
+        PieceType type;
+        Color color;
 
     public:
-        Piece(PieceType pieceType, PieceColor pieceColor);
+        Piece(PieceType pieceType, Color pieceColor);
 
-        const PieceType& GetPieceType() const;
-        const PieceColor& GetPieceColor() const;
-        const PlayerColor GetCorrespondingPlayerColor() const;
+        const PieceType& GetType() const;
+        const Color& GetColor() const;
     };
 }  // namespace Hive::Piece

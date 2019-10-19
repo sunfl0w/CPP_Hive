@@ -14,7 +14,7 @@ namespace Hive {
         this->y = y;
     }
 
-    bool AxialPosition::operator==(const AxialPosition &axialPosition) const {
+    bool AxialPosition::operator==(const AxialPosition& axialPosition) const {
         if (x == axialPosition.x && y == axialPosition.y) {
             return true;
         } else {
@@ -22,7 +22,7 @@ namespace Hive {
         }
     }
 
-    bool AxialPosition::operator!=(const AxialPosition &axialPosition) const {
+    bool AxialPosition::operator!=(const AxialPosition& axialPosition) const {
         if (x != axialPosition.x || y != axialPosition.y) {
             return true;
         } else {
@@ -32,7 +32,7 @@ namespace Hive {
 
     int AxialPosition::GetHashValue() const {
         //int hashValue = (x * 31) + (y * 37);
-        int hashValue = (x + 5) << 16 | ((y + 5)&0xFFFF);
+        int hashValue = (x + 5) << 16 | ((y + 5) & 0xFFFF);
         return hashValue;
     }
 
@@ -43,11 +43,16 @@ namespace Hive {
     }
 
     bool AxialPosition::IsNeighbourTo(const AxialPosition& otherPosition) const {
-        if(GetDistanceTo(otherPosition) == 1) {
+        if (GetDistanceTo(otherPosition) == 1) {
             return true;
         } else {
             return false;
         }
+    }
+
+    AxialPosition AxialPosition::Add(const AxialPosition& otherPosition) const {
+        AxialPosition result = AxialPosition(x + otherPosition.x, y + otherPosition.y);
+        return result;
     }
 
     AxialPosition AxialPosition::Subtract(const AxialPosition& otherPosition) const {
@@ -85,5 +90,9 @@ namespace Hive {
         } else {
             return false;
         }
+    }
+
+    AxialPosition AxialPosition::GetTranslationToOtherPosition(const AxialPosition& otherPosition) const {
+        return otherPosition.Subtract(*this);
     }
 }  // namespace Hive

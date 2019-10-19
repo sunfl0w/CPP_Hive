@@ -41,20 +41,20 @@ namespace Hive {
         return stacks;
     }
 
-    std::vector<PieceStack>& Board::GetPieceStacksByColor(PlayerColor playerColor) const {
+    std::vector<PieceStack>& Board::GetPieceStacksByColor(Color color) const {
         std::vector<PieceStack> stacks;
         for (std::pair<int, PieceStack> stackPair : pieceStacks) {
-            if (stackPair.second.GetPieceOnTop().GetCorrespondingPlayerColor() == playerColor) {
+            if (stackPair.second.GetPieceOnTop().GetColor() == color) {
                 stacks.push_back(stackPair.second);
             }
         }
         return stacks;
     }
 
-    std::vector<PieceStack>& Board::GetPieceStacksByColorAndType(PlayerColor playerColor, PieceType pieceType) const {
+    std::vector<PieceStack>& Board::GetPieceStacksByColorAndType(Color color, PieceType pieceType) const {
         std::vector<PieceStack> stacks;
         for (std::pair<int, PieceStack> stackPair : pieceStacks) {
-            if (stackPair.second.GetPieceOnTop().GetCorrespondingPlayerColor() == playerColor && stackPair.second.GetPieceOnTop().GetPieceType() == pieceType) {
+            if (stackPair.second.GetPieceOnTop().GetColor() == color && stackPair.second.GetPieceOnTop().GetType() == pieceType) {
                 stacks.push_back(stackPair.second);
             }
         }
@@ -94,21 +94,25 @@ namespace Hive {
     }
 
     std::vector<AxialPosition> Board::GetEmptySlideableNeighbouringAxialPositions(const AxialPosition& position) const {
-        std::vector<AxialPosition> neighbouringPositions;
-        neighbouringPositions = position.GetNeighbouringPositions();
-        for (int i = 0; i < neighbouringPositions.size(); i++) {
-            std::vector<PieceStack> neighbouringStacksOfNeighbour = GetNeighbouringPieceStacks(neighbouringPositions[i]);
-            bool isNeighbourAccesible = false;
-            for (PieceStack neighbouringStackOfNeighbour : neighbouringStacksOfNeighbour) {
-                if (neighbouringStackOfNeighbour.GetPieceOnTop().GetPieceType() != PieceType::Obstacle && neighbouringStackOfNeighbour.GetAxialPosition() != position) {
-                    isNeighbourAccesible = true;
-                }
-            }
-            if (PieceStackExists(neighbouringPositions[i]) || !CanSlide(position, neighbouringPositions[i]) || !isNeighbourAccesible) {
-                neighbouringPositions.erase(neighbouringPositions.begin() + i);
+        std::vector<AxialPosition> emptyNeighbouringPositions = GetEmptyNeighbouringAxialPositions(position);
+        for (int i = 0; i < emptyNeighbouringPositions.size(); i++) {
+            if (!CanSlide(position, emptyNeighbouringPositions[i])) {
+                emptyNeighbouringPositions.erase(emptyNeighbouringPositions.begin() + i);
             }
         }
-        return neighbouringPositions;
+        return emptyNeighbouringPositions;
+    }
+
+    std::vector<AxialPosition> Board::GetEmptySlideableNeighbouringAxialPositionsExcept(const AxialPosition& position, const std::vector<AxialPosition>& ignoredPositions) const {
+        std::vector<AxialPosition> emptyNeighbouringSlideablePosition = GetEmptySlideableNeighbouringAxialPositions(position);
+        for (int i = 0; i < emptyNeighbouringSlideablePosition.size(); i++) {
+            for (AxialPosition ignoredPosition : ignoredPositions) {
+                if (emptyNeighbouringSlideablePosition[i] == ignoredPosition) {
+                    emptyNeighbouringSlideablePosition.erase(emptyNeighbouringSlideablePosition.begin() + i);
+                }
+            }
+        }
+        return emptyNeighbouringSlideablePosition;
     }
 
     void Board::AddPieceOnTop(Piece& piece, AxialPosition& position) {
@@ -209,16 +213,16 @@ namespace Hive {
             return false;
         } else {
             std::vector<PieceStack> neighbouringPieceStacksAfterSlide = GetNeighbouringPieceStacks(slideEndPos);
-            bool startAndEndHaveCommonNeighbour = false;
+            bool startAndEndHaveCommonHiveNeighbour = false;
 
             for (PieceStack neighbouringPieceStack : neighbouringPieceStacks) {
                 for (PieceStack neighbouringPieceStackAfterSlide : neighbouringPieceStacksAfterSlide) {
-                    if (neighbouringPieceStack.GetAxialPosition() == neighbouringPieceStackAfterSlide.GetAxialPosition()) {
-                        startAndEndHaveCommonNeighbour = true;
+                    if (neighbouringPieceStack.GetAxialPosition() == neighbouringPieceStackAfterSlide.GetAxialPosition() && neighbouringPieceStack.GetPieceOnTop().GetType() != PieceType::Obstacle) {
+                        startAndEndHaveCommonHiveNeighbour = true;
                     }
                 }
             }
-            if (startAndEndHaveCommonNeighbour) {
+            if (startAndEndHaveCommonHiveNeighbour) {
                 return true;
             } else {
                 return false;
@@ -243,7 +247,7 @@ namespace Hive {
         }
 
         for (int i = 0; i < 3; i++) {
-            Piece obstaclePiece(PieceType::Obstacle, PieceColor::None);
+            Piece obstaclePiece(PieceType::Obstacle, Color::Undefined);
             AddPieceOnTop(obstaclePiece, obstaclePositions[i]);
         }
     }

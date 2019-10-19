@@ -1,26 +1,16 @@
 #include "Piece.hpp"
 
 namespace Hive {
-    Piece::Piece(PieceType pieceType, PieceColor pieceColor) {
-        this->pieceType = pieceType;
-        this->pieceColor = pieceColor;
+    Piece::Piece(PieceType type, Color color) {
+        this->type = type;
+        this->color = color;
     }
 
-    const PieceType& Piece::GetPieceType() const {
-        return pieceType;
+    const PieceType& Piece::GetType() const {
+        return type;
     }
     
-    const PieceColor& Piece::GetPieceColor() const {
-        return pieceColor;
-    }
-
-    const PlayerColor Piece::GetCorrespondingPlayerColor() const {
-        if(pieceColor == PieceColor::Red) {
-            return PlayerColor::Red;
-        } else if(pieceColor == PieceColor::Blue) {
-            return PlayerColor::Blue;
-        } else {
-            return PlayerColor::Undefined;
-        }
+    const Color& Piece::GetColor() const {
+        return color;
     }
 }

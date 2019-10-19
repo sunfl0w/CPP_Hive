@@ -12,7 +12,7 @@
 #include "Move.hpp"
 #include "AxialPosition.hpp"
 #include "PieceType.hpp"
-#include "PlayerColor.hpp"
+#include "Color.hpp"
 #include "SlidePath.hpp"
 
 namespace Hive {
@@ -35,8 +35,8 @@ namespace Hive {
         PieceStack& GetPieceStack(int x, int y) const;
 
         std::vector<PieceStack>& GetPieceStacks() const;
-        std::vector<PieceStack>& GetPieceStacksByColor(PlayerColor playerColor) const;
-        std::vector<PieceStack>& GetPieceStacksByColorAndType(PlayerColor playerColor, PieceType pieceType) const;
+        std::vector<PieceStack>& GetPieceStacksByColor(Color color) const;
+        std::vector<PieceStack>& GetPieceStacksByColorAndType(Color color, PieceType pieceType) const;
 
         Piece& GetPiece(const AxialPosition& position, int layer) const;
         Piece& GetPiece(int x, int y, int layer) const;
@@ -45,6 +45,7 @@ namespace Hive {
 
         std::vector<AxialPosition> GetEmptyNeighbouringAxialPositions(const AxialPosition& position) const;
         std::vector<AxialPosition> GetEmptySlideableNeighbouringAxialPositions(const AxialPosition& position) const;
+        std::vector<AxialPosition> GetEmptySlideableNeighbouringAxialPositionsExcept(const AxialPosition& position, const std::vector<AxialPosition>& ignoredPositions) const;
 
         void AddPieceOnTop(Piece& piece, AxialPosition& position);
         void RemoveUpmostPiece(AxialPosition& position);

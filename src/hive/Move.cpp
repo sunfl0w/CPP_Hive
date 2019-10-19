@@ -1,8 +1,9 @@
 #include "Move.hpp"
 
 namespace Hive {
-    Move::Move(MoveType moveType, const AxialPosition &startPosition, const AxialPosition &destinationPosition) : startPosition(startPosition), destinationPosition(destinationPosition) {
+    Move::Move(MoveType moveType, const AxialPosition &startPosition, const AxialPosition &destinationPosition, PieceType movedPieceType) : startPosition(startPosition), destinationPosition(destinationPosition) {
         this->moveType = moveType;
+        this->movedPieceType = movedPieceType;
     }
 
     MoveType Move::GetMoveType() {

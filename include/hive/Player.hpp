@@ -2,24 +2,23 @@
 
 #include <vector>
 
-#include "PlayerColor.hpp"
+#include "Color.hpp"
 #include "Piece.hpp"
 
 namespace Hive {
     class Player {
     private:
-        PlayerColor playerColor;
+        Color color;
 
-        std::vector<Piece::Piece> undeployedGamingPieces;
+        std::vector<Piece::Piece> undeployedPieces;
     public:
-        Player(PlayerColor playerColor);
+        Player(Color color);
 
-        const PlayerColor& GetPlayerColor() const;
+        const Color& GetColor() const;
 
-        PieceColor GetPieceColorFromPlayerColor();
-        const std::vector<Piece>& GetUndeployedGamePieces() const;
+        const std::vector<Piece>& GetUndeployedPieces() const;
 
     private:
-        void InitializeUndeployedGamePieces();
+        void InitializeUndeployedPieces();
     };
 }  // namespace Hive::Player

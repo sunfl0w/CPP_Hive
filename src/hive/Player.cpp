@@ -1,43 +1,35 @@
 #include "Player.hpp"
 
 namespace Hive {
-    Player::Player(PlayerColor playerColor) {
-        this->playerColor = playerColor;
-        this->undeployedGamingPieces = std::vector<Piece>();
-        InitializeUndeployedGamePieces();
+    Player::Player(Color color) {
+        this->color = color;
+        this->undeployedPieces = std::vector<Piece>();
+        InitializeUndeployedPieces();
     }
 
-    const PlayerColor& Player::GetPlayerColor() const {
-        return playerColor;
+    const Color& Player::GetColor() const {
+        return color;
     }
 
-    PieceColor Player::GetPieceColorFromPlayerColor() {
-        if(playerColor == PlayerColor::Red) {
-            return PieceColor::Red;
-        } else {
-            return PieceColor::Blue;
-        }
+    const std::vector<Piece>& Player::GetUndeployedPieces() const {
+        return undeployedPieces;
     }
 
-    const std::vector<Piece>& Player::GetUndeployedGamePieces() const {
-        return undeployedGamingPieces;
-    }
+    void Player::InitializeUndeployedPieces() {
+        undeployedPieces.push_back(Piece(PieceType::QueenBee, color));
 
-    void Player::InitializeUndeployedGamePieces() {
-        undeployedGamingPieces.push_back(Piece(PieceType::QueenBee, GetPieceColorFromPlayerColor()));
+        undeployedPieces.push_back(Piece(PieceType::Spider, color));
+        undeployedPieces.push_back(Piece(PieceType::Spider, color));
 
-        undeployedGamingPieces.push_back(Piece(PieceType::Spider, GetPieceColorFromPlayerColor()));
-        undeployedGamingPieces.push_back(Piece(PieceType::Spider, GetPieceColorFromPlayerColor()));
+        undeployedPieces.push_back(Piece(PieceType::Beetle, color));
+        undeployedPieces.push_back(Piece(PieceType::Beetle, color));
 
-        undeployedGamingPieces.push_back(Piece(PieceType::Beetle, GetPieceColorFromPlayerColor()));
-        undeployedGamingPieces.push_back(Piece(PieceType::Beetle, GetPieceColorFromPlayerColor()));
+        undeployedPieces.push_back(Piece(PieceType::Grasshopper, color));
+        undeployedPieces.push_back(Piece(PieceType::Grasshopper, color));
+        undeployedPieces.push_back(Piece(PieceType::Grasshopper, color));
 
-        undeployedGamingPieces.push_back(Piece(PieceType::Grasshopper, GetPieceColorFromPlayerColor()));
-        undeployedGamingPieces.push_back(Piece(PieceType::Grasshopper, GetPieceColorFromPlayerColor()));
-        undeployedGamingPieces.push_back(Piece(PieceType::Grasshopper, GetPieceColorFromPlayerColor()));
-
-        undeployedGamingPieces.push_back(Piece(PieceType::Ant, GetPieceColorFromPlayerColor()));
-        undeployedGamingPieces.push_back(Piece(PieceType::Ant, GetPieceColorFromPlayerColor()));
-        undeployedGamingPieces.push_back(Piece(PieceType::Ant, GetPieceColorFromPlayerColor()));
+        undeployedPieces.push_back(Piece(PieceType::Ant, color));
+        undeployedPieces.push_back(Piece(PieceType::Ant, color));
+        undeployedPieces.push_back(Piece(PieceType::Ant, color));
     }
 }  // namespace Hive

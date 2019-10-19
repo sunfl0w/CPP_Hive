@@ -1,7 +1,7 @@
 #pragma once
 
 namespace Hive {
-    enum class PlayerColor {
+    enum class Color {
         Red,
         Blue,
         Undefined,

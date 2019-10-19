@@ -28,8 +28,9 @@ namespace Hive {
         bool IsMoveValid(const Move& move) const;
 
         std::vector<Move> GetPossibleDeployMoves() const;
-        std::vector<Move> GetPossibleDragMoves() const;
+        std::vector<Move> GetPossibleQueenBeeDeployMoves() const;
 
+        std::vector<Move> GetPossibleDragMoves() const;
         std::vector<Move> GetPossibleQueenBeeDragMoves() const;
         std::vector<Move> GetPossibleSpiderDragMoves() const;
         std::vector<Move> GetPossibleBeetleDragMoves() const;
@@ -37,5 +38,8 @@ namespace Hive {
         std::vector<Move> GetPossibleAntDragMoves() const;
 
         std::vector<AxialPosition> GetBorderPositionsOfHive() const;
+
+    private:
+        std::vector<AxialPosition> GetDeployablePositions() const;
     };
 }  // namespace Hive
