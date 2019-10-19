@@ -11,6 +11,7 @@ namespace Hive {
         AxialPosition(int x, int y);
 
         bool operator==(const AxialPosition &axialPosition) const;
+        bool operator!=(const AxialPosition &axialPosition) const;
 
         int GetHashValue() const;
         int GetDistanceTo(const AxialPosition& otherPosition) const;

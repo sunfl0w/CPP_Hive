@@ -42,6 +42,7 @@ namespace Hive {
         Piece& GetPiece(int x, int y, int layer) const;
 
         std::vector<PieceStack> GetNeighbouringPieceStacks(const AxialPosition& position) const;
+
         std::vector<AxialPosition> GetEmptyNeighbouringAxialPositions(const AxialPosition& position) const;
         std::vector<AxialPosition> GetEmptySlideableNeighbouringAxialPositions(const AxialPosition& position) const;
 

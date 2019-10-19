@@ -99,8 +99,8 @@ namespace Hive {
         for (int i = 0; i < neighbouringPositions.size(); i++) {
             std::vector<PieceStack> neighbouringStacksOfNeighbour = GetNeighbouringPieceStacks(neighbouringPositions[i]);
             bool isNeighbourAccesible = false;
-            for(PieceStack neighbouringStackOfNeighbour : neighbouringStacksOfNeighbour) {
-                if(neighbouringStackOfNeighbour.GetPieceOnTop().GetPieceType() != PieceType::Obstacle && neighbouringStackOfNeighbour.GetAxialPosition() != position) {
+            for (PieceStack neighbouringStackOfNeighbour : neighbouringStacksOfNeighbour) {
+                if (neighbouringStackOfNeighbour.GetPieceOnTop().GetPieceType() != PieceType::Obstacle && neighbouringStackOfNeighbour.GetAxialPosition() != position) {
                     isNeighbourAccesible = true;
                 }
             }
@@ -178,7 +178,7 @@ namespace Hive {
                         break;
                     }
                 }
-                if(!isSlidePathAvailableForPosition) {
+                if (!isSlidePathAvailableForPosition) {
                     slidePaths.push_back(SlidePath(emptySlideableNeighbouringPosition, *this));
                 }
             }
@@ -187,7 +187,7 @@ namespace Hive {
     }
 
     bool Board::CanSlide(const AxialPosition& slideStartPos, const AxialPosition& slideEndPos) const {
-        if(!slideStartPos.IsNeighbourTo(slideEndPos)) {
+        if (!slideStartPos.IsNeighbourTo(slideEndPos)) {
             return false;
         }
 
@@ -208,7 +208,21 @@ namespace Hive {
         if (slideBlockedFromLeft && slideBlockedFromRight) {
             return false;
         } else {
-            return true;
+            std::vector<PieceStack> neighbouringPieceStacksAfterSlide = GetNeighbouringPieceStacks(slideEndPos);
+            bool startAndEndHaveCommonNeighbour = false;
+
+            for (PieceStack neighbouringPieceStack : neighbouringPieceStacks) {
+                for (PieceStack neighbouringPieceStackAfterSlide : neighbouringPieceStacksAfterSlide) {
+                    if (neighbouringPieceStack.GetAxialPosition() == neighbouringPieceStackAfterSlide.GetAxialPosition()) {
+                        startAndEndHaveCommonNeighbour = true;
+                    }
+                }
+            }
+            if (startAndEndHaveCommonNeighbour) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 

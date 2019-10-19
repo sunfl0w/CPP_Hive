@@ -22,6 +22,14 @@ namespace Hive {
         }
     }
 
+    bool AxialPosition::operator!=(const AxialPosition &axialPosition) const {
+        if (x != axialPosition.x || y != axialPosition.y) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     int AxialPosition::GetHashValue() const {
         //int hashValue = (x * 31) + (y * 37);
         int hashValue = (x + 5) << 16 | ((y + 5)&0xFFFF);

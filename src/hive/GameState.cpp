@@ -74,56 +74,81 @@ namespace Hive {
 
     std::vector<Move> GameState::GetPossibleDragMoves() const {
         std::vector<Move> possibleDragMoves;
-        std::vector<SlidePath> slidePaths = board.GetSlidePaths();
 
-        std::vector<Move> possibleQueenBeeDragMoves = GetPossibleQueenBeeDragMoves(slidePaths);
+        std::vector<Move> possibleQueenBeeDragMoves = GetPossibleQueenBeeDragMoves();
         possibleDragMoves.insert(possibleDragMoves.end(), possibleQueenBeeDragMoves.begin(), possibleQueenBeeDragMoves.end());
     }
 
-    std::vector<Move> GameState::GetPossibleQueenBeeDragMoves(const std::vector<SlidePath>& slidePaths) const {
+    std::vector<Move> GameState::GetPossibleQueenBeeDragMoves() const {
         std::vector<Move> possibleQueenBeeDragMoves;
-        PieceStack moveableQueenBeeOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayer.GetPlayerColor(), PieceType::QueenBee)[0];
-        if (board.IsHiveCoherentIfPieceMovesFromPosition(moveableQueenBeeOfCurrentPlayer.GetAxialPosition())) {
-            std::vector<SlidePath> availableSlidePaths;
-            for (SlidePath slidePath : slidePaths) {
-                if (slidePath.IsValidForPiece(moveableQueenBeeOfCurrentPlayer.GetAxialPosition(), board)) {
-                    availableSlidePaths.push_back(slidePath);
-                }
-            }
+        PieceStack queenBeeOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayer.GetPlayerColor(), PieceType::QueenBee)[0];
+        std::vector<AxialPosition> emptyNeighbouringPositions = board.GetEmptyNeighbouringAxialPositions(queenBeeOfCurrentPlayer.GetAxialPosition());
 
-            for (SlidePath slidePath : availableSlidePaths) {
-                for (AxialPosition slidePathPosition : slidePath.GetContainingPositions()) {
-                    if (slidePathPosition.IsNeighbourTo(moveableQueenBeeOfCurrentPlayer.GetAxialPosition())) {
-                        possibleQueenBeeDragMoves.push_back(Move(MoveType::DragMove, moveableQueenBeeOfCurrentPlayer.GetAxialPosition(), slidePathPosition));
-                    }
-                }
+        for (AxialPosition emptyNeighbouringPosition : emptyNeighbouringPositions) {
+            if (board.CanSlide(queenBeeOfCurrentPlayer.GetAxialPosition(), emptyNeighbouringPosition)) {
+                possibleQueenBeeDragMoves.push_back(Move(MoveType::DragMove, queenBeeOfCurrentPlayer.GetAxialPosition(), emptyNeighbouringPosition));
             }
         }
-
         return possibleQueenBeeDragMoves;
     }
 
-    std::vector<Move> GameState::GetPossibleSpiderDragMoves(const std::vector<SlidePath>& slidePaths) const {
+    std::vector<Move> GameState::GetPossibleSpiderDragMoves() const {
         std::vector<Move> possibleSpiderDragMoves;
-        std::vector<PieceStack> spidersOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayer.GetPlayerColor(), PieceType::QueenBee);
+        std::vector<PieceStack> spidersOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayer.GetPlayerColor(), PieceType::Spider);
         for (PieceStack spider : spidersOfCurrentPlayer) {
-            if (board.IsHiveCoherentIfPieceMovesFromPosition(spider.GetAxialPosition())) {
-                std::vector<SlidePath> availableSlidePaths;
-                for (SlidePath slidePath : slidePaths) {
-                    if (slidePath.IsValidForPiece(spider.GetAxialPosition(), board)) {
-                        availableSlidePaths.push_back(slidePath);
-                    }
-                }
-                
-                for (SlidePath slidePath : availableSlidePaths) {
-                    for (AxialPosition slidePathPosition : slidePath.GetContainingPositions()) {
-                        if (slidePathPosition.IsNeighbourTo(spider.GetAxialPosition())) {
-                            possibleSpiderDragMoves.push_back(Move(MoveType::DragMove, spider.GetAxialPosition(), slidePathPosition));
+            SlidePathNode startNode = SlidePathNode(spider.GetAxialPosition());
+            std::vector<SlidePathNode*> currentSlidePathNodes;
+            currentSlidePathNodes.push_back(&startNode);
+            for (int i = 0; i < 3; i++) {
+                std::vector<SlidePathNode*> newSlidePathNodes;
+                for (SlidePathNode* currentSlidePathNode : currentSlidePathNodes) {
+                    std::vector<AxialPosition> emptyNeighbouringPositions = board.GetEmptyNeighbouringAxialPositions(currentSlidePathNode->GetPosition());
+                    for (AxialPosition emptyNeighbouringPosition : emptyNeighbouringPositions) {
+                        if (board.CanSlide(currentSlidePathNode->GetPosition(), emptyNeighbouringPosition)) {
+                            if (i >= 1) {
+                                if (currentSlidePathNode->GetParent()->GetPosition() != emptyNeighbouringPosition) {
+                                    newSlidePathNodes.push_back(&SlidePathNode(emptyNeighbouringPosition));
+                                }
+                            } else {
+                                newSlidePathNodes.push_back(&SlidePathNode(emptyNeighbouringPosition));
+                            }
                         }
                     }
                 }
+                currentSlidePathNodes = newSlidePathNodes;
+            }
+            for (SlidePathNode* validEndNodes : currentSlidePathNodes) {
+                possibleSpiderDragMoves.push_back(Move(MoveType::DragMove, spider.GetAxialPosition(), validEndNodes->GetPosition()));
             }
         }
         return possibleSpiderDragMoves;
     }
+
+    std::vector<Move> GameState::GetPossibleBeetleDragMoves() const {
+        std::vector<Move> possibleBeetleDragMoves;
+        std::vector<PieceStack> beetlesOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayer.GetPlayerColor(), PieceType::Beetle);
+        for (PieceStack beetle : beetlesOfCurrentPlayer) {
+            std::vector<AxialPosition> neighbouringPositions = beetle.GetAxialPosition().GetNeighbouringPositions();
+
+            for (AxialPosition neighbouringPosition : neighbouringPositions) {
+                if (board.PieceStackExists(neighbouringPosition)) {
+                    possibleBeetleDragMoves.push_back(Move(MoveType::DragMove, beetle.GetAxialPosition(), neighbouringPosition));
+                } else {
+                    if (board.CanSlide(beetle.GetAxialPosition(), neighbouringPosition)) {
+                        possibleBeetleDragMoves.push_back(Move(MoveType::DragMove, beetle.GetAxialPosition(), neighbouringPosition));
+                    }
+                }
+            }
+        }
+        return possibleBeetleDragMoves;
+    }
+
+    std::vector<Move> GameState::GetPossibleGrasshopperDragMoves() const {
+        std::vector<Move> possibleBeetleDragMoves;
+        std::vector<PieceStack> grasshoppersOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayer.GetPlayerColor(), PieceType::Beetle);
+        for (PieceStack grasshopper : grasshoppersOfCurrentPlayer) {
+
+        }
+    }
+
 }  // namespace Hive
