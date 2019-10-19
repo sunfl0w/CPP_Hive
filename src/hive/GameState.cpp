@@ -9,11 +9,15 @@ namespace Hive {
         turn = gameState.turn;
     }
 
-    const Player& GameState::GetCurrentPlayer() const {
+    Board& GameState::GetBoard() {
+        return board;
+    }
+
+    Player& GameState::GetCurrentPlayer() {
         return currentPlayer;
     }
 
-    const Player& GameState::GetPausedPlayer() const {
+    Player& GameState::GetPausedPlayer() {
         return pausedPlayer;
     }
 

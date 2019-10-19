@@ -21,8 +21,10 @@ namespace Hive {
         GameState();
         GameState(GameState& gameState);
 
-        const Player& GetCurrentPlayer() const;
-        const Player& GetPausedPlayer() const;
+        Board& GetBoard();
+
+        Player& GetCurrentPlayer();
+        Player& GetPausedPlayer();
 
         std::vector<Move> GetPossibleMoves() const;
         bool IsMoveValid(const Move& move) const;
