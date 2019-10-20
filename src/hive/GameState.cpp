@@ -219,9 +219,13 @@ namespace Hive {
             while (!slideEndPositions.empty()) {
                 for (AxialPosition position : slideEndPositions) {
                     possibleAntDragMoves.push_back(Move(MoveType::DragMove, ant.GetAxialPosition(), position, PieceType::Ant));
+                    std::vector<AxialPosition> newEndPositions = board.GetEmptySlideableNeighbouringAxialPositionsExcept(position, searchedPositions);
+                    slideEndPositions.insert(slideEndPositions.end(), newEndPositions.begin(), newEndPositions.end());
+                    searchedPositions.push_back(position);
+                    slideEndPositions.erase(std::find(slideEndPositions.begin(), slideEndPositions.end(), position));
                 }
-                searchedPositions.insert(searchedPositions.end(), slideEndPositions.begin(), slideEndPositions.end());
-                slideEndPositions = board.GetEmptySlideableNeighbouringAxialPositionsExcept(ant.GetAxialPosition(), searchedPositions);
+                //searchedPositions.insert(searchedPositions.end(), slideEndPositions.begin(), slideEndPositions.end());
+                //slideEndPositions = board.GetEmptySlideableNeighbouringAxialPositionsExcept(ant.GetAxialPosition(), searchedPositions);
             }
         }
         return possibleAntDragMoves;

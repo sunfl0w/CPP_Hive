@@ -45,7 +45,7 @@ namespace Hive {
     std::vector<PieceStack> Board::GetPieceStacksWithoutObstacles() const {
         std::vector<PieceStack> stacks;
         for (std::pair<int, PieceStack> stackPair : pieceStacks) {
-            if(stackPair.second.GetPieceOnTop().GetType() != PieceType::Obstacle) {
+            if (stackPair.second.GetPieceOnTop().GetType() != PieceType::Obstacle) {
                 stacks.push_back(stackPair.second);
             }
         }
@@ -131,13 +131,13 @@ namespace Hive {
 
     std::vector<AxialPosition> Board::GetEmptySlideableNeighbouringAxialPositionsExcept(const AxialPosition& position, const std::vector<AxialPosition>& ignoredPositions) const {
         std::vector<AxialPosition> emptyNeighbouringSlideablePosition = GetEmptySlideableNeighbouringAxialPositions(position);
-        for (int i = 0; i < emptyNeighbouringSlideablePosition.size(); i++) {
-            for (AxialPosition ignoredPosition : ignoredPositions) {
-                if (emptyNeighbouringSlideablePosition[i] == ignoredPosition) {
-                    emptyNeighbouringSlideablePosition.erase(emptyNeighbouringSlideablePosition.begin() + i);
-                }
-            }
+        for (AxialPosition ignoredPosition : ignoredPositions) {
+            auto iterator = std::find(emptyNeighbouringSlideablePosition.begin(), emptyNeighbouringSlideablePosition.end(), ignoredPosition);
+            if(iterator != emptyNeighbouringSlideablePosition.end()) {
+                emptyNeighbouringSlideablePosition.erase(iterator);
+            }   
         }
+
         return emptyNeighbouringSlideablePosition;
     }
 
@@ -292,7 +292,7 @@ namespace Hive {
         }
 
         PieceStack startStack = pieceStacks[0];
-        if(startStack.GetAxialPosition() == ignorePosition) {
+        if (startStack.GetAxialPosition() == ignorePosition) {
             startStack = pieceStacks[1];
         }
         std::deque<PieceStack> pieceStacksToSearch;
