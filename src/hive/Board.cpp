@@ -4,6 +4,7 @@ namespace Hive {
     //Public Functions
 
     Board::Board() {
+        pieceStacks = std::unordered_map<int, PieceStack>();
         PlaceObstacles();
     }
 
@@ -23,17 +24,17 @@ namespace Hive {
         return PieceStackExists(position);
     }
 
-    PieceStack& Board::GetPieceStack(const AxialPosition& position) const {
+    PieceStack Board::GetPieceStack(const AxialPosition& position) const {
         PieceStack pieceStack = pieceStacks.at(position.GetHashValue());
         return pieceStack;
     }
 
-    PieceStack& Board::GetPieceStack(int x, int y) const {
+    PieceStack Board::GetPieceStack(int x, int y) const {
         AxialPosition position(x, y);
         return GetPieceStack(position);
     }
 
-    std::vector<PieceStack>& Board::GetPieceStacks() const {
+    std::vector<PieceStack> Board::GetPieceStacks() const {
         std::vector<PieceStack> stacks;
         for (std::pair<int, PieceStack> stackPair : pieceStacks) {
             stacks.push_back(stackPair.second);
@@ -41,7 +42,7 @@ namespace Hive {
         return stacks;
     }
 
-    std::vector<PieceStack>& Board::GetPieceStacksByColor(Color color) const {
+    std::vector<PieceStack> Board::GetPieceStacksByColor(Color color) const {
         std::vector<PieceStack> stacks;
         for (std::pair<int, PieceStack> stackPair : pieceStacks) {
             if (stackPair.second.GetPieceOnTop().GetColor() == color) {
@@ -51,7 +52,7 @@ namespace Hive {
         return stacks;
     }
 
-    std::vector<PieceStack>& Board::GetPieceStacksByColorAndType(Color color, PieceType pieceType) const {
+    std::vector<PieceStack> Board::GetPieceStacksByColorAndType(Color color, PieceType pieceType) const {
         std::vector<PieceStack> stacks;
         for (std::pair<int, PieceStack> stackPair : pieceStacks) {
             if (stackPair.second.GetPieceOnTop().GetColor() == color && stackPair.second.GetPieceOnTop().GetType() == pieceType) {
@@ -61,12 +62,12 @@ namespace Hive {
         return stacks;
     }
 
-    Piece& Board::GetPiece(const AxialPosition& position, int layer) const {
+    Piece Board::GetPiece(const AxialPosition& position, int layer) const {
         //For unordered_map
         return GetPieceStack(position).GetPieceByLayer(layer);
     }
 
-    Piece& Board::GetPiece(int x, int y, int layer) const {
+    Piece Board::GetPiece(int x, int y, int layer) const {
         AxialPosition position(x, y);
         return GetPiece(position, layer);
     }
@@ -77,7 +78,9 @@ namespace Hive {
         std::vector<AxialPosition> neighbouringPositions = position.GetNeighbouringPositions();
 
         for (AxialPosition neighbouringPosition : neighbouringPositions) {
-            neighbouringPieceStacks.push_back(GetPieceStack(neighbouringPosition));
+            if (PieceStackExists(neighbouringPosition)) {
+                neighbouringPieceStacks.push_back(GetPieceStack(neighbouringPosition));
+            }
         }
         return neighbouringPieceStacks;
     }

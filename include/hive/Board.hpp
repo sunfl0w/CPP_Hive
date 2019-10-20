@@ -20,7 +20,7 @@ namespace Hive {
         std::unordered_map<int, PieceStack> pieceStacks;
 
     public:
-        std::vector<AxialPosition> hiveBorderPositions;
+        //std::vector<AxialPosition> hiveBorderPositions;
         //std::vector<Piece::GamingPiece> pieces;
 
     public:
@@ -30,15 +30,15 @@ namespace Hive {
         bool PieceStackExists(const AxialPosition& coordinate) const;
         bool PieceStackExists(int x, int y) const;
 
-        PieceStack& GetPieceStack(const AxialPosition& position) const;
-        PieceStack& GetPieceStack(int x, int y) const;
+        PieceStack GetPieceStack(const AxialPosition& position) const;
+        PieceStack GetPieceStack(int x, int y) const;
 
-        std::vector<PieceStack>& GetPieceStacks() const;
-        std::vector<PieceStack>& GetPieceStacksByColor(Color color) const;
-        std::vector<PieceStack>& GetPieceStacksByColorAndType(Color color, PieceType pieceType) const;
+        std::vector<PieceStack> GetPieceStacks() const;
+        std::vector<PieceStack> GetPieceStacksByColor(Color color) const;
+        std::vector<PieceStack> GetPieceStacksByColorAndType(Color color, PieceType pieceType) const;
 
-        Piece& GetPiece(const AxialPosition& position, int layer) const;
-        Piece& GetPiece(int x, int y, int layer) const;
+        Piece GetPiece(const AxialPosition& position, int layer) const;
+        Piece GetPiece(int x, int y, int layer) const;
 
         std::vector<PieceStack> GetNeighbouringPieceStacks(const AxialPosition& position) const;
 

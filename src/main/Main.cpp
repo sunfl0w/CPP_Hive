@@ -67,7 +67,7 @@ void Test1() {
 
     std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
     int count = 0;
-    while(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count() < 0) {
+    while(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count() < 100) {
         std::vector<Hive::Move> dragMoves = gameState.GetPossibleDragMoves();
         count++;
         std::cout << "Moves calculated: " << dragMoves.size() << "\n";

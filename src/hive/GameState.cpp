@@ -3,6 +3,10 @@
 namespace Hive {
     GameState::GameState() : currentPlayer(Color::Red), pausedPlayer(Color::Blue) {
         turn = 0;
+        board = Board();
+        currentPlayer = Player(Color::Red);
+        pausedPlayer = Player(Color::Blue);
+        performedMoves = std::vector<Move>();
     }
 
     GameState::GameState(GameState& gameState) : board(gameState.board), currentPlayer(gameState.GetCurrentPlayer()), pausedPlayer(gameState.GetPausedPlayer()), performedMoves(gameState.performedMoves) {
@@ -104,12 +108,12 @@ namespace Hive {
 
     std::vector<Move> GameState::GetPossibleQueenBeeDragMoves() const {
         std::vector<Move> possibleQueenBeeDragMoves;
-        PieceStack queenBeeOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayer.GetColor(), PieceType::QueenBee)[0];
-        std::vector<AxialPosition> emptyNeighbouringPositions = board.GetEmptyNeighbouringAxialPositions(queenBeeOfCurrentPlayer.GetAxialPosition());
+        std::vector<PieceStack> queenBeeOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayer.GetColor(), PieceType::QueenBee);
+        std::vector<AxialPosition> emptyNeighbouringPositions = board.GetEmptyNeighbouringAxialPositions(queenBeeOfCurrentPlayer[0].GetAxialPosition());
 
         for (AxialPosition emptyNeighbouringPosition : emptyNeighbouringPositions) {
-            if (board.CanSlide(queenBeeOfCurrentPlayer.GetAxialPosition(), emptyNeighbouringPosition)) {
-                possibleQueenBeeDragMoves.push_back(Move(MoveType::DragMove, queenBeeOfCurrentPlayer.GetAxialPosition(), emptyNeighbouringPosition, PieceType::QueenBee));
+            if (board.CanSlide(queenBeeOfCurrentPlayer[0].GetAxialPosition(), emptyNeighbouringPosition)) {
+                possibleQueenBeeDragMoves.push_back(Move(MoveType::DragMove, queenBeeOfCurrentPlayer[0].GetAxialPosition(), emptyNeighbouringPosition, PieceType::QueenBee));
             }
         }
         return possibleQueenBeeDragMoves;
@@ -183,6 +187,7 @@ namespace Hive {
                 }
             }
         }
+        return possibleGrasshopperDragMoves;
     }
 
     std::vector<Move> GameState::GetPossibleAntDragMoves() const {
@@ -200,6 +205,7 @@ namespace Hive {
                 slideEndPositions = board.GetEmptySlideableNeighbouringAxialPositionsExcept(ant.GetAxialPosition(), searchedPositions);
             }
         }
+        return possibleAntDragMoves;
     }
 
     //Private

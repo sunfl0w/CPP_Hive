@@ -3,6 +3,7 @@
 namespace Hive {
     PieceStack::PieceStack(AxialPosition& position) {
         this->position = position;
+        this->pieces = std::vector<Piece>();
     }
 
     const AxialPosition& PieceStack::GetAxialPosition() const {
