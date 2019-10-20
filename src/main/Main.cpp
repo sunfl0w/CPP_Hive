@@ -65,6 +65,14 @@ void Test1() {
     Hive::AxialPosition pos8 = Hive::AxialPosition(-2, -3);
     gameState.GetBoard().AddPieceOnTop(piece8, pos8);
 
+    Hive::Piece piece9 = Hive::Piece(Hive::PieceType::Obstacle, Hive::Color::Undefined);
+    Hive::AxialPosition pos9 = Hive::AxialPosition(5, -5);
+    gameState.GetBoard().AddPieceOnTop(piece9, pos9);
+
+    Hive::Piece piece10 = Hive::Piece(Hive::PieceType::Obstacle, Hive::Color::Undefined);
+    Hive::AxialPosition pos10 = Hive::AxialPosition(4, 1);
+    gameState.GetBoard().AddPieceOnTop(piece10, pos10);
+
     std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
     int count = 0;
     while(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start).count() < 100) {

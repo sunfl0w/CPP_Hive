@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <random>
 #include <iostream>
+#include <deque>
 
 #include "RandomNumberGenerator.hpp"
 #include "Piece.hpp"
@@ -34,6 +35,7 @@ namespace Hive {
         PieceStack GetPieceStack(int x, int y) const;
 
         std::vector<PieceStack> GetPieceStacks() const;
+        std::vector<PieceStack> GetPieceStacksWithoutObstacles() const;
         std::vector<PieceStack> GetPieceStacksByColor(Color color) const;
         std::vector<PieceStack> GetPieceStacksByColorAndType(Color color, PieceType pieceType) const;
 
@@ -41,6 +43,7 @@ namespace Hive {
         Piece GetPiece(int x, int y, int layer) const;
 
         std::vector<PieceStack> GetNeighbouringPieceStacks(const AxialPosition& position) const;
+        std::vector<PieceStack> GetNeighbouringPieceStacksExceptObstacles(const AxialPosition& position) const;
 
         std::vector<AxialPosition> GetEmptyNeighbouringAxialPositions(const AxialPosition& position) const;
         std::vector<AxialPosition> GetEmptySlideableNeighbouringAxialPositions(const AxialPosition& position) const;

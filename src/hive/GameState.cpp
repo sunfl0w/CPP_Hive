@@ -54,7 +54,7 @@ namespace Hive {
         }
 
         if (possibleMoves.empty()) {
-            possibleMoves.push_back(Move(MoveType::PassMove, AxialPosition(0,0), AxialPosition(0,0), PieceType::Obstacle));
+            possibleMoves.push_back(Move(MoveType::PassMove, AxialPosition(0, 0), AxialPosition(0, 0), PieceType::Obstacle));
         }
 
         return possibleMoves;
@@ -109,6 +109,9 @@ namespace Hive {
     std::vector<Move> GameState::GetPossibleQueenBeeDragMoves() const {
         std::vector<Move> possibleQueenBeeDragMoves;
         std::vector<PieceStack> queenBeeOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayer.GetColor(), PieceType::QueenBee);
+        if (!board.IsHiveCoherentIfPieceMovesFromPosition(queenBeeOfCurrentPlayer[0].GetAxialPosition())) {
+            return possibleQueenBeeDragMoves;
+        }
         std::vector<AxialPosition> emptyNeighbouringPositions = board.GetEmptyNeighbouringAxialPositions(queenBeeOfCurrentPlayer[0].GetAxialPosition());
 
         for (AxialPosition emptyNeighbouringPosition : emptyNeighbouringPositions) {
@@ -123,6 +126,9 @@ namespace Hive {
         std::vector<Move> possibleSpiderDragMoves;
         std::vector<PieceStack> spidersOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayer.GetColor(), PieceType::Spider);
         for (PieceStack spider : spidersOfCurrentPlayer) {
+            if (!board.IsHiveCoherentIfPieceMovesFromPosition(spider.GetAxialPosition())) {
+                continue;
+            }
             SlidePathNode startNode = SlidePathNode(spider.GetAxialPosition());
             std::vector<SlidePathNode> currentSlidePathNodes;
             currentSlidePathNodes.push_back(startNode);
@@ -134,10 +140,14 @@ namespace Hive {
                         if (board.CanSlide(currentSlidePathNode.GetPosition(), emptyNeighbouringPosition)) {
                             if (i >= 1) {
                                 if (currentSlidePathNode.GetParent()->GetPosition() != emptyNeighbouringPosition) {
-                                    newSlidePathNodes.push_back(SlidePathNode(emptyNeighbouringPosition));
+                                    SlidePathNode newNode = SlidePathNode(emptyNeighbouringPosition);
+                                    currentSlidePathNode.AddChildNode(&newNode);
+                                    newSlidePathNodes.push_back(SlidePathNode(newNode));
                                 }
                             } else {
-                                newSlidePathNodes.push_back(SlidePathNode(emptyNeighbouringPosition));
+                                SlidePathNode newNode = SlidePathNode(emptyNeighbouringPosition);
+                                currentSlidePathNode.AddChildNode(&newNode);
+                                newSlidePathNodes.push_back(SlidePathNode(newNode));
                             }
                         }
                     }
@@ -155,6 +165,9 @@ namespace Hive {
         std::vector<Move> possibleBeetleDragMoves;
         std::vector<PieceStack> beetlesOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayer.GetColor(), PieceType::Beetle);
         for (PieceStack beetle : beetlesOfCurrentPlayer) {
+            if (!board.IsHiveCoherentIfPieceMovesFromPosition(beetle.GetAxialPosition())) {
+                continue;
+            }
             std::vector<AxialPosition> neighbouringPositions = beetle.GetAxialPosition().GetNeighbouringPositions();
 
             for (AxialPosition neighbouringPosition : neighbouringPositions) {
@@ -174,6 +187,9 @@ namespace Hive {
         std::vector<Move> possibleGrasshopperDragMoves;
         std::vector<PieceStack> grasshoppersOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayer.GetColor(), PieceType::Grasshopper);
         for (PieceStack grasshopper : grasshoppersOfCurrentPlayer) {
+            if (!board.IsHiveCoherentIfPieceMovesFromPosition(grasshopper.GetAxialPosition())) {
+                continue;
+            }
             std::vector<PieceStack> neighbouringPieceStacks = board.GetNeighbouringPieceStacks(grasshopper.GetAxialPosition());
             for (PieceStack neighbouringPieceStack : neighbouringPieceStacks) {
                 AxialPosition translation = grasshopper.GetAxialPosition().GetTranslationToOtherPosition(neighbouringPieceStack.GetAxialPosition());
@@ -194,6 +210,9 @@ namespace Hive {
         std::vector<Move> possibleAntDragMoves;
         std::vector<PieceStack> antsOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayer.GetColor(), PieceType::Ant);
         for (PieceStack ant : antsOfCurrentPlayer) {
+            if (!board.IsHiveCoherentIfPieceMovesFromPosition(ant.GetAxialPosition())) {
+                continue;
+            }
             std::vector<AxialPosition> searchedPositions;
             std::vector<AxialPosition> slideEndPositions = board.GetEmptySlideableNeighbouringAxialPositionsExcept(ant.GetAxialPosition(), searchedPositions);
 
