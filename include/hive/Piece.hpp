@@ -13,6 +13,7 @@ namespace Hive {
         Piece(PieceType pieceType, Color pieceColor);
 
         const PieceType& GetType() const;
+        void SetType(PieceType pieceType);
         const Color& GetColor() const;
     };
 }  // namespace Hive::Piece

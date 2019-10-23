@@ -25,7 +25,7 @@ namespace Hive {
         return pausedPlayer;
     }
 
-    std::vector<Move> GameState::GetPossibleMoves() const {
+    std::vector<Move> GameState::GetPossibleMoves() {
         std::vector<Move> possibleMoves;
 
         std::vector<PieceStack> pieceStacksOnBoard = board.GetPieceStacks();
@@ -85,7 +85,7 @@ namespace Hive {
         return possibleDeployMoves;
     }
 
-    std::vector<Move> GameState::GetPossibleDragMoves() const {
+    std::vector<Move> GameState::GetPossibleDragMoves() {
         std::vector<Move> possibleDragMoves;
 
         std::vector<Move> possibleQueenBeeDragMoves = GetPossibleQueenBeeDragMoves();
@@ -206,10 +206,11 @@ namespace Hive {
         return possibleGrasshopperDragMoves;
     }
 
-    std::vector<Move> GameState::GetPossibleAntDragMoves() const {
+    std::vector<Move> GameState::GetPossibleAntDragMoves() {
         std::vector<Move> possibleAntDragMoves;
         std::vector<PieceStack> antsOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayer.GetColor(), PieceType::Ant);
         for (PieceStack ant : antsOfCurrentPlayer) {
+            board.GetPieceStackUnsafe(ant.GetAxialPosition()).GetPieceOnTop().SetType(PieceType::Obstacle);
             if (!board.IsHiveCoherentIfPieceMovesFromPosition(ant.GetAxialPosition())) {
                 continue;
             }
@@ -217,16 +218,19 @@ namespace Hive {
             std::vector<AxialPosition> slideEndPositions = board.GetEmptySlideableNeighbouringAxialPositionsExcept(ant.GetAxialPosition(), searchedPositions);
 
             while (!slideEndPositions.empty()) {
+                std::vector<AxialPosition> newSlideEndPositions;
                 for (AxialPosition position : slideEndPositions) {
                     possibleAntDragMoves.push_back(Move(MoveType::DragMove, ant.GetAxialPosition(), position, PieceType::Ant));
                     std::vector<AxialPosition> newEndPositions = board.GetEmptySlideableNeighbouringAxialPositionsExcept(position, searchedPositions);
-                    slideEndPositions.insert(slideEndPositions.end(), newEndPositions.begin(), newEndPositions.end());
+                    newSlideEndPositions.insert(newSlideEndPositions.end(), newEndPositions.begin(), newEndPositions.end());
                     searchedPositions.push_back(position);
-                    slideEndPositions.erase(std::find(slideEndPositions.begin(), slideEndPositions.end(), position));
+                    //slideEndPositions.erase(std::find(slideEndPositions.begin(), slideEndPositions.end(), position));
                 }
+                slideEndPositions = newSlideEndPositions;
                 //searchedPositions.insert(searchedPositions.end(), slideEndPositions.begin(), slideEndPositions.end());
                 //slideEndPositions = board.GetEmptySlideableNeighbouringAxialPositionsExcept(ant.GetAxialPosition(), searchedPositions);
             }
+            ant.GetPieceOnTop().SetType(PieceType::Ant);
         }
         return possibleAntDragMoves;
     }

@@ -8,6 +8,10 @@ namespace Hive {
         //PlaceObstacles();
     }
 
+    Board::Board(const Board& board) {
+        pieceStacks = std::unordered_map<int, PieceStack>(board.pieceStacks);
+    }
+
     bool Board::PieceStackExists(const AxialPosition& position) const {
         //For unordered_map
         int hashValue = position.GetHashValue();
@@ -32,6 +36,10 @@ namespace Hive {
     PieceStack Board::GetPieceStack(int x, int y) const {
         AxialPosition position(x, y);
         return GetPieceStack(position);
+    }
+
+    PieceStack& Board::GetPieceStackUnsafe(const AxialPosition& position) {
+        return pieceStacks.at(position.GetHashValue());
     }
 
     std::vector<PieceStack> Board::GetPieceStacks() const {
@@ -111,7 +119,7 @@ namespace Hive {
     std::vector<AxialPosition> Board::GetEmptyNeighbouringAxialPositions(const AxialPosition& position) const {
         std::vector<AxialPosition> neighbouringPositions;
         neighbouringPositions = position.GetNeighbouringPositions();
-        for (int i = 0; i < neighbouringPositions.size(); i++) {
+         for (int i = neighbouringPositions.size() - 1; i >= 0; i--) {
             if (PieceStackExists(neighbouringPositions[i])) {
                 neighbouringPositions.erase(neighbouringPositions.begin() + i);
             }
@@ -121,7 +129,7 @@ namespace Hive {
 
     std::vector<AxialPosition> Board::GetEmptySlideableNeighbouringAxialPositions(const AxialPosition& position) const {
         std::vector<AxialPosition> emptyNeighbouringPositions = GetEmptyNeighbouringAxialPositions(position);
-        for (int i = 0; i < emptyNeighbouringPositions.size(); i++) {
+        for (int i = emptyNeighbouringPositions.size() - 1; i >= 0; i--) {
             if (!CanSlide(position, emptyNeighbouringPositions[i])) {
                 emptyNeighbouringPositions.erase(emptyNeighbouringPositions.begin() + i);
             }
@@ -196,43 +204,36 @@ namespace Hive {
         }
     }
 
+    std::vector<PieceStack> Board::GetCommonNeighbouringPieceStacks(const AxialPosition& pos1, const AxialPosition& pos2) const {
+
+    }
+
     bool Board::CanSlide(const AxialPosition& slideStartPos, const AxialPosition& slideEndPos) const {
         if (!slideStartPos.IsNeighbourTo(slideEndPos)) {
             return false;
         }
 
-        int slideDirection = GetDirectionOfNeighbouringPositions(slideStartPos, slideEndPos);
-        std::vector<PieceStack> neighbouringPieceStacks = GetNeighbouringPieceStacks(slideStartPos);
+        std::vector<PieceStack> neighbouringPieceStacksAtStart = GetNeighbouringPieceStacks(slideStartPos);
+        std::vector<PieceStack> neighbouringPieceStacksAtEnd = GetNeighbouringPieceStacks(slideEndPos);
 
-        bool slideBlockedFromRight = false;
-        bool slideBlockedFromLeft = false;
-        for (PieceStack neighbouringPieceStack : neighbouringPieceStacks) {
-            int directionToNeighbour = GetDirectionOfNeighbouringPositions(slideStartPos, neighbouringPieceStack.GetAxialPosition());
-            if (directionToNeighbour == slideDirection - 1 || (slideDirection == 0 && directionToNeighbour == 6)) {
-                slideBlockedFromLeft = true;
-            } else if (directionToNeighbour == slideDirection + 1 || (slideDirection == 6 && directionToNeighbour == 0)) {
-                slideBlockedFromRight = true;
+        int commonNeighbourCount = 0;
+        int commonNeighbourCountExcludingObstacles = 0;
+
+        for(PieceStack neighbouringPieceStackAtStart : neighbouringPieceStacksAtStart) {
+            for(PieceStack neighbouringPieceStackAtEnd : neighbouringPieceStacksAtEnd) {
+                if(neighbouringPieceStackAtStart.GetAxialPosition() == neighbouringPieceStackAtEnd.GetAxialPosition() && neighbouringPieceStackAtEnd.GetAxialPosition() != slideStartPos) {
+                    commonNeighbourCount++;
+                    if(neighbouringPieceStackAtStart.GetPieceOnTop().GetType() != PieceType::Obstacle) {
+                        commonNeighbourCountExcludingObstacles++;
+                    } 
+                }
             }
         }
 
-        if (slideBlockedFromLeft && slideBlockedFromRight) {
-            return false;
+        if(commonNeighbourCount < 2 && commonNeighbourCountExcludingObstacles > 0) {
+            return true;
         } else {
-            std::vector<PieceStack> neighbouringPieceStacksAfterSlide = GetNeighbouringPieceStacks(slideEndPos);
-            bool startAndEndHaveCommonHiveNeighbour = false;
-
-            for (PieceStack neighbouringPieceStack : neighbouringPieceStacks) {
-                for (PieceStack neighbouringPieceStackAfterSlide : neighbouringPieceStacksAfterSlide) {
-                    if (neighbouringPieceStack.GetAxialPosition() == neighbouringPieceStackAfterSlide.GetAxialPosition() && neighbouringPieceStack.GetPieceOnTop().GetType() != PieceType::Obstacle) {
-                        startAndEndHaveCommonHiveNeighbour = true;
-                    }
-                }
-            }
-            if (startAndEndHaveCommonHiveNeighbour) {
-                return true;
-            } else {
-                return false;
-            }
+            return false;
         }
     }
 

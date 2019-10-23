@@ -26,6 +26,8 @@ namespace Hive {
 
     public:
         Board();
+        Board(const Board& board);
+
         void PerformMove(Move& move);
 
         bool PieceStackExists(const AxialPosition& coordinate) const;
@@ -33,6 +35,7 @@ namespace Hive {
 
         PieceStack GetPieceStack(const AxialPosition& position) const;
         PieceStack GetPieceStack(int x, int y) const;
+        PieceStack& GetPieceStackUnsafe(const AxialPosition& position);
 
         std::vector<PieceStack> GetPieceStacks() const;
         std::vector<PieceStack> GetPieceStacksWithoutObstacles() const;
@@ -58,6 +61,8 @@ namespace Hive {
         std::vector<AxialPosition> GetEmptyAxialPositionsOnBoard() const;
 
         bool IsHiveCoherentIfPieceMovesFromPosition(const AxialPosition& position) const;
+
+        std::vector<PieceStack> GetCommonNeighbouringPieceStacks(const AxialPosition& pos1, const AxialPosition& pos2) const;
 
         bool CanSlide(const AxialPosition& slideStartPos, const AxialPosition& slideEndPos) const;
 

@@ -26,18 +26,18 @@ namespace Hive {
         Player& GetCurrentPlayer();
         Player& GetPausedPlayer();
 
-        std::vector<Move> GetPossibleMoves() const;
+        std::vector<Move> GetPossibleMoves();
         bool IsMoveValid(const Move& move) const;
 
         std::vector<Move> GetPossibleDeployMoves() const;
         std::vector<Move> GetPossibleQueenBeeDeployMoves() const;
 
-        std::vector<Move> GetPossibleDragMoves() const;
+        std::vector<Move> GetPossibleDragMoves();
         std::vector<Move> GetPossibleQueenBeeDragMoves() const;
         std::vector<Move> GetPossibleSpiderDragMoves() const;
         std::vector<Move> GetPossibleBeetleDragMoves() const;
         std::vector<Move> GetPossibleGrasshopperDragMoves() const;
-        std::vector<Move> GetPossibleAntDragMoves() const;
+        std::vector<Move> GetPossibleAntDragMoves();
 
         std::vector<AxialPosition> GetBorderPositionsOfHive() const;
 
