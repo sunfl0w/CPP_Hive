@@ -72,14 +72,12 @@ namespace Hive {
         neighbouringAxialPositions.push_back(AxialPosition(x - 1, y));
         neighbouringAxialPositions.push_back(AxialPosition(x, y - 1));
 
-        if (IsAtBorderOfBoard()) {
-            for (int i = 0; i < neighbouringAxialPositions.size(); i++) {
-                if (neighbouringAxialPositions[i].x < -5 || neighbouringAxialPositions[i].x > 5 || neighbouringAxialPositions[i].y < -5 || neighbouringAxialPositions[i].y > 5) {
-                    neighbouringAxialPositions.erase(neighbouringAxialPositions.begin() + i);
-                }
+        for (int i = neighbouringAxialPositions.size() - 1; i >= 0; i--) {
+            int z = 0 - neighbouringAxialPositions[i].x - neighbouringAxialPositions[i].y;
+            if (!(std::abs(neighbouringAxialPositions[i].x) + std::abs(neighbouringAxialPositions[i].y) + std::abs(z) <= 10)) {
+                neighbouringAxialPositions.erase(neighbouringAxialPositions.begin() + i);
             }
         }
-
         return neighbouringAxialPositions;
     }
 
