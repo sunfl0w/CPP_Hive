@@ -122,10 +122,11 @@ namespace Hive {
         return possibleQueenBeeDragMoves;
     }
 
-    std::vector<Move> GameState::GetPossibleSpiderDragMoves() const {
+    std::vector<Move> GameState::GetPossibleSpiderDragMoves() {
         std::vector<Move> possibleSpiderDragMoves;
         std::vector<PieceStack> spidersOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayer.GetColor(), PieceType::Spider);
         for (PieceStack spider : spidersOfCurrentPlayer) {
+            board.GetPieceStackUnsafe(spider.GetAxialPosition()).GetPieceOnTop().SetType(PieceType::Obstacle);
             if (!board.IsHiveCoherentIfPieceMovesFromPosition(spider.GetAxialPosition())) {
                 continue;
             }
@@ -135,25 +136,30 @@ namespace Hive {
             for (int i = 0; i < 3; i++) {
                 std::vector<SlidePathNode> newSlidePathNodes;
                 for (SlidePathNode currentSlidePathNode : currentSlidePathNodes) {
-                    std::vector<AxialPosition> emptyNeighbouringPositions = board.GetEmptyNeighbouringAxialPositions(currentSlidePathNode.GetPosition());
+                    std::vector<AxialPosition> emptyNeighbouringPositions = board.GetEmptySlideableNeighbouringAxialPositions(currentSlidePathNode.GetPosition());
                     for (AxialPosition emptyNeighbouringPosition : emptyNeighbouringPositions) {
-                        if (board.CanSlide(currentSlidePathNode.GetPosition(), emptyNeighbouringPosition)) {
-                            if (i >= 1) {
-                                if (currentSlidePathNode.GetParent()->GetPosition() != emptyNeighbouringPosition) {
-                                    SlidePathNode newNode = SlidePathNode(emptyNeighbouringPosition);
-                                    currentSlidePathNode.AddChildNode(&newNode);
-                                    newSlidePathNodes.push_back(SlidePathNode(newNode));
-                                }
-                            } else {
+                        if (i == 2) {
+                            if (currentSlidePathNode.GetParent()->GetPosition() != emptyNeighbouringPosition || currentSlidePathNode.GetParent()->GetParent()->GetPosition() != emptyNeighbouringPosition) {
                                 SlidePathNode newNode = SlidePathNode(emptyNeighbouringPosition);
                                 currentSlidePathNode.AddChildNode(&newNode);
                                 newSlidePathNodes.push_back(SlidePathNode(newNode));
                             }
+                        } else if (i == 1) {
+                            if (currentSlidePathNode.GetParent()->GetPosition() != emptyNeighbouringPosition) {
+                                SlidePathNode newNode = SlidePathNode(emptyNeighbouringPosition);
+                                currentSlidePathNode.AddChildNode(&newNode);
+                                newSlidePathNodes.push_back(SlidePathNode(newNode));
+                            }
+                        } else {
+                            SlidePathNode newNode = SlidePathNode(emptyNeighbouringPosition);
+                            currentSlidePathNode.AddChildNode(&newNode);
+                            newSlidePathNodes.push_back(SlidePathNode(newNode));
                         }
                     }
                 }
                 currentSlidePathNodes = newSlidePathNodes;
             }
+            board.GetPieceStackUnsafe(spider.GetAxialPosition()).GetPieceOnTop().SetType(PieceType::Spider);
             for (SlidePathNode validEndNodes : currentSlidePathNodes) {
                 possibleSpiderDragMoves.push_back(Move(MoveType::DragMove, spider.GetAxialPosition(), validEndNodes.GetPosition(), PieceType::Spider));
             }
@@ -230,7 +236,7 @@ namespace Hive {
                 //searchedPositions.insert(searchedPositions.end(), slideEndPositions.begin(), slideEndPositions.end());
                 //slideEndPositions = board.GetEmptySlideableNeighbouringAxialPositionsExcept(ant.GetAxialPosition(), searchedPositions);
             }
-            ant.GetPieceOnTop().SetType(PieceType::Ant);
+            board.GetPieceStackUnsafe(ant.GetAxialPosition()).GetPieceOnTop().SetType(PieceType::Ant);
         }
         return possibleAntDragMoves;
     }
