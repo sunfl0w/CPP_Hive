@@ -130,38 +130,21 @@ namespace Hive {
             if (!board.IsHiveCoherentIfPieceMovesFromPosition(spider.GetAxialPosition())) {
                 continue;
             }
-            SlidePathNode startNode = SlidePathNode(spider.GetAxialPosition());
-            std::vector<SlidePathNode> currentSlidePathNodes;
-            currentSlidePathNodes.push_back(startNode);
+            std::vector<AxialPosition> searchedPositions = std::vector<AxialPosition>();
+            std::vector<AxialPosition> currentSlidePathEndPositions;
+            currentSlidePathEndPositions.push_back(spider.GetAxialPosition());
             for (int i = 0; i < 3; i++) {
-                std::vector<SlidePathNode> newSlidePathNodes;
-                for (SlidePathNode currentSlidePathNode : currentSlidePathNodes) {
-                    std::vector<AxialPosition> emptyNeighbouringPositions = board.GetEmptySlideableNeighbouringAxialPositions(currentSlidePathNode.GetPosition());
-                    for (AxialPosition emptyNeighbouringPosition : emptyNeighbouringPositions) {
-                        if (i == 2) {
-                            if (currentSlidePathNode.GetParent()->GetPosition() != emptyNeighbouringPosition || currentSlidePathNode.GetParent()->GetParent()->GetPosition() != emptyNeighbouringPosition) {
-                                SlidePathNode newNode = SlidePathNode(emptyNeighbouringPosition);
-                                currentSlidePathNode.AddChildNode(&newNode);
-                                newSlidePathNodes.push_back(SlidePathNode(newNode));
-                            }
-                        } else if (i == 1) {
-                            if (currentSlidePathNode.GetParent()->GetPosition() != emptyNeighbouringPosition) {
-                                SlidePathNode newNode = SlidePathNode(emptyNeighbouringPosition);
-                                currentSlidePathNode.AddChildNode(&newNode);
-                                newSlidePathNodes.push_back(SlidePathNode(newNode));
-                            }
-                        } else {
-                            SlidePathNode newNode = SlidePathNode(emptyNeighbouringPosition);
-                            currentSlidePathNode.AddChildNode(&newNode);
-                            newSlidePathNodes.push_back(SlidePathNode(newNode));
-                        }
-                    }
+                std::vector<AxialPosition> newSlidePathEndPositions;
+                for (AxialPosition currentSlidePathEndPosition : currentSlidePathEndPositions) {
+                    std::vector<AxialPosition> emptyNeighbouringPositions = board.GetEmptySlideableNeighbouringAxialPositionsExcept(currentSlidePathEndPosition, searchedPositions);
+                    newSlidePathEndPositions.insert(newSlidePathEndPositions.end(), emptyNeighbouringPositions.begin(), emptyNeighbouringPositions.end());
                 }
-                currentSlidePathNodes = newSlidePathNodes;
+                searchedPositions.insert(searchedPositions.end(), currentSlidePathEndPositions.begin(), currentSlidePathEndPositions.end());
+                currentSlidePathEndPositions = newSlidePathEndPositions;
             }
             board.GetPieceStackUnsafe(spider.GetAxialPosition()).GetPieceOnTop().SetType(PieceType::Spider);
-            for (SlidePathNode validEndNodes : currentSlidePathNodes) {
-                possibleSpiderDragMoves.push_back(Move(MoveType::DragMove, spider.GetAxialPosition(), validEndNodes.GetPosition(), PieceType::Spider));
+            for (AxialPosition validEndPosition : currentSlidePathEndPositions) {
+                possibleSpiderDragMoves.push_back(Move(MoveType::DragMove, spider.GetAxialPosition(), validEndPosition, PieceType::Spider));
             }
         }
         return possibleSpiderDragMoves;
