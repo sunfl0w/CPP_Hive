@@ -7,6 +7,11 @@ set(sources ${sources}
     src/hive/PieceStack.cpp
     src/hive/Player.cpp
     src/hive/SlidePathNode.cpp
-    src/main/Main.cpp
+    src/starter/Starter.cpp
     src/util/RandomNumberGenerator.cpp
+    src/pugiXML/pugixml.cpp
+    src/communication/SC_Message.cpp
+    src/communication/SC_MessageHandler.cpp
+    src/client/HiveClient.cpp
+    src/client/TCP_Client.cpp
 )

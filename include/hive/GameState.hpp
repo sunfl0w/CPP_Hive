@@ -27,7 +27,7 @@ namespace Hive {
         Player& GetPausedPlayer();
 
         std::vector<Move> GetPossibleMoves();
-        bool IsMoveValid(const Move& move) const;
+        void PerformMove(const Move& move);
 
         std::vector<Move> GetPossibleDeployMoves() const;
         std::vector<Move> GetPossibleQueenBeeDeployMoves() const;

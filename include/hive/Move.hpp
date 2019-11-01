@@ -13,10 +13,11 @@ namespace Hive {
         PieceType movedPieceType;
 
     public:
-        Move(MoveType moveType, const AxialPosition &startPosition, const AxialPosition &destinationPosition, PieceType movedPieceType);
+        Move(const MoveType &moveType, const AxialPosition &startPosition, const AxialPosition &destinationPosition, const PieceType &movedPieceType);
 
-        MoveType GetMoveType();
-        const AxialPosition& GetStartPosition();
-        const AxialPosition& GetDestinationPosition();
+        MoveType GetMoveType() const;
+        PieceType GetMovedPieceType() const;
+        AxialPosition GetStartPosition() const;
+        AxialPosition GetDestinationPosition() const;
     };
 }  // namespace Hive::Move

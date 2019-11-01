@@ -60,7 +60,17 @@ namespace Hive {
         return possibleMoves;
     }
 
-    bool GameState::IsMoveValid(const Move& move) const {
+    void GameState::PerformMove(const Move& move) {
+        if(move.GetMoveType() == MoveType::PassMove) {
+            turn++;
+        } else if(move.GetMoveType() == MoveType::DeployMove) {
+            board.AddPieceOnTop(Piece(move.GetMovedPieceType(), currentPlayer.GetColor()), move.GetDestinationPosition());
+            turn++;
+        } else if(move.GetMoveType() == MoveType::DragMove) {
+            board.RemoveUpmostPiece(move.GetStartPosition());
+            board.AddPieceOnTop(Piece(move.GetMovedPieceType(), currentPlayer.GetColor()), move.GetDestinationPosition());
+            turn++;
+        }
     }
 
     //Private

@@ -28,8 +28,6 @@ namespace Hive {
         Board();
         Board(const Board& board);
 
-        void PerformMove(Move& move);
-
         bool PieceStackExists(const AxialPosition& coordinate) const;
         bool PieceStackExists(int x, int y) const;
 
@@ -52,8 +50,8 @@ namespace Hive {
         std::vector<AxialPosition> GetEmptySlideableNeighbouringAxialPositions(const AxialPosition& position) const;
         std::vector<AxialPosition> GetEmptySlideableNeighbouringAxialPositionsExcept(const AxialPosition& position, const std::vector<AxialPosition>& ignoredPositions) const;
 
-        void AddPieceOnTop(Piece& piece, AxialPosition& position);
-        void RemoveUpmostPiece(AxialPosition& position);
+        void AddPieceOnTop(const Piece& piece, const AxialPosition& position);
+        void RemoveUpmostPiece(const AxialPosition& position);
 
         bool IsAxialPositionAtBorderOfBoard(AxialPosition& position) const;
         bool IsAxialPositionOnBoard(AxialPosition& position) const;

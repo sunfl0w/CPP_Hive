@@ -1,7 +1,7 @@
 #include "PieceStack.hpp"
 
 namespace Hive {
-    PieceStack::PieceStack(AxialPosition& position) {
+    PieceStack::PieceStack(const AxialPosition& position) {
         this->position = position;
         this->pieces = std::vector<Piece>();
     }
@@ -10,7 +10,7 @@ namespace Hive {
         return position;
     }
 
-    void PieceStack::AddPieceOnTop(Piece& piece) {
+    void PieceStack::AddPieceOnTop(const Piece& piece) {
         pieces.push_back(piece);
     }
 

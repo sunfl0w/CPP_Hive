@@ -149,7 +149,7 @@ namespace Hive {
         return emptyNeighbouringSlideablePosition;
     }
 
-    void Board::AddPieceOnTop(Piece& piece, AxialPosition& position) {
+    void Board::AddPieceOnTop(const Piece& piece, const AxialPosition& position) {
         if (PieceStackExists(position)) {
             GetPieceStack(position).AddPieceOnTop(piece);
         } else {
@@ -159,7 +159,7 @@ namespace Hive {
         }
     }
 
-    void Board::RemoveUpmostPiece(AxialPosition& position) {
+    void Board::RemoveUpmostPiece(const AxialPosition& position) {
         GetPieceStack(position).RemovePieceOnTop();
     }
 

@@ -7,7 +7,7 @@ namespace Hive {
         InitializeUndeployedPieces();
     }
 
-    const Color& Player::GetColor() const {
+    Color Player::GetColor() const {
         return color;
     }
 

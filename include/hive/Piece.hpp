@@ -10,10 +10,10 @@ namespace Hive {
         Color color;
 
     public:
-        Piece(PieceType pieceType, Color pieceColor);
+        Piece(const PieceType& pieceType, const Color& pieceColor);
 
-        const PieceType& GetType() const;
+        PieceType GetType() const;
         void SetType(PieceType pieceType);
-        const Color& GetColor() const;
+        Color GetColor() const;
     };
 }  // namespace Hive::Piece

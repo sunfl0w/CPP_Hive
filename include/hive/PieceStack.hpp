@@ -11,10 +11,10 @@ namespace Hive {
         std::vector<Piece> pieces;
         AxialPosition position;
     public:
-        PieceStack(AxialPosition& position);
+        PieceStack(const AxialPosition& position);
 
         const AxialPosition& GetAxialPosition() const;
-        void AddPieceOnTop(Piece& piece);
+        void AddPieceOnTop(const Piece& piece);
         void RemovePieceOnTop();
         Piece& GetPieceByLayer(int layer);
         Piece& GetPieceOnTop();

@@ -1,12 +1,12 @@
 #include "Piece.hpp"
 
 namespace Hive {
-    Piece::Piece(PieceType type, Color color) {
+    Piece::Piece(const PieceType& type, const Color& color) {
         this->type = type;
         this->color = color;
     }
 
-    const PieceType& Piece::GetType() const {
+    PieceType Piece::GetType() const {
         return type;
     }
 
@@ -14,7 +14,7 @@ namespace Hive {
         type = pieceType;
     }
     
-    const Color& Piece::GetColor() const {
+    Color Piece::GetColor() const {
         return color;
     }
 }

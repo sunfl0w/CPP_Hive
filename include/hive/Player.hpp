@@ -14,7 +14,7 @@ namespace Hive {
     public:
         Player(Color color);
 
-        const Color& GetColor() const;
+        Color GetColor() const;
 
         const std::vector<Piece>& GetUndeployedPieces() const;
 

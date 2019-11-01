@@ -1,0 +1,19 @@
+#pragma once
+
+namespace Communication {
+    enum class SC_MessageType
+    {
+        Protocol,
+        ProtocolEnd,
+        Welcome,
+        JoinRequest,
+        JoinRequestPrepared,
+        Joined,
+        GameState,
+        Move,
+        MoveRequest,
+        Left,
+        Result,
+        Error,
+    };
+}
