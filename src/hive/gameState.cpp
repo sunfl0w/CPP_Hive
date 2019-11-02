@@ -1,15 +1,13 @@
-#include "GameState.hpp"
+#include "gameState.hpp"
 
 namespace Hive {
-    GameState::GameState() : currentPlayer(Color::Red), pausedPlayer(Color::Blue) {
+    GameState::GameState() {
         turn = 0;
-        board = Board();
-        currentPlayer = Player(Color::Red);
-        pausedPlayer = Player(Color::Blue);
-        performedMoves = std::vector<Move>();
+        board = std::unique_ptr<Socha::AbstractBoard>(new Board());
+        performedMoves = std::vector<std::unique_ptr<Socha::AbstractMove>>();
     }
 
-    GameState::GameState(GameState& gameState) : board(gameState.board), currentPlayer(gameState.GetCurrentPlayer()), pausedPlayer(gameState.GetPausedPlayer()), performedMoves(gameState.performedMoves) {
+    GameState::GameState(GameState& gameState) : board (gameState.board), currentPlayer(gameState.GetCurrentPlayer()), pausedPlayer(gameState.GetPausedPlayer()), performedMoves(gameState.performedMoves) {
         turn = gameState.turn;
     }
 

@@ -5,17 +5,11 @@
 
 #include "Move.hpp"
 #include "Player.hpp"
-#include "Board.hpp"
+#include "board.hpp"
 #include "SlidePathNode.hpp"
 
 namespace Hive {
     class GameState {
-    private:
-        int turn;
-        Board board;
-        Player currentPlayer;
-        Player pausedPlayer;
-        std::vector<Move> performedMoves;
 
     public:
         GameState();

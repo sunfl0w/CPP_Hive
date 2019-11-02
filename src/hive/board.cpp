@@ -1,4 +1,4 @@
-#include "Board.hpp"
+#include "board.hpp"
 
 namespace Hive {
     //Public Functions
