@@ -2,12 +2,12 @@
 
 #include <algorithm>
 #include <iostream>
-#include <pugixml.hpp>
 #include <string>
 #include <vector>
+#include <pugixml.hpp>
 
 #include "Color.hpp"
-#include "GameState.hpp"
+#include "gameState.hpp"
 #include "Move.hpp"
 #include "SC_Message.hpp"
 #include "XmlStringWriter.hpp"

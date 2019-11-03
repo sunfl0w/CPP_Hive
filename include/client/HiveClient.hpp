@@ -13,7 +13,7 @@
 #include "TCP_Client.hpp"
 
 #include "Color.hpp"
-#include "GameState.hpp"
+#include "gameState.hpp"
 #include "Move.hpp"
 
 namespace Client {
