@@ -67,7 +67,7 @@ namespace Hive {
     }
 
     std::vector<AxialPosition> AxialPosition::GetNeighbouringPositions() const {
-        std::vector<AxialPosition> neighbouringAxialPositions;
+        std::vector<AxialPosition> neighbouringAxialPositions = std::vector<AxialPosition>();
 
         neighbouringAxialPositions.push_back(AxialPosition(x + 1, y - 1));
         neighbouringAxialPositions.push_back(AxialPosition(x + 1, y));

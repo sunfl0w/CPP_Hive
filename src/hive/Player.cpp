@@ -1,18 +1,30 @@
 #include "Player.hpp"
 
 namespace Hive {
+    Player::Player() {
+        undeployedPieces = std::vector<Piece>();
+    }
+
     Player::Player(Color color) {
         this->color = color;
-        this->undeployedPieces = std::vector<Piece>();
-        InitializeUndeployedPieces();
+        undeployedPieces = std::vector<Piece>();
+        //InitializeUndeployedPieces();
     }
 
     Color Player::GetColor() const {
         return color;
     }
 
+    void Player::SetColor(Color color) {
+        this->color = color;
+    }
+
     const std::vector<Piece>& Player::GetUndeployedPieces() const {
         return undeployedPieces;
+    }
+
+    void Player::AddUndeployedPiece(Piece piece) {
+        undeployedPieces.push_back(piece);
     }
 
     void Player::InitializeUndeployedPieces() {

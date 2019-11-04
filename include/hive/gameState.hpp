@@ -10,15 +10,27 @@
 
 namespace Hive {
     class GameState {
+    private:
+        unsigned int turn;
+        Board board;
+        Player currentPlayer;
+        Player pausedPlayer;
+        std::vector<Move> performedMoves;
 
     public:
         GameState();
         GameState(GameState& gameState);
 
+        unsigned int GetTurn() const;
+        void SetTurn(unsigned int turn);
+
         Board& GetBoard();
 
+        Player& GetPlayer(Color color);
         Player& GetCurrentPlayer();
+        void SetCurrentPlayer(Player player);
         Player& GetPausedPlayer();
+        void SetPausedPlayer(Player player);
 
         std::vector<Move> GetPossibleMoves();
         void PerformMove(const Move& move);

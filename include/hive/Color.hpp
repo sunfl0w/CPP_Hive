@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string.h>
+#include <string>
 
 namespace Hive {
     enum class Color {
@@ -11,7 +11,7 @@ namespace Hive {
 
     static const std::string colorStrings[] = {"RED", "BLUE", "UNDEFINED"};
 
-    std::string ColorToString(Hive::Color color) {
-        return colorStrings[(int)color];
-    }
+    std::string ColorToString(Hive::Color color);
+
+    Color ColorFromString(std::string colorAsString);
 }

@@ -12,11 +12,14 @@ namespace Hive {
 
         std::vector<Piece> undeployedPieces;
     public:
+        Player();
         Player(Color color);
 
         Color GetColor() const;
+        void SetColor(Color color);
 
         const std::vector<Piece>& GetUndeployedPieces() const;
+        void AddUndeployedPiece(Piece piece);
 
     private:
         void InitializeUndeployedPieces();

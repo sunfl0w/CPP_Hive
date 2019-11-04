@@ -3,24 +3,50 @@
 namespace Hive {
     GameState::GameState() {
         turn = 0;
-        board = std::unique_ptr<Socha::AbstractBoard>(new Board());
-        performedMoves = std::vector<std::unique_ptr<Socha::AbstractMove>>();
+        board = Board();
+        currentPlayer = Player(Color::Red);
+        pausedPlayer = Player(Color::Blue);
+        performedMoves = std::vector<Move>();
     }
 
     GameState::GameState(GameState& gameState) : board (gameState.board), currentPlayer(gameState.GetCurrentPlayer()), pausedPlayer(gameState.GetPausedPlayer()), performedMoves(gameState.performedMoves) {
         turn = gameState.turn;
     }
 
+    unsigned int GameState::GetTurn() const {
+        return turn;
+    }
+
+    void GameState::SetTurn(unsigned int turn) {
+        this->turn = turn;
+    }
+
     Board& GameState::GetBoard() {
         return board;
+    }
+
+    Player& GameState::GetPlayer(Color color) {
+        if(currentPlayer.GetColor() == color) {
+            return currentPlayer;
+        } else if(pausedPlayer.GetColor() == color) {
+            return pausedPlayer;
+        }
     }
 
     Player& GameState::GetCurrentPlayer() {
         return currentPlayer;
     }
 
+    void GameState::SetCurrentPlayer(Player player) {
+        currentPlayer = player;
+    }
+
     Player& GameState::GetPausedPlayer() {
         return pausedPlayer;
+    }
+
+    void GameState::SetPausedPlayer(Player player) {
+        pausedPlayer = player;
     }
 
     std::vector<Move> GameState::GetPossibleMoves() {
@@ -52,7 +78,7 @@ namespace Hive {
         }
 
         if (possibleMoves.empty()) {
-            possibleMoves.push_back(Move(MoveType::PassMove, AxialPosition(0, 0), AxialPosition(0, 0), PieceType::Obstacle));
+            possibleMoves.push_back(Move(MoveType::PassMove, Color::Undefined, AxialPosition(0, 0), AxialPosition(0, 0), PieceType::Obstacle));
         }
 
         return possibleMoves;
@@ -78,7 +104,7 @@ namespace Hive {
         std::vector<AxialPosition> deployablePositions = GetDeployablePositions();
         for (AxialPosition deployablePosition : deployablePositions) {
             for (Piece piece : currentPlayer.GetUndeployedPieces()) {
-                possibleDeployMoves.push_back(Move(MoveType::DeployMove, AxialPosition(0, 0), deployablePosition, piece.GetType()));
+                possibleDeployMoves.push_back(Move(MoveType::DeployMove, currentPlayer.GetColor(), AxialPosition(0, 0), deployablePosition, piece.GetType()));
             }
         }
         return possibleDeployMoves;
@@ -88,7 +114,7 @@ namespace Hive {
         std::vector<Move> possibleDeployMoves;
         std::vector<AxialPosition> deployablePositions = GetDeployablePositions();
         for (AxialPosition deployablePosition : deployablePositions) {
-            possibleDeployMoves.push_back(Move(MoveType::DeployMove, AxialPosition(0, 0), deployablePosition, PieceType::QueenBee));
+            possibleDeployMoves.push_back(Move(MoveType::DeployMove, currentPlayer.GetColor(), AxialPosition(0, 0), deployablePosition, PieceType::QueenBee));
         }
         return possibleDeployMoves;
     }
@@ -124,7 +150,7 @@ namespace Hive {
 
         for (AxialPosition emptyNeighbouringPosition : emptyNeighbouringPositions) {
             if (board.CanSlide(queenBeeOfCurrentPlayer[0].GetAxialPosition(), emptyNeighbouringPosition)) {
-                possibleQueenBeeDragMoves.push_back(Move(MoveType::DragMove, queenBeeOfCurrentPlayer[0].GetAxialPosition(), emptyNeighbouringPosition, PieceType::QueenBee));
+                possibleQueenBeeDragMoves.push_back(Move(MoveType::DragMove, currentPlayer.GetColor(), queenBeeOfCurrentPlayer[0].GetAxialPosition(), emptyNeighbouringPosition, PieceType::QueenBee));
             }
         }
         return possibleQueenBeeDragMoves;
@@ -152,7 +178,7 @@ namespace Hive {
             }
             board.GetPieceStackUnsafe(spider.GetAxialPosition()).GetPieceOnTop().SetType(PieceType::Spider);
             for (AxialPosition validEndPosition : currentSlidePathEndPositions) {
-                possibleSpiderDragMoves.push_back(Move(MoveType::DragMove, spider.GetAxialPosition(), validEndPosition, PieceType::Spider));
+                possibleSpiderDragMoves.push_back(Move(MoveType::DragMove, currentPlayer.GetColor(), spider.GetAxialPosition(), validEndPosition, PieceType::Spider));
             }
         }
         return possibleSpiderDragMoves;
@@ -169,10 +195,10 @@ namespace Hive {
 
             for (AxialPosition neighbouringPosition : neighbouringPositions) {
                 if (board.PieceStackExists(neighbouringPosition)) {
-                    possibleBeetleDragMoves.push_back(Move(MoveType::DragMove, beetle.GetAxialPosition(), neighbouringPosition, PieceType::Beetle));
+                    possibleBeetleDragMoves.push_back(Move(MoveType::DragMove, currentPlayer.GetColor(), beetle.GetAxialPosition(), neighbouringPosition, PieceType::Beetle));
                 } else {
                     if (board.CanSlide(beetle.GetAxialPosition(), neighbouringPosition)) {
-                        possibleBeetleDragMoves.push_back(Move(MoveType::DragMove, beetle.GetAxialPosition(), neighbouringPosition, PieceType::Beetle));
+                        possibleBeetleDragMoves.push_back(Move(MoveType::DragMove, currentPlayer.GetColor(), beetle.GetAxialPosition(), neighbouringPosition, PieceType::Beetle));
                     }
                 }
             }
@@ -194,7 +220,7 @@ namespace Hive {
                 searchPos = searchPos.Add(translation);
                 while (board.IsAxialPositionOnBoard(searchPos)) {
                     if (!board.PieceStackExists(searchPos)) {
-                        possibleGrasshopperDragMoves.push_back(Move(MoveType::DragMove, grasshopper.GetAxialPosition(), searchPos, PieceType::Grasshopper));
+                        possibleGrasshopperDragMoves.push_back(Move(MoveType::DragMove, currentPlayer.GetColor(), grasshopper.GetAxialPosition(), searchPos, PieceType::Grasshopper));
                     }
                     searchPos = searchPos.Add(translation);
                 }
@@ -217,7 +243,7 @@ namespace Hive {
             while (!slideEndPositions.empty()) {
                 std::vector<AxialPosition> newSlideEndPositions;
                 for (AxialPosition position : slideEndPositions) {
-                    possibleAntDragMoves.push_back(Move(MoveType::DragMove, ant.GetAxialPosition(), position, PieceType::Ant));
+                    possibleAntDragMoves.push_back(Move(MoveType::DragMove, currentPlayer.GetColor(), ant.GetAxialPosition(), position, PieceType::Ant));
                     std::vector<AxialPosition> newEndPositions = board.GetEmptySlideableNeighbouringAxialPositionsExcept(position, searchedPositions);
                     newSlideEndPositions.insert(newSlideEndPositions.end(), newEndPositions.begin(), newEndPositions.end());
                     searchedPositions.push_back(position);
@@ -243,7 +269,7 @@ namespace Hive {
                 deployablePositions.push_back(emptyAxialPosition);
             }
         } else if (turn == 1) {
-            std::vector<PieceStack> pieceStacks = board.GetPieceStacksByColorAndType(Color::Red, PieceType::QueenBee);
+            std::vector<PieceStack> pieceStacks = board.GetPieceStacksByColor(Color::Red);
             std::vector<AxialPosition> neighbouringEmptyPositions = board.GetEmptyNeighbouringAxialPositions(pieceStacks[0].GetAxialPosition());
             for (AxialPosition neighbouringEmptyPosition : neighbouringEmptyPositions) {
                 deployablePositions.push_back(neighbouringEmptyPosition);

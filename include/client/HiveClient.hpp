@@ -11,6 +11,7 @@
 #include "SC_MessageHandler.hpp"
 #include "SC_MessageType.hpp"
 #include "TCP_Client.hpp"
+#include "HiveLogic.hpp"
 
 #include "Color.hpp"
 #include "gameState.hpp"
@@ -24,6 +25,7 @@ namespace Client {
         Hive::Color ownPlayerColor;
         Hive::GameState currentGameState;
         bool gameOver = false;
+        AI::HiveLogic *logic = new AI::HiveLogic();
 
         void ClientLoop();
         void Shutdown();

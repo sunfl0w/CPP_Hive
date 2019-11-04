@@ -15,12 +15,12 @@ namespace Client {
             }
             std::vector<Communication::SC_Message> messages = scMessageHandler.SplitInputMessagesIntoValidSC_Messages(inputStream);
             for (Communication::SC_Message message : messages) {
-                //std::cout << message.content << "\n";
+                std::cout << message.content << "\n";
                 //std::cerr << message.content << "\n";
             }
             std::vector<Communication::SC_Message> responses = HandleIncomingMessagesAndGenerateRespones(messages);
             for (Communication::SC_Message response : responses) {
-                //std::cout << response.content << "\n";
+                std::cout << response.content << "\n";
                 //std::cerr << response.content << "\n";
                 tcpClient.SendMessage(response.content);
             }
@@ -42,8 +42,8 @@ namespace Client {
             } else if (message.messageType == Communication::SC_MessageType::Welcome) {
                 ownPlayerColor = scMessageHandler.GetPlayerColorFromWelcomeMessage(message);
             } else if (message.messageType == Communication::SC_MessageType::GameState) {
-                Hive::GameState gameState = scMessageHandler.GetGameStateFromGameStateMessage(message);
-                currentGameState = gameState;
+                //Hive::GameState gameState = scMessageHandler.GetGameStateFromGameStateMessage(message);
+                currentGameState = scMessageHandler.GetGameStateFromGameStateMessage(message);
             } else if (message.messageType == Communication::SC_MessageType::MoveRequest) {
                 if (!gameOver) {
                     Hive::Move nextMove = GetNextMove();                   

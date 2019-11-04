@@ -2,8 +2,7 @@
 namespace Communication {
     SC_MessageHandler::SC_MessageHandler() {}
 
-    std::vector<SC_Message> SC_MessageHandler::FilterProtocolMessages(const std::string &inputString) {
-        std::string inputStream(inputString);
+    std::vector<SC_Message> SC_MessageHandler::FilterProtocolMessages(std::string &inputStream) {
         std::vector<SC_Message> protocolMessages;
 
         //Removing non xml-compliant messages. Duhhh!
@@ -24,8 +23,7 @@ namespace Communication {
         return protocolMessages;
     }
 
-    std::vector<SC_Message> SC_MessageHandler::SplitInputMessagesIntoValidSC_Messages(const std::string &inputString) {
-        std::string inputStream(inputString);
+    std::vector<SC_Message> SC_MessageHandler::SplitInputMessagesIntoValidSC_Messages(std::string inputStream) {
         std::vector<SC_Message> messages;
 
         std::vector<SC_Message> protocolMessages = FilterProtocolMessages(inputStream);
@@ -89,7 +87,7 @@ namespace Communication {
     }
 
     SC_Message SC_MessageHandler::CreateJoinRequestMessage() {
-        return SC_Message("<join gameType=\"swc_2019_piranhas\" />", SC_MessageType::JoinRequest);
+        return SC_Message("<join gameType=\"swc_2020_hive\" />", SC_MessageType::JoinRequest);
     }
 
     SC_Message SC_MessageHandler::CreateJoinReservedRequestMessage(const std::string &reservationCode) {
@@ -101,17 +99,40 @@ namespace Communication {
 
         pugi::xml_node roomNode = moveMessageDoc.append_child("room");
         roomNode.append_attribute("roomId").set_value(roomID.c_str());
-        if (move.GetMoveType == Hive::MoveType::DeployMove) {
+        if (move.GetMoveType() == Hive::MoveType::DeployMove) {
             pugi::xml_node dataNode = roomNode.append_child("data");
             dataNode.append_attribute("class").set_value("setmove");
 
             pugi::xml_node pieceNode = dataNode.append_child("piece");
-            if (move.GetColor() == Hive::Color::Red) {
-                pieceNode.append_attribute("owner").set_value("RED");
-            }
+            pieceNode.append_attribute("owner").set_value(Hive::ColorToString(move.GetColor()).c_str());
+            pieceNode.append_attribute("type").set_value(Hive::PieceTypeToString(move.GetMovedPieceType()).c_str());
+
+            pugi::xml_node destinationNode = dataNode.append_child("destination");
+            destinationNode.append_attribute("x").set_value(move.GetDestinationPosition().x);
+            destinationNode.append_attribute("y").set_value(move.GetDestinationPosition().y);
+            destinationNode.append_attribute("z").set_value(move.GetDestinationPosition().GetZCoordinate());
+        } else if (move.GetMoveType() == Hive::MoveType::DragMove) {
+            pugi::xml_node dataNode = roomNode.append_child("data");
+            dataNode.append_attribute("class").set_value("dragmove");
+
+            pugi::xml_node startNode = dataNode.append_child("start");
+            startNode.append_attribute("x").set_value(move.GetStartPosition().x);
+            startNode.append_attribute("y").set_value(move.GetStartPosition().y);
+            startNode.append_attribute("z").set_value(move.GetStartPosition().GetZCoordinate());
+
+            pugi::xml_node destinationNode = dataNode.append_child("destination");
+            destinationNode.append_attribute("x").set_value(move.GetDestinationPosition().x);
+            destinationNode.append_attribute("y").set_value(move.GetDestinationPosition().y);
+            destinationNode.append_attribute("z").set_value(move.GetDestinationPosition().GetZCoordinate());
+        } else if (move.GetMoveType() == Hive::MoveType::DragMove) {
+            pugi::xml_node dataNode = roomNode.append_child("data");
+            dataNode.append_attribute("class").set_value("missmove");
         }
 
-        return SC_Message("<room roomId=\"" + roomID + "\"><data class=\"setmove\">  "\" /></room>", SC_MessageType::Move);
+        Util::XMLStringWriter xmlStringWriter;
+        moveMessageDoc.print(xmlStringWriter, " ", pugi::format_default);
+
+        return SC_Message(xmlStringWriter.stringData, SC_MessageType::Move);
     }
 
     Hive::Color SC_MessageHandler::GetPlayerColorFromWelcomeMessage(const SC_Message &message) {
@@ -140,53 +161,62 @@ namespace Communication {
         for (pugi::xml_attribute stateAttribute : roomNode.child("data").child("state").attributes()) {
             std::string stateAttributeName(stateAttribute.name());
             if (stateAttributeName == "turn") {
-                gameState = std::stoi(std::string(stateAttribute.value()));
-            } else if (stateAttributeName == "startPlayerColor") {
-                std::string playerColor = std::string(stateAttribute.value());
-                if (playerColor == "RED") {
-                    gameState.startingPlayer = Player(PlayerColor::Red);
-                } else {
-                    gameState.startingPlayer = Player(PlayerColor::Blue);
-                }
+                gameState.SetTurn(std::stoi(std::string(stateAttribute.value())));
             } else if (stateAttributeName == "currentPlayerColor") {
-                std::string playerColor = std::string(stateAttribute.value());
-                if (playerColor == "RED") {
-                    gameState.currentPlayer = Player(PlayerColor::Red);
+                std::string currentPlayerColor = std::string(stateAttribute.value());
+                std::string pausedPlayerColor = "UNDEFINED";
+                if (currentPlayerColor == "RED") {
+                    pausedPlayerColor = "BLUE";
+                } else if (currentPlayerColor == "BLUE") {
+                    pausedPlayerColor = "RED";
+                }
+
+                if(currentPlayerColor == "RED") {
+                    gameState.SetCurrentPlayer(Hive::Player(Hive::Color::Red));
+                    gameState.SetPausedPlayer(Hive::Player(Hive::Color::Blue));
                 } else {
-                    gameState.currentPlayer = Player(PlayerColor::Blue);
+                    gameState.SetCurrentPlayer(Hive::Player(Hive::Color::Blue));
+                    gameState.SetPausedPlayer(Hive::Player(Hive::Color::Red));
                 }
             }
         }
 
         for (pugi::xml_node fieldsNode : roomNode.child("data").child("state").child("board").children()) {
-            for (pugi::xml_node fieldNode : fieldsNode.children()) {
-                Position fieldPos;
-                FieldType fieldType;
+            for (pugi::xml_node fieldNode : fieldsNode.children("field")) {
+                Hive::AxialPosition position;
                 for (pugi::xml_attribute fieldAttribute : fieldNode.attributes()) {
                     std::string fieldAttributeName(fieldAttribute.name());
                     if (fieldAttributeName == "x") {
                         std::string x = std::string(fieldAttribute.value());
-                        fieldPos.x = std::stoi(x);
+                        position.x = std::stoi(x);
                     } else if (fieldAttributeName == "y") {
                         std::string y = std::string(fieldAttribute.value());
-                        fieldPos.y = std::stoi(y);
-                    } else if (fieldAttributeName == "state") {
-                        std::string fieldAttributeValue(fieldAttribute.value());
-                        if (fieldAttributeValue == "RED") {
-                            fieldType = FieldType::Red;
-                        } else if (fieldAttributeValue == "BLUE") {
-                            fieldType = FieldType::Blue;
-                        } else if (fieldAttributeValue == "OBSTRUCTED") {
-                            fieldType = FieldType::Obstacle;
-                        } else if (fieldAttributeValue == "EMPTY") {
-                            fieldType = FieldType::Empty;
-                        }
+                        position.y = std::stoi(y);
                     }
                 }
-                gameState.board.SetFieldTypeAtPosition(fieldPos, fieldType);
+
+                for (pugi::xml_node pieceNode : fieldNode.children("piece")) {
+                    std::string pieceColor = pieceNode.attribute("owner").value();
+                    std::string pieceType = pieceNode.attribute("type").value();
+
+                    gameState.GetBoard().AddPieceOnTop(Hive::Piece(Hive::PieceTypeFromString(pieceType), Hive::ColorFromString(pieceColor)), position);
+                }
             }
         }
-        gameState.moveDistanceBoard = MoveDistanceBoard(gameState.board);
+
+        for (pugi::xml_node pieceNode : roomNode.child("data").child("state").child("undeployedRedPieces").children("piece")) {
+            std::string pieceColor = pieceNode.attribute("owner").value();
+            std::string pieceType = pieceNode.attribute("type").value();
+
+            gameState.GetPlayer(Hive::Color::Red).AddUndeployedPiece(Hive::Piece(Hive::PieceTypeFromString(pieceType), Hive::ColorFromString(pieceColor)));
+        }
+
+        for (pugi::xml_node pieceNode : roomNode.child("data").child("state").child("undeployedBluePieces").children("piece")) {
+            std::string pieceColor = pieceNode.attribute("owner").value();
+            std::string pieceType = pieceNode.attribute("type").value();
+
+            gameState.GetPlayer(Hive::Color::Blue).AddUndeployedPiece(Hive::Piece(Hive::PieceTypeFromString(pieceType), Hive::ColorFromString(pieceColor)));
+        }
 
         return gameState;
     }
