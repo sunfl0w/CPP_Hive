@@ -9,6 +9,7 @@
 #include "Color.hpp"
 #include "gameState.hpp"
 #include "Move.hpp"
+#include "MoveType.hpp"
 #include "SC_Message.hpp"
 #include "XmlStringWriter.hpp"
 

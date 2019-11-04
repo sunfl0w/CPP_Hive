@@ -46,34 +46,7 @@ namespace Client {
                 currentGameState = gameState;
             } else if (message.messageType == Communication::SC_MessageType::MoveRequest) {
                 if (!gameOver) {
-                    Hive::Move nextMove = GetNextMove();
-                    std::string direction = "??";
-                    switch (nextMove.GetDirection()) {
-                        case Direction::Up_Right:
-                            direction = "Up_Right";
-                            break;
-                        case Direction::Up:
-                            direction = "Up";
-                            break;
-                        case Direction::Down_Right:
-                            direction = "Down_Right";
-                            break;
-                        case Direction::Right:
-                            direction = "Right";
-                            break;
-                        case Direction::Down_Left:
-                            direction = "Down_Left";
-                            break;
-                        case Direction::Down:
-                            direction = "Down";
-                            break;
-                        case Direction::Up_Left:
-                            direction = "Up_Left";
-                            break;
-                        case Direction::Left:
-                            direction = "Left";
-                            break;
-                    }
+                    Hive::Move nextMove = GetNextMove();                   
                     responseMessages.push_back(scMessageHandler.CreateMoveMessage(nextMove, roomID));
                 }
             } else if (message.messageType == Communication::SC_MessageType::Left) {

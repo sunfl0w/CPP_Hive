@@ -97,34 +97,21 @@ namespace Communication {
     }
 
     SC_Message SC_MessageHandler::CreateMoveMessage(const Hive::Move &move, const std::string &roomID) {
-        std::string directionString;
-        switch (move.GetDirection()) {
-            case (Direction::Up):
-                directionString = "UP";
-                break;
-            case (Direction::Down):
-                directionString = "DOWN";
-                break;
-            case (Direction::Left):
-                directionString = "LEFT";
-                break;
-            case (Direction::Right):
-                directionString = "RIGHT";
-                break;
-            case (Direction::Up_Right):
-                directionString = "UP_RIGHT";
-                break;
-            case (Direction::Up_Left):
-                directionString = "UP_LEFT";
-                break;
-            case (Direction::Down_Right):
-                directionString = "DOWN_RIGHT";
-                break;
-            case (Direction::Down_Left):
-                directionString = "DOWN_LEFT";
-                break;
+        pugi::xml_document moveMessageDoc;
+
+        pugi::xml_node roomNode = moveMessageDoc.append_child("room");
+        roomNode.append_attribute("roomId").set_value(roomID.c_str());
+        if (move.GetMoveType == Hive::MoveType::DeployMove) {
+            pugi::xml_node dataNode = roomNode.append_child("data");
+            dataNode.append_attribute("class").set_value("setmove");
+
+            pugi::xml_node pieceNode = dataNode.append_child("piece");
+            if (move.GetColor() == Hive::Color::Red) {
+                pieceNode.append_attribute("owner").set_value("RED");
+            }
         }
-        return SC_Message("<room roomId=\"" + roomID + "\"><data class=\"move\" x=\"" + std::to_string(move.GetStartPosition().x) + "\" y=\"" + std::to_string(move.GetStartPosition().y) + "\" direction=\"" + directionString + "\" /></room>", SC_MessageType::JoinRequest);
+
+        return SC_Message("<room roomId=\"" + roomID + "\"><data class=\"setmove\">  "\" /></room>", SC_MessageType::Move);
     }
 
     Hive::Color SC_MessageHandler::GetPlayerColorFromWelcomeMessage(const SC_Message &message) {

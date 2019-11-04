@@ -36,6 +36,10 @@ namespace Hive {
         return hashValue;
     }
 
+    int AxialPosition::GetZCoordinate() const {
+        return 0 - x - y;
+    }
+
     int AxialPosition::GetDistanceTo(const AxialPosition& otherPosition) const {
         int z = 0 - x - y;
         int zOther = 0 - otherPosition.x - otherPosition.y;

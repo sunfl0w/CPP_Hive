@@ -14,6 +14,7 @@ namespace Hive {
         bool operator!=(const AxialPosition &axialPosition) const;
 
         int GetHashValue() const;
+        int GetZCoordinate() const;
         int GetDistanceTo(const AxialPosition& otherPosition) const;
         bool IsNeighbourTo(const AxialPosition& otherPosition) const;
         AxialPosition Add(const AxialPosition& otherPosition) const;
