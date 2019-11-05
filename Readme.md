@@ -5,3 +5,6 @@ If you find a bug, please contact me. If you have suggestions to improve the cod
 You may also improve on my code and never tell anyone, so you have the upper edge in the competition.
 
 I wish happy coding with as little bugs as possible. (Pun intended) ;)
+
+All necessary information about compiling and using this code can be found in the wiki of the CPP_Hive repository.
+https://github.com/sunfl0w/CPP_Hive

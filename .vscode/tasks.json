@@ -54,11 +54,13 @@
         {
             "label": "BuildDebug",
             "type": "shell",
-            "command": "make",
+            "command": "cmake",
             "options": {
                 "cwd": "${workspaceFolder}/build"
             },
             "args": [
+                "--build",
+                "."
             ],
             "dependsOn": "CMakeSetDebug",
             "group": {
@@ -70,10 +72,14 @@
         {
             "label": "BuildRelease",
             "type": "shell",
-            "command": "make",
+            "command": "cmake",
             "options": {
                 "cwd": "${workspaceFolder}/build"
             },
+            "args": [
+                "--build",
+                "."
+            ],
             "dependsOn": "CMakeSetRelease",
             "group": {
                 "kind": "build",
