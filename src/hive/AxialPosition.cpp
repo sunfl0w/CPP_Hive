@@ -85,6 +85,19 @@ namespace Hive {
         return neighbouringAxialPositions;
     }
 
+    std::vector<AxialPosition> AxialPosition::GetNeighbouringPositionsIncludingOutsideBoardPositions() const {
+         std::vector<AxialPosition> neighbouringAxialPositions = std::vector<AxialPosition>();
+
+        neighbouringAxialPositions.push_back(AxialPosition(x + 1, y));
+        neighbouringAxialPositions.push_back(AxialPosition(x + 1, y - 1));
+        neighbouringAxialPositions.push_back(AxialPosition(x, y - 1));
+        neighbouringAxialPositions.push_back(AxialPosition(x - 1, y));
+        neighbouringAxialPositions.push_back(AxialPosition(x - 1, y + 1));
+        neighbouringAxialPositions.push_back(AxialPosition(x, y + 1));
+
+        return neighbouringAxialPositions;
+    }
+
     bool AxialPosition::IsAtBorderOfBoard() const {
         int z = 0 - x - y;
         if (std::abs(x) + std::abs(y) + std::abs(z) == 10) {

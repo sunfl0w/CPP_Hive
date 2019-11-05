@@ -20,6 +20,7 @@ namespace Hive {
         AxialPosition Add(const AxialPosition& otherPosition) const;
         AxialPosition Subtract(const AxialPosition& otherPosition) const;
         std::vector<AxialPosition> GetNeighbouringPositions() const;
+        std::vector<AxialPosition> GetNeighbouringPositionsIncludingOutsideBoardPositions() const;
         bool IsAtBorderOfBoard() const;
         AxialPosition GetTranslationToOtherPosition(const AxialPosition& otherPosition) const;
     };

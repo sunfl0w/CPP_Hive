@@ -47,7 +47,12 @@ namespace Hive {
 
         std::vector<AxialPosition> GetBorderPositionsOfHive() const;
 
+        bool IsGameOver() const {
+
+        }
+
     private:
         std::vector<AxialPosition> GetDeployablePositions() const;
+        bool IsQueenBeeBlocked(Color color) const;
     };
 }  // namespace Hive

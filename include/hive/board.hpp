@@ -64,9 +64,9 @@ namespace Hive {
 
         bool CanSlide(const AxialPosition& slideStartPos, const AxialPosition& slideEndPos) const;
 
-    private:
         void PlaceObstacles();
 
+    private:
         int GetCoherentHiveSize() const;
         int GetCoherentHiveSize(const AxialPosition& ignorePosition) const;
 
