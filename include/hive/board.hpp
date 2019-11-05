@@ -58,7 +58,7 @@ namespace Hive {
 
         std::vector<AxialPosition> GetEmptyAxialPositionsOnBoard() const;
 
-        bool IsHiveCoherentIfPieceMovesFromPosition(const AxialPosition& position) const;
+        bool IsHiveCoherentIfPieceMovesFromPosition(const AxialPosition& position);
 
         std::vector<PieceStack> GetCommonNeighbouringPieceStacks(const AxialPosition& pos1, const AxialPosition& pos2) const;
 

@@ -4,6 +4,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <string>
+#include <cstring>
 
 #include "pugixml.hpp"
 #include "Color.hpp"

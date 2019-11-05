@@ -151,7 +151,7 @@ namespace Hive {
 
     void Board::AddPieceOnTop(const Piece& piece, const AxialPosition& position) {
         if (PieceStackExists(position)) {
-            GetPieceStack(position).AddPieceOnTop(piece);
+            GetPieceStackUnsafe(position).AddPieceOnTop(piece);
         } else {
             PieceStack newPieceStack = PieceStack(position);
             newPieceStack.AddPieceOnTop(piece);
@@ -160,7 +160,10 @@ namespace Hive {
     }
 
     void Board::RemoveUpmostPiece(const AxialPosition& position) {
-        GetPieceStack(position).RemovePieceOnTop();
+        GetPieceStackUnsafe(position).RemovePieceOnTop();
+        if(GetPieceStackUnsafe(position).GetPieces().empty()) {
+            pieceStacks.erase(position.GetHashValue());
+        }
     }
 
     bool Board::IsAxialPositionAtBorderOfBoard(AxialPosition& position) const {
@@ -195,11 +198,15 @@ namespace Hive {
         return emptyAxialPositions;
     }
 
-    bool Board::IsHiveCoherentIfPieceMovesFromPosition(const AxialPosition& position) const {
-        int hiveSize = GetCoherentHiveSize(position);
-        if (GetCoherentHiveSize(position) == pieceStacks.size() - 1 - 3) {
+    bool Board::IsHiveCoherentIfPieceMovesFromPosition(const AxialPosition& position) {
+        PieceType type = GetPieceStackUnsafe(position).GetPieceOnTop().GetType();
+        GetPieceStackUnsafe(position).GetPieceOnTop().SetType(PieceType::Obstacle);
+        int hiveSize = GetCoherentHiveSize();
+        if (GetCoherentHiveSize() == pieceStacks.size() - 1 - 3) {
+            GetPieceStackUnsafe(position).GetPieceOnTop().SetType(type);
             return true;
         } else {
+            GetPieceStackUnsafe(position).GetPieceOnTop().SetType(type);
             return false;
         }
     }
@@ -274,7 +281,7 @@ namespace Hive {
         while (!pieceStacksToSearch.empty()) {
             std::vector<PieceStack> neighbouringPieceStacks = GetNeighbouringPieceStacks(pieceStacksToSearch[0].GetAxialPosition());
             for (PieceStack neighbouringPieceStack : neighbouringPieceStacks) {
-                if (hive.find(neighbouringPieceStack.GetAxialPosition().GetHashValue()) == hive.end()) {
+                if (hive.find(neighbouringPieceStack.GetAxialPosition().GetHashValue()) == hive.end() && neighbouringPieceStack.GetPieceOnTop().GetType() != PieceType::Obstacle) {
                     hive.insert({neighbouringPieceStack.GetAxialPosition().GetHashValue(), neighbouringPieceStack});
                     pieceStacksToSearch.push_back(neighbouringPieceStack);
                 }

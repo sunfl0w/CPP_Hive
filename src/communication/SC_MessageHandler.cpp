@@ -124,7 +124,7 @@ namespace Communication {
             destinationNode.append_attribute("x").set_value(move.GetDestinationPosition().x);
             destinationNode.append_attribute("y").set_value(move.GetDestinationPosition().y);
             destinationNode.append_attribute("z").set_value(move.GetDestinationPosition().GetZCoordinate());
-        } else if (move.GetMoveType() == Hive::MoveType::DragMove) {
+        } else if (move.GetMoveType() == Hive::MoveType::PassMove) {
             pugi::xml_node dataNode = roomNode.append_child("data");
             dataNode.append_attribute("class").set_value("missmove");
         }
@@ -192,6 +192,10 @@ namespace Communication {
                     } else if (fieldAttributeName == "y") {
                         std::string y = std::string(fieldAttribute.value());
                         position.y = std::stoi(y);
+                    } else if(fieldAttributeName == "isObstructed") {
+                        if(std::strcmp(fieldAttribute.value(), "true") == 0) {
+                            gameState.GetBoard().AddPieceOnTop(Hive::Piece(Hive::PieceType::Obstacle, Hive::Color::Undefined), position);
+                        }
                     }
                 }
 

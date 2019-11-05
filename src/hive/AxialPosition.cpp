@@ -69,12 +69,12 @@ namespace Hive {
     std::vector<AxialPosition> AxialPosition::GetNeighbouringPositions() const {
         std::vector<AxialPosition> neighbouringAxialPositions = std::vector<AxialPosition>();
 
-        neighbouringAxialPositions.push_back(AxialPosition(x + 1, y - 1));
         neighbouringAxialPositions.push_back(AxialPosition(x + 1, y));
-        neighbouringAxialPositions.push_back(AxialPosition(x, y + 1));
-        neighbouringAxialPositions.push_back(AxialPosition(x - 1, y + 1));
-        neighbouringAxialPositions.push_back(AxialPosition(x - 1, y));
+        neighbouringAxialPositions.push_back(AxialPosition(x + 1, y - 1));
         neighbouringAxialPositions.push_back(AxialPosition(x, y - 1));
+        neighbouringAxialPositions.push_back(AxialPosition(x - 1, y));
+        neighbouringAxialPositions.push_back(AxialPosition(x - 1, y + 1));
+        neighbouringAxialPositions.push_back(AxialPosition(x, y + 1));
 
         for (int i = neighbouringAxialPositions.size() - 1; i >= 0; i--) {
             int z = 0 - neighbouringAxialPositions[i].x - neighbouringAxialPositions[i].y;
