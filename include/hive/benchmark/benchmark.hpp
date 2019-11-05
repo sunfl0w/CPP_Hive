@@ -1,9 +1,12 @@
+#pragma once
+
 #include <chrono>
 #include <vector>
+#include <iostream>
 
 #include "gameState.hpp"
 #include "Move.hpp"
 
 namespace Hive::Benchmark {
-    static void BenchmakGetPossibleMoves(unsigned int benchmarkingTimeInMs);
+    void BenchmarkGetPossibleMoves(unsigned int benchmarkingTimeInMs);
 }

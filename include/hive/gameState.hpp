@@ -45,7 +45,7 @@ namespace Hive {
         std::vector<Move> GetPossibleGrasshopperDragMoves();
         std::vector<Move> GetPossibleAntDragMoves();
 
-        bool IsGameOver() const;
+        bool IsGameOver();
 
     private:
         std::vector<AxialPosition> GetDeployablePositions() const;

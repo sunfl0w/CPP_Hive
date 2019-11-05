@@ -5,11 +5,13 @@
 #include <vector>
 
 #include "HiveClient.hpp"
+#include "benchmark.hpp"
 
 using namespace boost::program_options;
 
 int main(int argc, char *argv[]) {
-    std::cout << "Hello, World! I am a c++ client!\n";
+    Hive::Benchmark::BenchmarkGetPossibleMoves(10000);
+    /*std::cout << "Hello, World! I am a c++ client!\n";
     std::cout << "Parsing arguments.\n";
 
     options_description optionsDesribtion("C++ client");
@@ -46,6 +48,6 @@ int main(int argc, char *argv[]) {
     } else {
         std::cout << "Start reserved.\n";
         hiveClient.StartReserved(hostname, hostPort, reservationCode);
-    }
+    }*/
     return 0;
 }

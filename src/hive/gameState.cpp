@@ -267,18 +267,23 @@ namespace Hive {
         return possibleAntDragMoves;
     }
 
-    bool GameState::IsGameOver() const {
+    bool GameState::IsGameOver() {
         if(currentPlayer.GetColor() == Color::Red) {
             if(board.GetPieceStacksByColorAndType(Color::Red, PieceType::QueenBee).empty() && turn > 6) {
+                return true;
+            } else if(IsQueenBeeBlocked(Color::Red)) {
                 return true;
             }
         } else if(currentPlayer.GetColor() == Color::Blue) {
             if(board.GetPieceStacksByColorAndType(Color::Blue, PieceType::QueenBee).empty() && turn > 7) {
                 return true;
+            } else if(IsQueenBeeBlocked(Color::Blue) && turn % 2 == 0) {
+                return true;
             }
         } else if(turn > 60) {
             return true;
         }
+        return false;
     }
 
     //Private
