@@ -45,14 +45,10 @@ namespace Hive {
         std::vector<Move> GetPossibleGrasshopperDragMoves();
         std::vector<Move> GetPossibleAntDragMoves();
 
-        std::vector<AxialPosition> GetBorderPositionsOfHive() const;
-
-        bool IsGameOver() const {
-
-        }
+        bool IsGameOver() const;
 
     private:
         std::vector<AxialPosition> GetDeployablePositions() const;
-        bool IsQueenBeeBlocked(Color color) const;
+        bool IsQueenBeeBlocked(Color color);
     };
 }  // namespace Hive

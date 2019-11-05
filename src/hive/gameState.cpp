@@ -267,6 +267,20 @@ namespace Hive {
         return possibleAntDragMoves;
     }
 
+    bool GameState::IsGameOver() const {
+        if(currentPlayer.GetColor() == Color::Red) {
+            if(board.GetPieceStacksByColorAndType(Color::Red, PieceType::QueenBee).empty() && turn > 6) {
+                return true;
+            }
+        } else if(currentPlayer.GetColor() == Color::Blue) {
+            if(board.GetPieceStacksByColorAndType(Color::Blue, PieceType::QueenBee).empty() && turn > 7) {
+                return true;
+            }
+        } else if(turn > 60) {
+            return true;
+        }
+    }
+
     //Private
 
     std::vector<AxialPosition> GameState::GetDeployablePositions() const {
@@ -303,5 +317,28 @@ namespace Hive {
             }
         }
         return deployablePositions;
+    }
+
+    bool GameState::IsQueenBeeBlocked(Color color) {
+        std::vector<PieceStack> queenBees = board.GetPieceStacksByColorAndType(color, PieceType::QueenBee);
+        if(queenBees.size() > 0) {
+            PieceStack queenBee = queenBees[0];
+            std::vector<AxialPosition> neighbouringPositions = queenBee.GetAxialPosition().GetNeighbouringPositionsIncludingOutsideBoardPositions();
+            int numberOfBlockingNeighbours = 0;
+            for(AxialPosition neighbouringPosition : neighbouringPositions) {
+                if(!board.IsAxialPositionOnBoard(neighbouringPosition)) {
+                    numberOfBlockingNeighbours++;
+                } else if(board.PieceStackExists(neighbouringPosition)) {
+                    numberOfBlockingNeighbours++;
+                }
+            }
+            if(numberOfBlockingNeighbours == 6) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 }  // namespace Hive
