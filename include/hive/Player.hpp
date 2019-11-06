@@ -21,7 +21,6 @@ namespace Hive {
         const std::vector<Piece>& GetUndeployedPieces() const;
         void AddUndeployedPiece(Piece piece);
 
-    private:
         void InitializeUndeployedPieces();
     };
 }  // namespace Hive::Player

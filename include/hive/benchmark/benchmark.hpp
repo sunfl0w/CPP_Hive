@@ -6,6 +6,7 @@
 
 #include "gameState.hpp"
 #include "Move.hpp"
+#include "RandomNumberGenerator.hpp"
 
 namespace Hive::Benchmark {
     void BenchmarkGetPossibleMoves(unsigned int benchmarkingTimeInMs);
