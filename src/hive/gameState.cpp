@@ -100,7 +100,7 @@ namespace Hive {
 
     //Private
 
-    std::vector<Move> GameState::GetPossibleDeployMoves() const {
+    std::vector<Move> GameState::GetPossibleDeployMoves() {
         std::vector<Move> possibleDeployMoves;
         std::vector<AxialPosition> deployablePositions = GetDeployablePositions();
         for (AxialPosition deployablePosition : deployablePositions) {
@@ -111,7 +111,7 @@ namespace Hive {
         return possibleDeployMoves;
     }
 
-    std::vector<Move> GameState::GetPossibleQueenBeeDeployMoves() const {
+    std::vector<Move> GameState::GetPossibleQueenBeeDeployMoves() {
         std::vector<Move> possibleDeployMoves;
         std::vector<AxialPosition> deployablePositions = GetDeployablePositions();
         for (AxialPosition deployablePosition : deployablePositions) {
@@ -288,7 +288,7 @@ namespace Hive {
 
     //Private
 
-    std::vector<AxialPosition> GameState::GetDeployablePositions() const {
+    std::vector<AxialPosition> GameState::GetDeployablePositions() {
         std::vector<AxialPosition> deployablePositions;
 
         if (turn == 0) {

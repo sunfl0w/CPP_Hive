@@ -60,7 +60,10 @@
             },
             "args": [
                 "--build",
-                "."
+                ".",
+                "--",
+                "-j",
+                "8"
             ],
             "dependsOn": "CMakeSetDebug",
             "group": {
@@ -78,7 +81,10 @@
             },
             "args": [
                 "--build",
-                "."
+                ".",
+                "--",
+                "-j",
+                "8"
             ],
             "dependsOn": "CMakeSetRelease",
             "group": {

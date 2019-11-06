@@ -35,8 +35,8 @@ namespace Hive {
         std::vector<Move> GetPossibleMoves();
         void PerformMove(const Move& move);
 
-        std::vector<Move> GetPossibleDeployMoves() const;
-        std::vector<Move> GetPossibleQueenBeeDeployMoves() const;
+        std::vector<Move> GetPossibleDeployMoves();
+        std::vector<Move> GetPossibleQueenBeeDeployMoves();
 
         std::vector<Move> GetPossibleDragMoves();
         std::vector<Move> GetPossibleQueenBeeDragMoves();
@@ -48,7 +48,7 @@ namespace Hive {
         bool IsGameOver();
 
     private:
-        std::vector<AxialPosition> GetDeployablePositions() const;
+        std::vector<AxialPosition> GetDeployablePositions();
         bool IsQueenBeeBlocked(Color color);
     };
 }  // namespace Hive

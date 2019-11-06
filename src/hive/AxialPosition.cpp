@@ -32,7 +32,10 @@ namespace Hive {
 
     int AxialPosition::GetHashValue() const {
         //int hashValue = (x * 31) + (y * 37);
-        int hashValue = (x + 5) << 16 | ((y + 5) & 0xFFFF);
+        //int hashValue = (x + 5) << 16 | ((y + 5) & 0xFFFF);
+        int hashValue = ((x * 0x1f1f1f1f) ^ y);
+        //int hashValue = ((y << 16) ^ x);
+        //int hashValue = x | (y << 15);
         return hashValue;
     }
 
@@ -68,6 +71,7 @@ namespace Hive {
 
     std::vector<AxialPosition> AxialPosition::GetNeighbouringPositions() const {
         std::vector<AxialPosition> neighbouringAxialPositions = std::vector<AxialPosition>();
+        neighbouringAxialPositions.reserve(6);
 
         neighbouringAxialPositions.push_back(AxialPosition(x + 1, y));
         neighbouringAxialPositions.push_back(AxialPosition(x + 1, y - 1));
