@@ -20,6 +20,7 @@ namespace Hive {
 
         const std::vector<Piece>& GetUndeployedPieces() const;
         void AddUndeployedPiece(Piece piece);
+        void RemoveUndeployedPiece(PieceType type);
 
         void InitializeUndeployedPieces();
     };

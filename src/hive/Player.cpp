@@ -27,6 +27,14 @@ namespace Hive {
         undeployedPieces.push_back(piece);
     }
 
+    void Player::RemoveUndeployedPiece(PieceType type) {
+        for(int i = 0; i < undeployedPieces.size(); i++) {
+            if(undeployedPieces[i].GetType() == type) {
+                undeployedPieces.erase(undeployedPieces.begin() + i);
+            }
+        }
+    }
+
     void Player::InitializeUndeployedPieces() {
         undeployedPieces.push_back(Piece(PieceType::QueenBee, color));
 

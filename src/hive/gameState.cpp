@@ -88,6 +88,7 @@ namespace Hive {
         if (move.GetMoveType() == MoveType::PassMove) {
             turn++;
         } else if (move.GetMoveType() == MoveType::DeployMove) {
+            currentPlayer.RemoveUndeployedPiece(move.GetMovedPieceType());
             board.AddPieceOnTop(Piece(move.GetMovedPieceType(), currentPlayer.GetColor()), move.GetDestinationPosition());
             turn++;
         } else if (move.GetMoveType() == MoveType::DragMove) {
@@ -95,6 +96,10 @@ namespace Hive {
             board.AddPieceOnTop(Piece(move.GetMovedPieceType(), currentPlayer.GetColor()), move.GetDestinationPosition());
             turn++;
         }
+
+        Player swap = currentPlayer;
+        currentPlayer = pausedPlayer;
+        pausedPlayer = swap;
     }
 
     //Private
@@ -280,7 +285,8 @@ namespace Hive {
             } else if (IsQueenBeeBlocked(Color::Blue) && turn % 2 == 0) {
                 return true;
             }
-        } else if (turn > 60) {
+        } 
+        if (turn > 60) {
             return true;
         }
         return false;
