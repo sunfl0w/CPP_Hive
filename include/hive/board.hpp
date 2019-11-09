@@ -45,7 +45,7 @@ namespace Hive {
         Piece& GetPiece(const AxialPosition& position, int layer);
         Piece& GetPiece(int x, int y, int layer);
 
-        std::vector<PieceStack*> GetNeighbouringPieceStacks(const AxialPosition& position);
+        std::vector<PieceStack> GetNeighbouringPieceStacks(const AxialPosition& position);
         std::vector<PieceStack> GetNeighbouringPieceStacksExceptObstacles(const AxialPosition& position);
 
         std::vector<AxialPosition> GetEmptyNeighbouringAxialPositions(const AxialPosition& position);
@@ -70,7 +70,6 @@ namespace Hive {
 
     private:
         int GetCoherentHiveSize();
-        int GetCoherentHiveSize(const AxialPosition& ignorePosition);
 
         int GetDirectionOfNeighbouringPositions(const AxialPosition& startPos, const AxialPosition& destinationPos) const;
     };

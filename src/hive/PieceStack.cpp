@@ -26,7 +26,7 @@ namespace Hive {
         return pieces[pieces.size() - 1];
     }
 
-    std::vector<Piece>& PieceStack::GetPieces() {
+    std::vector<Piece> PieceStack::GetPieces() {
         return pieces;
     }
 }  // namespace Hive::Piece

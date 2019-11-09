@@ -65,7 +65,7 @@ namespace Communication {
                         scMessageType = SC_MessageType::MoveRequest;
                     } else if (classAttributeValue == "result") {
                         scMessageType = SC_MessageType::Result;
-                    } else if (classAttributeValue == "MSG") {
+                    } else if (classAttributeValue == "error") {
                         scMessageType = SC_MessageType::Error;
                     }
                 }

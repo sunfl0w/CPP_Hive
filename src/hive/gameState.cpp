@@ -54,6 +54,10 @@ namespace Hive {
 
         std::vector<PieceStack> pieceStacksOnBoard = board.GetPieceStacks();
 
+        if(turn == 6) {
+            int i = 0;
+        }
+
         bool isQueenBeeOfCurrentPlayerOnBoard = false;
         for (PieceStack pieceStack : pieceStacksOnBoard) {
             for (Piece piece : pieceStack.GetPieces()) {
@@ -149,7 +153,7 @@ namespace Hive {
         std::vector<Move> possibleQueenBeeDragMoves;
         std::vector<PieceStack> queenBeesOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayer.GetColor(), PieceType::QueenBee);
         for (PieceStack queenBeeOfCurrentPlayer : queenBeesOfCurrentPlayer) {
-            if (!board.IsHiveCoherentIfPieceMovesFromPosition(queenBeeOfCurrentPlayer.GetAxialPosition())) {
+            if (board.IsHiveCoherentIfPieceMovesFromPosition(queenBeeOfCurrentPlayer.GetAxialPosition())) {
                 std::vector<AxialPosition> emptyNeighbouringPositions = board.GetEmptyNeighbouringAxialPositions(queenBeeOfCurrentPlayer.GetAxialPosition());
 
                 for (AxialPosition emptyNeighbouringPosition : emptyNeighbouringPositions) {
@@ -220,17 +224,17 @@ namespace Hive {
             if (!board.IsHiveCoherentIfPieceMovesFromPosition(grasshopper.GetAxialPosition())) {
                 continue;
             }
-            std::vector<PieceStack*> neighbouringPieceStacks = board.GetNeighbouringPieceStacks(grasshopper.GetAxialPosition());
-            for (PieceStack* neighbouringPieceStack : neighbouringPieceStacks) {
-                AxialPosition translation = grasshopper.GetAxialPosition().GetTranslationToOtherPosition(neighbouringPieceStack->GetAxialPosition());
+            std::vector<PieceStack> neighbouringPieceStacks = board.GetNeighbouringPieceStacks(grasshopper.GetAxialPosition());
+            for (PieceStack neighbouringPieceStack : neighbouringPieceStacks) {
+                AxialPosition translation = grasshopper.GetAxialPosition().GetTranslationToOtherPosition(neighbouringPieceStack.GetAxialPosition());
                 AxialPosition searchPos = grasshopper.GetAxialPosition();
                 searchPos = searchPos.Add(translation);
                 while (board.IsAxialPositionOnBoard(searchPos)) {
-                    if (board.PieceStackExists(searchPos)) {
+                    /*if (board.PieceStackExists(searchPos)) {
                         if (board.GetPieceStack(searchPos).GetPieceOnTop().GetType() == PieceType::Obstacle) {
                             break;
                         }
-                    }
+                    }*/
                     if (!board.PieceStackExists(searchPos)) {
                         possibleGrasshopperDragMoves.push_back(Move(MoveType::DragMove, currentPlayer.GetColor(), grasshopper.GetAxialPosition(), searchPos, PieceType::Grasshopper));
                         break;
@@ -313,10 +317,10 @@ namespace Hive {
             for (PieceStack gameSpieceStack : pieceStacksOfCurrentPlayer) {
                 std::vector<AxialPosition> neighbouringEmptyPositions = board.GetEmptyNeighbouringAxialPositions(gameSpieceStack.GetAxialPosition());
                 for (AxialPosition neighbouringEmptyPosition : neighbouringEmptyPositions) {
-                    std::vector<PieceStack*> neighbouringStacks = board.GetNeighbouringPieceStacks(neighbouringEmptyPosition);
+                    std::vector<PieceStack> neighbouringStacks = board.GetNeighbouringPieceStacks(neighbouringEmptyPosition);
                     bool enemyStackNeighbouring = false;
-                    for (PieceStack* neighbouringStack : neighbouringStacks) {
-                        if (neighbouringStack->GetPieceOnTop().GetColor() != currentPlayer.GetColor() && neighbouringStack->GetPieceOnTop().GetType() != PieceType::Obstacle) {
+                    for (PieceStack neighbouringStack : neighbouringStacks) {
+                        if (neighbouringStack.GetPieceOnTop().GetColor() != currentPlayer.GetColor() && neighbouringStack.GetPieceOnTop().GetType() != PieceType::Obstacle) {
                             enemyStackNeighbouring = true;
                             break;
                         }
