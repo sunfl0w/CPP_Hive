@@ -89,13 +89,13 @@ namespace Hive {
         return GetPiece(position, layer);
     }
 
-    std::vector<PieceStack> Board::GetNeighbouringPieceStacks(const AxialPosition& position) {
-        std::vector<PieceStack> neighbouringPieceStacks;
+    std::vector<PieceStack*> Board::GetNeighbouringPieceStacks(const AxialPosition& position) {
+        std::vector<PieceStack*> neighbouringPieceStacks;
         neighbouringPieceStacks.reserve(4);
 
         for (AxialPosition neighbouringPosition : position.GetNeighbouringPositions()) {
             if (PieceStackExists(neighbouringPosition)) {
-                neighbouringPieceStacks.push_back(GetPieceStack(neighbouringPosition));
+                neighbouringPieceStacks.push_back(&GetPieceStack(neighbouringPosition));
             }
         }
         return neighbouringPieceStacks;
@@ -219,17 +219,17 @@ namespace Hive {
             return false;
         }
 
-        std::vector<PieceStack> neighbouringPieceStacksAtStart = GetNeighbouringPieceStacks(slideStartPos);
-        std::vector<PieceStack> neighbouringPieceStacksAtEnd = GetNeighbouringPieceStacks(slideEndPos);
+        std::vector<PieceStack*> neighbouringPieceStacksAtStart = GetNeighbouringPieceStacks(slideStartPos);
+        std::vector<PieceStack*> neighbouringPieceStacksAtEnd = GetNeighbouringPieceStacks(slideEndPos);
 
         int commonNeighbourCount = 0;
         int commonNeighbourCountExcludingObstacles = 0;
 
-        for(PieceStack neighbouringPieceStackAtStart : neighbouringPieceStacksAtStart) {
-            for(PieceStack neighbouringPieceStackAtEnd : neighbouringPieceStacksAtEnd) {
-                if(neighbouringPieceStackAtStart.GetAxialPosition() == neighbouringPieceStackAtEnd.GetAxialPosition() && neighbouringPieceStackAtEnd.GetAxialPosition() != slideStartPos) {
+        for(PieceStack* neighbouringPieceStackAtStart : neighbouringPieceStacksAtStart) {
+            for(PieceStack* neighbouringPieceStackAtEnd : neighbouringPieceStacksAtEnd) {
+                if(neighbouringPieceStackAtStart->GetAxialPosition() == neighbouringPieceStackAtEnd->GetAxialPosition() && neighbouringPieceStackAtEnd->GetAxialPosition() != slideStartPos) {
                     commonNeighbourCount++;
-                    if(neighbouringPieceStackAtStart.GetPieceOnTop().GetType() != PieceType::Obstacle) {
+                    if(neighbouringPieceStackAtStart->GetPieceOnTop().GetType() != PieceType::Obstacle) {
                         commonNeighbourCountExcludingObstacles++;
                     } 
                 }

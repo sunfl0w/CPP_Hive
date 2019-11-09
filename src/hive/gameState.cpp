@@ -224,9 +224,9 @@ namespace Hive {
             if (!board.IsHiveCoherentIfPieceMovesFromPosition(grasshopper.GetAxialPosition())) {
                 continue;
             }
-            std::vector<PieceStack> neighbouringPieceStacks = board.GetNeighbouringPieceStacks(grasshopper.GetAxialPosition());
-            for (PieceStack neighbouringPieceStack : neighbouringPieceStacks) {
-                AxialPosition translation = grasshopper.GetAxialPosition().GetTranslationToOtherPosition(neighbouringPieceStack.GetAxialPosition());
+            std::vector<PieceStack*> neighbouringPieceStacks = board.GetNeighbouringPieceStacks(grasshopper.GetAxialPosition());
+            for (PieceStack* neighbouringPieceStack : neighbouringPieceStacks) {
+                AxialPosition translation = grasshopper.GetAxialPosition().GetTranslationToOtherPosition(neighbouringPieceStack->GetAxialPosition());
                 AxialPosition searchPos = grasshopper.GetAxialPosition();
                 searchPos = searchPos.Add(translation);
                 while (board.IsAxialPositionOnBoard(searchPos)) {
@@ -317,10 +317,10 @@ namespace Hive {
             for (PieceStack gameSpieceStack : pieceStacksOfCurrentPlayer) {
                 std::vector<AxialPosition> neighbouringEmptyPositions = board.GetEmptyNeighbouringAxialPositions(gameSpieceStack.GetAxialPosition());
                 for (AxialPosition neighbouringEmptyPosition : neighbouringEmptyPositions) {
-                    std::vector<PieceStack> neighbouringStacks = board.GetNeighbouringPieceStacks(neighbouringEmptyPosition);
+                    std::vector<PieceStack*> neighbouringStacks = board.GetNeighbouringPieceStacks(neighbouringEmptyPosition);
                     bool enemyStackNeighbouring = false;
-                    for (PieceStack neighbouringStack : neighbouringStacks) {
-                        if (neighbouringStack.GetPieceOnTop().GetColor() != currentPlayer.GetColor() && neighbouringStack.GetPieceOnTop().GetType() != PieceType::Obstacle) {
+                    for (PieceStack* neighbouringStack : neighbouringStacks) {
+                        if (neighbouringStack->GetPieceOnTop().GetColor() != currentPlayer.GetColor() && neighbouringStack->GetPieceOnTop().GetType() != PieceType::Obstacle) {
                             enemyStackNeighbouring = true;
                             break;
                         }
