@@ -16,8 +16,10 @@ namespace Hive {
             return PieceType::Grasshopper;
         } else if(pieceTypeAsString == "ANT") {
             return PieceType::Ant;
-        } else {
+        } else if(pieceTypeAsString == "OBSTACLE") {
             return PieceType::Obstacle;
+        } else {
+            return PieceType::Undefined;
         }
     }
 }

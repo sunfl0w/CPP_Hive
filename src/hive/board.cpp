@@ -241,7 +241,7 @@ namespace Hive {
         GetPieceStackUnsafe(position).SetPieces(obstacle);
         //GetPieceStackUnsafe(position).RemovePieceOnTop();
         //RemoveUpmostPiece(position);
-        //int hiveSize = GetCoherentHiveSize();
+        int hiveSize = GetCoherentHiveSize();
         if (GetCoherentHiveSize() == pieceStacks.size() - 3 - 1) {
             //GetPieceStackUnsafe(position).AddPieceOnTop(Piece(type, color));
             //AddPieceOnTop(Piece(type, color), position);
@@ -268,7 +268,7 @@ namespace Hive {
 
         for (PieceStack* neighbouringPieceStackAtStart : neighbouringPieceStacksAtStart) {
             for (PieceStack* neighbouringPieceStackAtEnd : neighbouringPieceStacksAtEnd) {
-                if (neighbouringPieceStackAtStart->GetAxialPosition() == neighbouringPieceStackAtEnd->GetAxialPosition() && neighbouringPieceStackAtEnd->GetAxialPosition() != slideStartPos) {
+                if (neighbouringPieceStackAtStart->GetAxialPosition() == neighbouringPieceStackAtEnd->GetAxialPosition() && neighbouringPieceStackAtEnd->GetAxialPosition() != slideStartPos && neighbouringPieceStackAtEnd->GetPieceOnTop().GetType() != PieceType::Undefined) {
                     commonNeighbourCount++;
                     if (neighbouringPieceStackAtStart->GetPieceOnTop().GetType() != PieceType::Obstacle) {
                         commonNeighbourCountExcludingObstacles++;
