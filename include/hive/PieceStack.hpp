@@ -18,6 +18,8 @@ namespace Hive {
         void RemovePieceOnTop();
         Piece& GetPieceByLayer(int layer);
         Piece& GetPieceOnTop();
+
         std::vector<Piece> GetPieces();
+        void SetPieces(std::vector<Piece> pieces);
     };
 }  // namespace Hive::GamingPiece

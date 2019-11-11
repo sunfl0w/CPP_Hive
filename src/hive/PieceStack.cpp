@@ -29,4 +29,8 @@ namespace Hive {
     std::vector<Piece> PieceStack::GetPieces() {
         return pieces;
     }
+
+    void PieceStack::SetPieces(std::vector<Piece> pieces) {
+        this->pieces = pieces;
+    }
 }  // namespace Hive::Piece
