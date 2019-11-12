@@ -15,10 +15,10 @@ namespace Hive {
     }
 
     bool AxialPosition::operator==(const AxialPosition& axialPosition) const {
-        if (x == axialPosition.x && y == axialPosition.y) {
-            return true;
-        } else {
+        if (x != axialPosition.x || y != axialPosition.y) {
             return false;
+        } else {
+            return true;
         }
     }
 
@@ -31,7 +31,7 @@ namespace Hive {
     }
 
     int AxialPosition::GetHashValue() const {
-        int hashValue = (x * 31) + (y * 37);
+        int hashValue = (x * 31) + (y * 37); //<== Note to myself: Is slow but reliable
         //int hashValue = (x + 5) << 16 | ((y + 5) & 0xFFFF);
         //int hashValue = ((x * 0x1f1f1f1f) ^ y);
         //int hashValue = ((y << 16) ^ x);

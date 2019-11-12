@@ -15,11 +15,13 @@
 #include "AxialPosition.hpp"
 #include "PieceType.hpp"
 #include "Color.hpp"
+#include "robin_hood.h"
 
 namespace Hive {
     class Board {
     private:
-        std::unordered_map<int, PieceStack> pieceStacks;
+        robin_hood::unordered_map<int, PieceStack> pieceStacks;
+        //std::unordered_map<int, PieceStack> pieceStacks;
         //std::map<int, PieceStack> pieceStacks;
 
     public:

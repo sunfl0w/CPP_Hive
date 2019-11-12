@@ -4,21 +4,23 @@ namespace Hive {
     //Public Functions
 
     Board::Board() {
-        pieceStacks = std::unordered_map<int, PieceStack>();
+        pieceStacks = robin_hood::unordered_map<int, PieceStack>();
+        //pieceStacks = std::unordered_map<int, PieceStack>();
         //pieceStacks = std::map<int, PieceStack>();
         //PlaceObstacles();
     }
 
     Board::Board(const Board& board) {
-        pieceStacks = std::unordered_map<int, PieceStack>(board.pieceStacks);
+        pieceStacks = robin_hood::unordered_map<int, PieceStack>(board.pieceStacks);
+        //pieceStacks = std::unordered_map<int, PieceStack>(board.pieceStacks);
         //pieceStacks = std::map<int, PieceStack>(board.pieceStacks);
     }
 
     bool Board::PieceStackExists(const AxialPosition& position) const {
-        if (pieceStacks.find(position.GetHashValue()) == pieceStacks.end()) {
-            return false;
-        } else {
+        if (pieceStacks.find(position.GetHashValue()) != pieceStacks.end()) {
             return true;
+        } else {
+            return false;
         }
     }
 
@@ -44,58 +46,58 @@ namespace Hive {
 
     std::vector<PieceStack*> Board::GetPieceStacks() {
         std::vector<int> keys;
-        for (std::pair<int, PieceStack> pair : pieceStacks) {
-            keys.push_back(pair.first); 
+        for (robin_hood::pair<int, PieceStack> pair : pieceStacks) {
+            keys.push_back(pair.first);
         }
 
         std::vector<PieceStack*> stacks;
-        for (int key : keys) {           
-            stacks.push_back(&pieceStacks.at(key));         
+        for (int key : keys) {
+            stacks.push_back(&pieceStacks.at(key));
         }
         return stacks;
     }
 
     std::vector<PieceStack*> Board::GetPieceStacksWithoutObstacles() {
         std::vector<int> keys;
-        for (std::pair<int, PieceStack> pair : pieceStacks) {
+        for (robin_hood::pair<int, PieceStack> pair : pieceStacks) {
             if (pair.second.GetPieceOnTop().GetType() != PieceType::Obstacle) {
                 keys.push_back(pair.first);
             }
         }
 
         std::vector<PieceStack*> stacks;
-        for (int key : keys) {           
-            stacks.push_back(&pieceStacks.at(key));         
+        for (int key : keys) {
+            stacks.push_back(&pieceStacks.at(key));
         }
         return stacks;
     }
 
     std::vector<PieceStack*> Board::GetPieceStacksByColor(Color color) {
         std::vector<int> keys;
-        for (std::pair<int, PieceStack> pair : pieceStacks) {
+        for (robin_hood::pair<int, PieceStack> pair : pieceStacks) {
             if (pair.second.GetPieceOnTop().GetColor() == color) {
                 keys.push_back(pair.first);
             }
         }
 
         std::vector<PieceStack*> stacks;
-        for (int key : keys) {           
-            stacks.push_back(&pieceStacks.at(key));         
+        for (int key : keys) {
+            stacks.push_back(&pieceStacks.at(key));
         }
         return stacks;
     }
 
     std::vector<PieceStack*> Board::GetPieceStacksByColorAndType(Color color, PieceType pieceType) {
         std::vector<int> keys;
-        for (std::pair<int, PieceStack> pair : pieceStacks) {
+        for (robin_hood::pair<int, PieceStack> pair : pieceStacks) {
             if (pair.second.GetPieceOnTop().GetColor() == color && pair.second.GetPieceOnTop().GetType() == pieceType) {
                 keys.push_back(pair.first);
             }
         }
 
         std::vector<PieceStack*> stacks;
-        for (int key : keys) {           
-            stacks.push_back(&pieceStacks.at(key));         
+        for (int key : keys) {
+            stacks.push_back(&pieceStacks.at(key));
         }
         return stacks;
         /*std::vector<PieceStack> stacks;
@@ -109,7 +111,7 @@ namespace Hive {
 
     std::vector<PieceStack> Board::GetPieceStacksByColorAndType_Copy(Color color, PieceType pieceType) {
         std::vector<PieceStack> stacks;
-        for (std::pair<int, PieceStack> pair : pieceStacks) {
+        for (robin_hood::pair<int, PieceStack> pair : pieceStacks) {
             if (pair.second.GetPieceOnTop().GetColor() == color && pair.second.GetPieceOnTop().GetType() == pieceType) {
                 stacks.push_back(pair.second);
             }
@@ -139,11 +141,10 @@ namespace Hive {
     }
 
     std::vector<PieceStack*> Board::GetNeighbouringPieceStacksExceptObstacles(const AxialPosition& position) {
-        //For unordered_map
         std::vector<PieceStack*> neighbouringPieceStacks;
-        std::vector<AxialPosition> neighbouringPositions = position.GetNeighbouringPositions();
+        neighbouringPieceStacks.reserve(4);
 
-        for (AxialPosition neighbouringPosition : neighbouringPositions) {
+        for (AxialPosition neighbouringPosition : position.GetNeighbouringPositions()) {
             if (PieceStackExists(neighbouringPosition) && GetPieceStack(neighbouringPosition).GetPieceOnTop().GetType() != PieceType::Obstacle) {
                 neighbouringPieceStacks.push_back(&GetPieceStack(neighbouringPosition));
             }
@@ -234,14 +235,14 @@ namespace Hive {
     }
 
     bool Board::IsHiveCoherentIfPieceMovesFromPosition(const AxialPosition& position) {
-        PieceType type = GetPieceStackUnsafe(position).GetPieceOnTop().GetType();
-        Color color = GetPieceStackUnsafe(position).GetPieceOnTop().GetColor();
+        //PieceType type = GetPieceStackUnsafe(position).GetPieceOnTop().GetType();
+        //Color color = GetPieceStackUnsafe(position).GetPieceOnTop().GetColor();
         std::vector<Piece> pieces = GetPieceStackUnsafe(position).GetPieces();
         std::vector<Piece> obstacle = {Piece(PieceType::Obstacle, Color::Undefined)};
         GetPieceStackUnsafe(position).SetPieces(obstacle);
         //GetPieceStackUnsafe(position).RemovePieceOnTop();
         //RemoveUpmostPiece(position);
-        int hiveSize = GetCoherentHiveSize();
+        //int hiveSize = GetCoherentHiveSize();
         if (GetCoherentHiveSize() == pieceStacks.size() - 3 - 1) {
             //GetPieceStackUnsafe(position).AddPieceOnTop(Piece(type, color));
             //AddPieceOnTop(Piece(type, color), position);
@@ -307,7 +308,7 @@ namespace Hive {
     }
 
     int Board::GetCoherentHiveSize() {
-        std::unordered_map<int, PieceStack*> hive;
+        robin_hood::unordered_map<int, PieceStack*> hive;
         std::vector<PieceStack*> pieceStacks = GetPieceStacksWithoutObstacles();
 
         if (pieceStacks.size() == 0) {
@@ -320,9 +321,9 @@ namespace Hive {
         pieceStacksToSearch.push_back(startStack);
 
         while (!pieceStacksToSearch.empty()) {
-            std::vector<PieceStack*> neighbouringPieceStacks = GetNeighbouringPieceStacks(pieceStacksToSearch[0]->GetAxialPosition());
+            std::vector<PieceStack*> neighbouringPieceStacks = GetNeighbouringPieceStacksExceptObstacles(pieceStacksToSearch[0]->GetAxialPosition());
             for (PieceStack* neighbouringPieceStack : neighbouringPieceStacks) {
-                if (hive.find(neighbouringPieceStack->GetAxialPosition().GetHashValue()) == hive.end() && neighbouringPieceStack->GetPieceOnTop().GetType() != PieceType::Obstacle) {
+                if (hive.find(neighbouringPieceStack->GetAxialPosition().GetHashValue()) == hive.end()) {
                     hive.insert({neighbouringPieceStack->GetAxialPosition().GetHashValue(), neighbouringPieceStack});
                     pieceStacksToSearch.push_back(neighbouringPieceStack);
                 }
