@@ -100,23 +100,6 @@ namespace Hive {
             stacks.push_back(&pieceStacks.at(key));
         }
         return stacks;
-        /*std::vector<PieceStack> stacks;
-        for (std::pair<int, PieceStack> pair : pieceStacks) {
-            if (pair.second.GetPieceOnTop().GetColor() == color && pair.second.GetPieceOnTop().GetType() == pieceType) {
-                stacks.push_back(pair.second);
-            }
-        }
-        return stacks;*/
-    }
-
-    std::vector<PieceStack> Board::GetPieceStacksByColorAndType_Copy(Color color, PieceType pieceType) {
-        std::vector<PieceStack> stacks;
-        for (robin_hood::pair<int, PieceStack> pair : pieceStacks) {
-            if (pair.second.GetPieceOnTop().GetColor() == color && pair.second.GetPieceOnTop().GetType() == pieceType) {
-                stacks.push_back(pair.second);
-            }
-        }
-        return stacks;
     }
 
     Piece& Board::GetPiece(const AxialPosition& position, int layer) {

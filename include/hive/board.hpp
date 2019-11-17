@@ -43,7 +43,6 @@ namespace Hive {
         std::vector<PieceStack*> GetPieceStacksWithoutObstacles();
         std::vector<PieceStack*> GetPieceStacksByColor(Color color);
         std::vector<PieceStack*> GetPieceStacksByColorAndType(Color color, PieceType pieceType);
-        std::vector<PieceStack> GetPieceStacksByColorAndType_Copy(Color color, PieceType pieceType);
 
         Piece& GetPiece(const AxialPosition& position, int layer);
         Piece& GetPiece(int x, int y, int layer);
