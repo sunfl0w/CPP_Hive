@@ -16,11 +16,13 @@
 #include "PieceType.hpp"
 #include "Color.hpp"
 #include "robin_hood.h"
+#include "phmap.h"
 
 namespace Hive {
     class Board {
     private:
-        robin_hood::unordered_map<int, PieceStack> pieceStacks;
+        //robin_hood::unordered_map<int, PieceStack> pieceStacks;
+        phmap::node_hash_map<int, PieceStack> pieceStacks;
         //std::unordered_map<int, PieceStack> pieceStacks;
         //std::map<int, PieceStack> pieceStacks;
 

@@ -4,14 +4,16 @@ namespace Hive {
     //Public Functions
 
     Board::Board() {
-        pieceStacks = robin_hood::unordered_map<int, PieceStack>();
+        pieceStacks = phmap::node_hash_map<int, PieceStack>();
+        //pieceStacks = robin_hood::unordered_map<int, PieceStack>();
         //pieceStacks = std::unordered_map<int, PieceStack>();
         //pieceStacks = std::map<int, PieceStack>();
         //PlaceObstacles();
     }
 
     Board::Board(const Board& board) {
-        pieceStacks = robin_hood::unordered_map<int, PieceStack>(board.pieceStacks);
+        pieceStacks = phmap::node_hash_map<int, PieceStack>(board.pieceStacks);
+        //pieceStacks = robin_hood::unordered_map<int, PieceStack>(board.pieceStacks);
         //pieceStacks = std::unordered_map<int, PieceStack>(board.pieceStacks);
         //pieceStacks = std::map<int, PieceStack>(board.pieceStacks);
     }
@@ -46,7 +48,7 @@ namespace Hive {
 
     std::vector<PieceStack*> Board::GetPieceStacks() {
         std::vector<int> keys;
-        for (robin_hood::pair<int, PieceStack> pair : pieceStacks) {
+        for (std::pair<int, PieceStack> pair : pieceStacks) {
             keys.push_back(pair.first);
         }
 
@@ -59,7 +61,7 @@ namespace Hive {
 
     std::vector<PieceStack*> Board::GetPieceStacksWithoutObstacles() {
         std::vector<int> keys;
-        for (robin_hood::pair<int, PieceStack> pair : pieceStacks) {
+        for (std::pair<int, PieceStack> pair : pieceStacks) {
             if (pair.second.GetPieceOnTop().GetType() != PieceType::Obstacle) {
                 keys.push_back(pair.first);
             }
@@ -74,7 +76,7 @@ namespace Hive {
 
     std::vector<PieceStack*> Board::GetPieceStacksByColor(Color color) {
         std::vector<int> keys;
-        for (robin_hood::pair<int, PieceStack> pair : pieceStacks) {
+        for (std::pair<int, PieceStack> pair : pieceStacks) {
             if (pair.second.GetPieceOnTop().GetColor() == color) {
                 keys.push_back(pair.first);
             }
@@ -89,7 +91,7 @@ namespace Hive {
 
     std::vector<PieceStack*> Board::GetPieceStacksByColorAndType(Color color, PieceType pieceType) {
         std::vector<int> keys;
-        for (robin_hood::pair<int, PieceStack> pair : pieceStacks) {
+        for (std::pair<int, PieceStack> pair : pieceStacks) {
             if (pair.second.GetPieceOnTop().GetColor() == color && pair.second.GetPieceOnTop().GetType() == pieceType) {
                 keys.push_back(pair.first);
             }
