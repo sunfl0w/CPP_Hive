@@ -6,6 +6,14 @@ namespace Hive {
         this->pieces = std::vector<Piece>();
     }
 
+    bool PieceStack::operator==(const PieceStack &pieceStack) const {
+        if(position == pieceStack.position) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     const AxialPosition& PieceStack::GetAxialPosition() const {
         return position;
     }

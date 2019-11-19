@@ -90,6 +90,7 @@
         "locale": "cpp",
         "queue": "cpp",
         "stack": "cpp",
-        "coroutine": "cpp"
+        "coroutine": "cpp",
+        "shared_mutex": "cpp"
     }
 }

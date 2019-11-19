@@ -22,9 +22,11 @@ namespace Hive {
     class Board {
     private:
         //robin_hood::unordered_map<int, PieceStack> pieceStacks;
-        phmap::node_hash_map<int, PieceStack> pieceStacks;
+        //phmap::node_hash_map<int, PieceStack> pieceStacks;
         //std::unordered_map<int, PieceStack> pieceStacks;
         //std::map<int, PieceStack> pieceStacks;
+
+        std::vector<phmap::node_hash_map<int, PieceStack>> pieceStacks;
 
     public:
         //std::vector<AxialPosition> hiveBorderPositions;
