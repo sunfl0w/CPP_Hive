@@ -234,7 +234,7 @@ namespace Hive {
                 AxialPosition translation = grasshopper->GetAxialPosition().GetTranslationToOtherPosition(neighbouringPieceStack->GetAxialPosition());
                 AxialPosition searchPos = grasshopper->GetAxialPosition();
                 searchPos = searchPos.Add(translation);
-                while (board.IsAxialPositionOnBoard(searchPos)) {
+                while (board.IsPositionOnBoard(searchPos)) {
                     /*if (board.PieceStackExists(searchPos)) {
                         if (board.GetPieceStack(searchPos).GetPieceOnTop().GetType() == PieceType::Obstacle) {
                             break;
@@ -346,7 +346,7 @@ namespace Hive {
             std::vector<AxialPosition> neighbouringPositions = queenBee->GetAxialPosition().GetNeighbouringPositionsIncludingOutsideBoardPositions();
             int numberOfBlockingNeighbours = 0;
             for (AxialPosition neighbouringPosition : neighbouringPositions) {
-                if (!board.IsAxialPositionOnBoard(neighbouringPosition)) {
+                if (!board.IsPositionOnBoard(neighbouringPosition)) {
                     numberOfBlockingNeighbours++;
                 } else if (board.PieceStackExists(neighbouringPosition)) {
                     numberOfBlockingNeighbours++;

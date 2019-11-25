@@ -10,6 +10,8 @@ set(sources ${sources}
     src/hive/Player.cpp
     src/hive/SlidePathNode.cpp
     src/hive/benchmark/benchmark.cpp
+    src/hive/neighbourMap.cpp
+    src/hive/globals.cpp
     src/starter/Starter.cpp
     src/util/RandomNumberGenerator.cpp
     src/communication/SC_Message.cpp

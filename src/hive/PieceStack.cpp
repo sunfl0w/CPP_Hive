@@ -14,6 +14,14 @@ namespace Hive {
         }
     }
 
+    bool PieceStack::IsStackEmpty() const {
+        if(pieces.empty()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     const AxialPosition& PieceStack::GetAxialPosition() const {
         return position;
     }

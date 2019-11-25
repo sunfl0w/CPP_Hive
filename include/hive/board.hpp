@@ -18,6 +18,8 @@
 #include "robin_hood.h"
 #include "phmap.h"
 
+#include "globals.hpp"
+
 namespace Hive {
     class Board {
     private:
@@ -26,7 +28,9 @@ namespace Hive {
         //std::unordered_map<int, PieceStack> pieceStacks;
         //std::map<int, PieceStack> pieceStacks;
 
-        std::vector<phmap::node_hash_map<int, PieceStack>> pieceStacks;
+        //std::vector<phmap::node_hash_map<int, PieceStack>> pieceStacks;
+
+        std::vector<std::vector<PieceStack>> pieceStacks;
 
     public:
         //std::vector<AxialPosition> hiveBorderPositions;
@@ -62,7 +66,8 @@ namespace Hive {
         void RemoveUpmostPiece(const AxialPosition& position);
 
         bool IsAxialPositionAtBorderOfBoard(AxialPosition& position) const;
-        bool IsAxialPositionOnBoard(AxialPosition& position) const;
+        bool IsPositionOnBoard(AxialPosition& position) const;
+        bool IsPositionOnBoard(int x, int y) const;
 
         std::vector<AxialPosition> GetEmptyAxialPositionsOnBoard() const;
 
