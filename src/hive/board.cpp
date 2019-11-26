@@ -245,7 +245,7 @@ namespace Hive {
         //GetPieceStackUnsafe(position).RemovePieceOnTop();
         //RemoveUpmostPiece(position);
         //int hiveSize = GetCoherentHiveSize();
-        if (GetCoherentHiveSize() == pieceStacks.size() - 4) {
+        if (GetCoherentHiveSize() == GetPieceStacks().size() - 4) {
             //GetPieceStackUnsafe(position).AddPieceOnTop(Piece(type, color));
             //AddPieceOnTop(Piece(type, color), position);
             GetPieceStackUnsafe(position).SetPieces(pieces);
