@@ -35,11 +35,7 @@ namespace Hive {
     }
 
     bool Board::PieceStackExists(const AxialPosition& position) const {
-        if (pieceStacks[position.x + 5][position.y + 5].IsStackEmpty()) {
-            return false;
-        } else {
-            return true;
-        }
+        return !pieceStacks[position.x + 5][position.y + 5].IsStackEmpty();
     }
 
     bool Board::PieceStackExists(int x, int y) const {
@@ -196,30 +192,15 @@ namespace Hive {
     }
 
     bool Board::IsAxialPositionAtBorderOfBoard(AxialPosition& position) const {
-        int z = 0 - position.x - position.y;
-        if (std::abs(position.x) + std::abs(position.y) + std::abs(z) == 10) {
-            return true;
-        } else {
-            return false;
-        }
+        return std::abs(position.x) + std::abs(position.y) + std::abs(0 - position.x - position.y) == 10;
     }
 
     bool Board::IsPositionOnBoard(AxialPosition& position) const {
-        int z = 0 - position.x - position.y;
-        if (std::abs(position.x) + std::abs(position.y) + std::abs(z) <= 10) {
-            return true;
-        } else {
-            return false;
-        }
+        return std::abs(position.x) + std::abs(position.y) + std::abs(0 - position.x - position.y) <= 10;
     }
 
     bool Board::IsPositionOnBoard(int x, int y) const {
-        int z = 0 - x - y;
-        if (std::abs(x) + std::abs(y) + std::abs(z) <= 10) {
-            return true;
-        } else {
-            return false;
-        }
+        return std::abs(x) + std::abs(y) + std::abs(0 - x - y) <= 10;
     }
 
     std::vector<AxialPosition> Board::GetEmptyAxialPositionsOnBoard() const {
@@ -313,13 +294,9 @@ namespace Hive {
         robin_hood::unordered_map<int, PieceStack*> hive;
         std::vector<PieceStack*> pieceStacks = GetPieceStacksWithoutObstacles();
 
-        if (pieceStacks.size() == 0) {
-            return 0;
-        }
-
         PieceStack* startStack = pieceStacks[0];
         hive.insert({startStack->GetAxialPosition().GetHashValue(), startStack});
-        std::vector<PieceStack*> pieceStacksToSearch;
+        std::deque<PieceStack*> pieceStacksToSearch;
         pieceStacksToSearch.push_back(startStack);
 
         while (!pieceStacksToSearch.empty()) {
@@ -330,7 +307,7 @@ namespace Hive {
                     pieceStacksToSearch.push_back(neighbouringPieceStack);
                 }
             }
-            pieceStacksToSearch.erase(pieceStacksToSearch.begin());
+            pieceStacksToSearch.pop_front();
         }
         return hive.size();
     }

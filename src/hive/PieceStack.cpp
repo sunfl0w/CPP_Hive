@@ -4,22 +4,16 @@ namespace Hive {
     PieceStack::PieceStack(const AxialPosition& position) {
         this->position = position;
         this->pieces = std::vector<Piece>();
+        //isEmpty = true;
     }
 
     bool PieceStack::operator==(const PieceStack &pieceStack) const {
-        if(position == pieceStack.position) {
-            return true;
-        } else {
-            return false;
-        }
+        return position == pieceStack.position;
     }
 
     bool PieceStack::IsStackEmpty() const {
-        if(pieces.empty()) {
-            return true;
-        } else {
-            return false;
-        }
+        return pieces.empty();
+        //return isEmpty;
     }
 
     const AxialPosition& PieceStack::GetAxialPosition() const {
@@ -28,10 +22,12 @@ namespace Hive {
 
     void PieceStack::AddPieceOnTop(const Piece& piece) {
         pieces.push_back(piece);
+        //isEmpty = false;
     }
 
     void PieceStack::RemovePieceOnTop() {
         pieces.erase(pieces.begin() + pieces.size() - 1);
+        //isEmpty = pieces.empty();
     }
 
     Piece& PieceStack::GetPieceByLayer(int layer) {
@@ -48,5 +44,6 @@ namespace Hive {
 
     void PieceStack::SetPieces(std::vector<Piece> pieces) {
         this->pieces = pieces;
+        //isEmpty = pieces.empty(); 
     }
 }  // namespace Hive::Piece

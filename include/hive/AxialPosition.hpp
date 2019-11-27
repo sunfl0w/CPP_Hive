@@ -22,6 +22,7 @@ namespace Hive {
         std::vector<AxialPosition> GetNeighbouringPositions() const;
         std::vector<AxialPosition> GetNeighbouringPositionsIncludingOutsideBoardPositions() const;
         bool IsAtBorderOfBoard() const;
+        bool IsOnBoard() const;
         AxialPosition GetTranslationToOtherPosition(const AxialPosition& otherPosition) const;
     };
 }  // namespace Hive

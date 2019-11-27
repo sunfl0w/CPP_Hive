@@ -10,6 +10,8 @@ namespace Hive {
     private:
         std::vector<Piece> pieces;
         AxialPosition position;
+
+        //bool isEmpty = true;
     public:
         PieceStack(const AxialPosition& position);
 
