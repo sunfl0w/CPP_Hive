@@ -39,9 +39,7 @@ namespace Hive {
     }
 
     bool Board::PieceStackExists(int x, int y) const {
-        //For unordered_map
-        AxialPosition position(x, y);
-        return PieceStackExists(position);
+        return !pieceStacks[x + 5][y + 5].IsStackEmpty();
     }
 
     PieceStack& Board::GetPieceStack(const AxialPosition& position) {
@@ -60,11 +58,20 @@ namespace Hive {
 
     std::vector<PieceStack*> Board::GetPieceStacks() {
         std::vector<PieceStack*> stacks;
-        stacks.reserve(20);
-        for (int x = -5; x < 6; x++) {
-            for (int y = -5; y < 6; y++) {
-                if (IsPositionOnBoard(x, y) && !pieceStacks[x + 5][y + 5].IsStackEmpty()) {
+        stacks.reserve(25);
+        /*for (int y = -5; y < 6; y++) {
+            for (int x = -5; x < 6; x++) {
+                if (IsPositionOnBoard(x, y) && PieceStackExists(x, y)) {
                     stacks.push_back(&pieceStacks[x + 5][y + 5]);
+                }
+            }
+        }*/
+        for (int q = -5; q <= 5; q++) {
+            int r1 = std::max(-5, -q - 5);
+            int r2 = std::min(5, -q + 5);
+            for (int r = r1; r <= r2; r++) {
+                if (PieceStackExists(q, r)) {
+                    stacks.push_back(&pieceStacks[q + 5][r + 5]);
                 }
             }
         }
@@ -72,13 +79,18 @@ namespace Hive {
     }
 
     std::vector<PieceStack*> Board::GetPieceStacksWithoutObstacles() {
-        std::vector<PieceStack*> stacks;
-        stacks.reserve(20);
-        for (int x = -5; x < 6; x++) {
+        std::vector<PieceStack*> stacks = GetPieceStacks();
+        //stacks.reserve(20);
+        /*for (int x = -5; x < 6; x++) {
             for (int y = -5; y < 6; y++) {
-                if (IsPositionOnBoard(x, y) && !pieceStacks[x + 5][y + 5].IsStackEmpty() && GetPieceStack(x, y).GetPieceOnTop().GetType() != PieceType::Obstacle) {
+                if (IsPositionOnBoard(x, y) && PieceStackExists(x, y) && GetPieceStack(x, y).GetPieceOnTop().GetType() != PieceType::Obstacle) {
                     stacks.push_back(&pieceStacks[x + 5][y + 5]);
                 }
+            }
+        }*/
+        for (int i = stacks.size() - 1; i >= 0; i--) {
+            if (stacks[i]->GetPieceOnTop().GetType() == PieceType::Obstacle) {
+                stacks.erase(stacks.begin() + i);
             }
         }
         return stacks;
@@ -88,7 +100,7 @@ namespace Hive {
         std::vector<PieceStack*> stacks;
         for (int x = -5; x < 6; x++) {
             for (int y = -5; y < 6; y++) {
-                if (IsPositionOnBoard(x, y) && !pieceStacks[x + 5][y + 5].IsStackEmpty() && GetPieceStack(x, y).GetPieceOnTop().GetColor() == color) {
+                if (IsPositionOnBoard(x, y) && PieceStackExists(x, y) && GetPieceStack(x, y).GetPieceOnTop().GetColor() == color) {
                     stacks.push_back(&pieceStacks[x + 5][y + 5]);
                 }
             }
@@ -100,7 +112,7 @@ namespace Hive {
         std::vector<PieceStack*> stacks;
         for (int x = -5; x < 6; x++) {
             for (int y = -5; y < 6; y++) {
-                if (IsPositionOnBoard(x, y) && !pieceStacks[x + 5][y + 5].IsStackEmpty() && GetPieceStack(x, y).GetPieceOnTop().GetColor() == color && GetPieceStack(x, y).GetPieceOnTop().GetType() == pieceType) {
+                if (IsPositionOnBoard(x, y) && PieceStackExists(x, y) && GetPieceStack(x, y).GetPieceOnTop().GetColor() == color && GetPieceStack(x, y).GetPieceOnTop().GetType() == pieceType) {
                     stacks.push_back(&pieceStacks[x + 5][y + 5]);
                 }
             }
@@ -119,7 +131,7 @@ namespace Hive {
 
     std::vector<PieceStack*> Board::GetNeighbouringPieceStacks(const AxialPosition& position) {
         std::vector<PieceStack*> neighbouringPieceStacks;
-        neighbouringPieceStacks.reserve(4);
+        neighbouringPieceStacks.reserve(6);
 
         for (AxialPosition neighbouringPosition : neighbourMap.GetNeighbouringPositionsRef(position)) {
             if (PieceStackExists(neighbouringPosition)) {
@@ -186,8 +198,8 @@ namespace Hive {
 
     void Board::RemoveUpmostPiece(const AxialPosition& position) {
         GetPieceStackUnsafe(position).RemovePieceOnTop();
-        /*if (GetPieceStackUnsafe(position).GetPieces().empty()) {
-            pieceStacks[position.x + 5].erase(position.GetHashValue());
+        /*if (GetPieceStackUnsafe(position)->IsStackEmpty()) {
+            pieceStacks[position.x + 5][position.y + 5] = nullptr;
         }*/
     }
 
@@ -226,14 +238,14 @@ namespace Hive {
         //GetPieceStackUnsafe(position).RemovePieceOnTop();
         //RemoveUpmostPiece(position);
         //int hiveSize = GetCoherentHiveSize();
+        if (AreNeighbouringFieldsCoherent(position)) {
+            GetPieceStackUnsafe(position).SetPieces(pieces);
+            return true;
+        }
         if (GetCoherentHiveSize() == GetPieceStacks().size() - 4) {
-            //GetPieceStackUnsafe(position).AddPieceOnTop(Piece(type, color));
-            //AddPieceOnTop(Piece(type, color), position);
             GetPieceStackUnsafe(position).SetPieces(pieces);
             return true;
         } else {
-            //GetPieceStackUnsafe(position).AddPieceOnTop(Piece(type, color));
-            //AddPieceOnTop(Piece(type, color), position);
             GetPieceStackUnsafe(position).SetPieces(pieces);
             return false;
         }
@@ -291,19 +303,25 @@ namespace Hive {
     }
 
     int Board::GetCoherentHiveSize() {
-        robin_hood::unordered_map<int, PieceStack*> hive;
+        //robin_hood::unordered_map<int, PieceStack*> hive;
+        std::vector<PieceStack*> hive;
         std::vector<PieceStack*> pieceStacks = GetPieceStacksWithoutObstacles();
 
         PieceStack* startStack = pieceStacks[0];
-        hive.insert({startStack->GetAxialPosition().GetHashValue(), startStack});
+        //hive.insert({startStack->GetAxialPosition().GetHashValue(), startStack});
+        hive.push_back(startStack);
         std::deque<PieceStack*> pieceStacksToSearch;
         pieceStacksToSearch.push_back(startStack);
 
         while (!pieceStacksToSearch.empty()) {
             std::vector<PieceStack*> neighbouringPieceStacks = GetNeighbouringPieceStacksExceptObstacles(pieceStacksToSearch[0]->GetAxialPosition());
             for (PieceStack* neighbouringPieceStack : neighbouringPieceStacks) {
-                if (hive.find(neighbouringPieceStack->GetAxialPosition().GetHashValue()) == hive.end()) {
+                /*if (hive.find(neighbouringPieceStack->GetAxialPosition().GetHashValue()) == hive.end()) {
                     hive.insert({neighbouringPieceStack->GetAxialPosition().GetHashValue(), neighbouringPieceStack});
+                    pieceStacksToSearch.push_back(neighbouringPieceStack);
+                }*/
+                if (std::find(hive.begin(), hive.end(), neighbouringPieceStack) == hive.end()) {
+                    hive.push_back(neighbouringPieceStack);
                     pieceStacksToSearch.push_back(neighbouringPieceStack);
                 }
             }
@@ -333,4 +351,26 @@ namespace Hive {
             return -1;
         }
     }
+
+    bool Board::AreNeighbouringFieldsCoherent(const AxialPosition& pos) {
+        std::vector<AxialPosition> neighbouringPositions = neighbourMap.GetNeighbouringPositionsRef(pos);
+
+        int connectionSum = 0;
+        for (AxialPosition neighbouringPosition : neighbouringPositions) {
+            for (AxialPosition otherNeighbouringPosition : neighbouringPositions) {
+                if (neighbouringPosition != otherNeighbouringPosition) {
+                    if (neighbouringPosition.IsNeighbourTo(otherNeighbouringPosition)) {
+                        connectionSum++;
+                    }
+                }
+            }
+        }
+
+        if (connectionSum == neighbouringPositions.size() - 1 || neighbouringPositions.size() == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }  // namespace Hive

@@ -81,5 +81,6 @@ namespace Hive {
         int GetCoherentHiveSize();
 
         int GetDirectionOfNeighbouringPositions(const AxialPosition& startPos, const AxialPosition& destinationPos) const;
+        bool AreNeighbouringFieldsCoherent(const AxialPosition& pos);
     };
 }  // namespace Hive
