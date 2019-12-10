@@ -78,7 +78,7 @@ namespace Hive {
         void PlaceObstacles();
 
     private:
-        int GetCoherentHiveSize();
+        bool GetCoherentHiveSize(const AxialPosition& pos);
 
         int GetDirectionOfNeighbouringPositions(const AxialPosition& startPos, const AxialPosition& destinationPos) const;
         bool AreNeighbouringFieldsCoherent(const AxialPosition& pos);

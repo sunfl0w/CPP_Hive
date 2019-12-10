@@ -61,36 +61,5 @@ int main(int argc, char *argv[]) {
         hiveClient.StartReserved(hostname, hostPort, reservationCode);
     }*/
 
-    /*GameState gameState;
-    gameState.GetBoard().AddPieceOnTop(Piece(PieceType::Spider, Color::Red), AxialPosition(0, 4));
-    gameState.GetBoard().AddPieceOnTop(Piece(PieceType::Beetle, Color::Red), AxialPosition(0, 4));
-    gameState.GetBoard().AddPieceOnTop(Piece(PieceType::QueenBee, Color::Red), AxialPosition(1, 3));
-    gameState.GetBoard().AddPieceOnTop(Piece(PieceType::Spider, Color::Red), AxialPosition(2, 2));
-    gameState.GetBoard().AddPieceOnTop(Piece(PieceType::Ant, Color::Red), AxialPosition(2, 3));
-    gameState.GetBoard().AddPieceOnTop(Piece(PieceType::Ant, Color::Red), AxialPosition(3, 1));
-    gameState.GetBoard().AddPieceOnTop(Piece(PieceType::Spider, Color::Red), AxialPosition(4, 0));
-    gameState.GetBoard().AddPieceOnTop(Piece(PieceType::Grasshopper, Color::Red), AxialPosition(3, 0));
-    gameState.GetBoard().AddPieceOnTop(Piece(PieceType::Ant, Color::Red), AxialPosition(1, 1));
-    gameState.GetBoard().AddPieceOnTop(Piece(PieceType::Grasshopper, Color::Red), AxialPosition(1, -2));
-
-    gameState.GetBoard().AddPieceOnTop(Piece(PieceType::Spider, Color::Blue), AxialPosition(3, -1));
-    gameState.GetBoard().AddPieceOnTop(Piece(PieceType::Grasshopper, Color::Blue), AxialPosition(4, -2));
-    gameState.GetBoard().AddPieceOnTop(Piece(PieceType::Ant, Color::Blue), AxialPosition(1, -0));
-    gameState.GetBoard().AddPieceOnTop(Piece(PieceType::Beetle, Color::Blue), AxialPosition(1, -0));
-    gameState.GetBoard().AddPieceOnTop(Piece(PieceType::Beetle, Color::Blue), AxialPosition(1, -1));
-    gameState.GetBoard().AddPieceOnTop(Piece(PieceType::QueenBee, Color::Blue), AxialPosition(2, -1));
-    gameState.GetBoard().AddPieceOnTop(Piece(PieceType::Spider, Color::Blue), AxialPosition(3, -2));
-    gameState.GetBoard().AddPieceOnTop(Piece(PieceType::Ant, Color::Blue), AxialPosition(4, -3));
-    gameState.GetBoard().AddPieceOnTop(Piece(PieceType::Spider, Color::Blue), AxialPosition(3, -3));
-    gameState.GetBoard().AddPieceOnTop(Piece(PieceType::Grasshopper, Color::Blue), AxialPosition(2, -3));
-    gameState.GetBoard().AddPieceOnTop(Piece(PieceType::Ant, Color::Blue), AxialPosition(1, -3));
-
-    gameState.GetBoard().AddPieceOnTop(Piece(PieceType::Obstacle, Color::Undefined), AxialPosition(0, 5));
-    gameState.GetBoard().AddPieceOnTop(Piece(PieceType::Obstacle, Color::Undefined), AxialPosition(0, 1));
-    gameState.GetBoard().AddPieceOnTop(Piece(PieceType::Obstacle, Color::Undefined), AxialPosition(4, -4));
-
-    std::vector<Move> possibleMoves = gameState.GetPossibleMoves();
-    int i = 0;*/
-
     return 0;
 }
