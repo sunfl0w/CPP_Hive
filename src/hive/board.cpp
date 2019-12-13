@@ -34,11 +34,11 @@ namespace Hive {
         //pieceStacks = std::vector<phmap::node_hash_map<int, PieceStack>>(pieceStacks);
     }
 
-    bool Board::PieceStackExists(const AxialPosition& position) const {
+    bool Board::PieceStackExists(const AxialPosition& position) {
         return !pieceStacks[position.x + 5][position.y + 5].IsStackEmpty();
     }
 
-    bool Board::PieceStackExists(int x, int y) const {
+    bool Board::PieceStackExists(int x, int y) {
         return !pieceStacks[x + 5][y + 5].IsStackEmpty();
     }
 
@@ -215,7 +215,7 @@ namespace Hive {
         return std::abs(x) + std::abs(y) + std::abs(0 - x - y) <= 10;
     }
 
-    std::vector<AxialPosition> Board::GetEmptyAxialPositionsOnBoard() const {
+    std::vector<AxialPosition> Board::GetEmptyAxialPositionsOnBoard() {
         std::vector<AxialPosition> emptyAxialPositions;
         for (int x = -5; x <= 5; x++) {
             for (int y = -5; y <= 5; y++) {

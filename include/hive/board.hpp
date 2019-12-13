@@ -40,8 +40,8 @@ namespace Hive {
         Board();
         Board(const Board& board);
 
-        bool PieceStackExists(const AxialPosition& coordinate) const;
-        bool PieceStackExists(int x, int y) const;
+        bool PieceStackExists(const AxialPosition& coordinate);
+        bool PieceStackExists(int x, int y);
 
         PieceStack& GetPieceStack(const AxialPosition& position);
         PieceStack& GetPieceStack(int x, int y);
@@ -69,7 +69,7 @@ namespace Hive {
         bool IsPositionOnBoard(AxialPosition& position) const;
         bool IsPositionOnBoard(int x, int y) const;
 
-        std::vector<AxialPosition> GetEmptyAxialPositionsOnBoard() const;
+        std::vector<AxialPosition> GetEmptyAxialPositionsOnBoard();
 
         bool IsHiveCoherentIfPieceMovesFromPosition(const AxialPosition& position);
 

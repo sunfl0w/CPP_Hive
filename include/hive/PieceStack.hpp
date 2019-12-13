@@ -11,12 +11,12 @@ namespace Hive {
         std::vector<Piece> pieces;
         AxialPosition position;
 
-        //bool isEmpty = true;
+        bool isEmpty = true;
     public:
         PieceStack(const AxialPosition& position);
 
         bool operator==(const PieceStack &pieceStack) const;
-        bool IsStackEmpty() const;
+        bool& IsStackEmpty();
 
         const AxialPosition& GetAxialPosition() const;
         void AddPieceOnTop(const Piece& piece);
