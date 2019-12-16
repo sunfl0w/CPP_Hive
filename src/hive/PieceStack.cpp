@@ -11,10 +11,10 @@ namespace Hive {
         return position == pieceStack.position;
     }
 
-    bool& PieceStack::IsStackEmpty() {
+    /*bool& PieceStack::IsStackEmpty() {
         //return pieces.empty();
         return isEmpty;
-    }
+    }*/
 
     const AxialPosition& PieceStack::GetAxialPosition() const {
         return position;

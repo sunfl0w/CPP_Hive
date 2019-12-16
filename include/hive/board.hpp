@@ -1,8 +1,7 @@
 #pragma once
 
 #include <vector>
-#include <unordered_map>
-#include <map>
+#include <set>
 #include <algorithm>
 #include <random>
 #include <iostream>
@@ -15,8 +14,6 @@
 #include "AxialPosition.hpp"
 #include "PieceType.hpp"
 #include "Color.hpp"
-#include "robin_hood.h"
-#include "phmap.h"
 
 #include "globals.hpp"
 

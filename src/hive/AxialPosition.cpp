@@ -38,7 +38,7 @@ namespace Hive {
     int AxialPosition::GetDistanceTo(const AxialPosition& otherPosition) const {
         //int z = 0 - x - y;
         //int zOther = 0 - otherPosition.x - otherPosition.y;
-        return (std::abs(x - otherPosition.x) + std::abs(y - otherPosition.y) + std::abs(0 - x - y - 0 - otherPosition.x - otherPosition.y)) / 2;
+        return (std::abs(x - otherPosition.x) + std::abs(y - otherPosition.y) + std::abs(0 - x - y - 0 - otherPosition.x - otherPosition.y)) >> 1;
     }
 
     bool AxialPosition::IsNeighbourTo(const AxialPosition& otherPosition) const {
