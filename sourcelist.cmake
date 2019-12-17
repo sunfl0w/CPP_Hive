@@ -8,7 +8,6 @@ set(sources ${sources}
     src/hive/PieceStack.cpp
     src/hive/PieceType.cpp
     src/hive/Player.cpp
-    src/hive/SlidePathNode.cpp
     src/hive/benchmark/benchmark.cpp
     src/hive/neighbourMap.cpp
     src/hive/globals.cpp

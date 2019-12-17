@@ -8,8 +8,8 @@
 namespace Hive {
     class PieceStack {
     private:
-        std::vector<Piece> pieces;
         AxialPosition position;
+        std::vector<Piece> pieces;
 
         bool isEmpty = true;
 

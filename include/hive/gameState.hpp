@@ -6,7 +6,6 @@
 #include "Move.hpp"
 #include "Player.hpp"
 #include "board.hpp"
-#include "SlidePathNode.hpp"
 
 namespace Hive {
     class GameState {

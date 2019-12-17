@@ -150,11 +150,11 @@ namespace Hive {
         std::vector<PieceStack*> queenBeesOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayer.GetColor(), PieceType::QueenBee);
         for (PieceStack* queenBeeOfCurrentPlayer : queenBeesOfCurrentPlayer) {
             if (board.IsHiveCoherentIfPieceMovesFromPosition(AxialPosition(queenBeeOfCurrentPlayer->GetAxialPosition()))) {
-                std::vector<AxialPosition> emptyNeighbouringPositions = board.GetEmptyNeighbouringAxialPositions(queenBeeOfCurrentPlayer->GetAxialPosition());
+                std::vector<AxialPosition*> emptyNeighbouringPositions = board.GetEmptyNeighbouringAxialPositions(queenBeeOfCurrentPlayer->GetAxialPosition());
 
-                for (AxialPosition emptyNeighbouringPosition : emptyNeighbouringPositions) {
-                    if (board.CanSlide(queenBeeOfCurrentPlayer->GetAxialPosition(), emptyNeighbouringPosition)) {
-                        possibleQueenBeeDragMoves.push_back(Move(MoveType::DragMove, currentPlayer.GetColor(), queenBeeOfCurrentPlayer->GetAxialPosition(), emptyNeighbouringPosition, PieceType::QueenBee));
+                for (AxialPosition* emptyNeighbouringPosition : emptyNeighbouringPositions) {
+                    if (board.CanSlide(queenBeeOfCurrentPlayer->GetAxialPosition(), *emptyNeighbouringPosition)) {
+                        possibleQueenBeeDragMoves.push_back(Move(MoveType::DragMove, currentPlayer.GetColor(), queenBeeOfCurrentPlayer->GetAxialPosition(), *emptyNeighbouringPosition, PieceType::QueenBee));
                     }
                 }
             }
@@ -177,8 +177,11 @@ namespace Hive {
             for (int i = 0; i < 3; i++) {
                 std::vector<AxialPosition> newSlidePathEndPositions;
                 for (AxialPosition currentSlidePathEndPosition : currentSlidePathEndPositions) {
-                    std::vector<AxialPosition> emptyNeighbouringPositions = board.GetEmptySlideableNeighbouringAxialPositionsExcept(currentSlidePathEndPosition, searchedPositions);
-                    newSlidePathEndPositions.insert(newSlidePathEndPositions.end(), emptyNeighbouringPositions.begin(), emptyNeighbouringPositions.end());
+                    std::vector<AxialPosition*> emptyNeighbouringPositions = board.GetEmptySlideableNeighbouringAxialPositionsExcept(currentSlidePathEndPosition, searchedPositions);
+                    for(AxialPosition* emptyNeighbouringPosition : emptyNeighbouringPositions) {
+                        newSlidePathEndPositions.push_back(*emptyNeighbouringPosition);
+                    }
+                    //newSlidePathEndPositions.insert(newSlidePathEndPositions.end(), emptyNeighbouringPositions.begin(), emptyNeighbouringPositions.end());
                 }
                 searchedPositions.insert(searchedPositions.end(), currentSlidePathEndPositions.begin(), currentSlidePathEndPositions.end());
                 currentSlidePathEndPositions = newSlidePathEndPositions;
@@ -201,8 +204,8 @@ namespace Hive {
             std::vector<AxialPosition> neighbouringPositions = beetle->GetAxialPosition().GetNeighbouringPositions();
 
             for (AxialPosition neighbouringPosition : neighbouringPositions) {
-                if(board.PieceStackExists(neighbouringPosition)) {
-                    if(board.GetPieceStack(neighbouringPosition).GetPieceOnTop().GetType() != PieceType::Obstacle) {
+                if (board.PieceStackExists(neighbouringPosition)) {
+                    if (board.GetPieceStack(neighbouringPosition).GetPieceOnTop().GetType() != PieceType::Obstacle) {
                         possibleBeetleDragMoves.push_back(Move(MoveType::DragMove, currentPlayer.GetColor(), beetle->GetAxialPosition(), neighbouringPosition, PieceType::Beetle));
                     }
                 } else {
@@ -261,15 +264,15 @@ namespace Hive {
                 continue;
             }
             std::vector<AxialPosition> searchedPositions;
-            std::vector<AxialPosition> slideEndPositions = board.GetEmptySlideableNeighbouringAxialPositionsExcept(ant->GetAxialPosition(), searchedPositions);
+            std::vector<AxialPosition*> slideEndPositions = board.GetEmptySlideableNeighbouringAxialPositionsExcept(ant->GetAxialPosition(), searchedPositions);
 
             while (!slideEndPositions.empty()) {
-                std::vector<AxialPosition> newSlideEndPositions;
-                for (AxialPosition position : slideEndPositions) {
-                    possibleAntDragMoves.push_back(Move(MoveType::DragMove, currentPlayer.GetColor(), ant->GetAxialPosition(), position, PieceType::Ant));
-                    std::vector<AxialPosition> newEndPositions = board.GetEmptySlideableNeighbouringAxialPositionsExcept(position, searchedPositions);
+                std::vector<AxialPosition*> newSlideEndPositions;
+                for (AxialPosition* position : slideEndPositions) {
+                    possibleAntDragMoves.push_back(Move(MoveType::DragMove, currentPlayer.GetColor(), ant->GetAxialPosition(), *position, PieceType::Ant));
+                    std::vector<AxialPosition*> newEndPositions = board.GetEmptySlideableNeighbouringAxialPositionsExcept(*position, searchedPositions);
                     newSlideEndPositions.insert(newSlideEndPositions.end(), newEndPositions.begin(), newEndPositions.end());
-                    searchedPositions.push_back(position);
+                    searchedPositions.push_back(*position);
                     //slideEndPositions.erase(std::find(slideEndPositions.begin(), slideEndPositions.end(), position));
                 }
                 slideEndPositions = newSlideEndPositions;
@@ -313,16 +316,16 @@ namespace Hive {
             }
         } else if (turn == 1) {
             std::vector<PieceStack*> pieceStacks = board.GetPieceStacksByColor(Color::Red);
-            std::vector<AxialPosition> neighbouringEmptyPositions = board.GetEmptyNeighbouringAxialPositions(pieceStacks[0]->GetAxialPosition());
-            for (AxialPosition neighbouringEmptyPosition : neighbouringEmptyPositions) {
-                deployablePositions.push_back(neighbouringEmptyPosition);
+            std::vector<AxialPosition*> neighbouringEmptyPositions = board.GetEmptyNeighbouringAxialPositions(pieceStacks[0]->GetAxialPosition());
+            for (AxialPosition* neighbouringEmptyPosition : neighbouringEmptyPositions) {
+                deployablePositions.push_back(*neighbouringEmptyPosition);
             }
         } else {
             std::vector<PieceStack*> pieceStacksOfCurrentPlayer = board.GetPieceStacksByColor(currentPlayer.GetColor());
             for (PieceStack* gameSpieceStack : pieceStacksOfCurrentPlayer) {
-                std::vector<AxialPosition> neighbouringEmptyPositions = board.GetEmptyNeighbouringAxialPositions(gameSpieceStack->GetAxialPosition());
-                for (AxialPosition neighbouringEmptyPosition : neighbouringEmptyPositions) {
-                    std::vector<PieceStack*> neighbouringStacks = board.GetNeighbouringPieceStacks(neighbouringEmptyPosition);
+                std::vector<AxialPosition*> neighbouringEmptyPositions = board.GetEmptyNeighbouringAxialPositions(gameSpieceStack->GetAxialPosition());
+                for (AxialPosition* neighbouringEmptyPosition : neighbouringEmptyPositions) {
+                    std::vector<PieceStack*> neighbouringStacks = board.GetNeighbouringPieceStacks(*neighbouringEmptyPosition);
                     bool enemyStackNeighbouring = false;
                     for (PieceStack* neighbouringStack : neighbouringStacks) {
                         if (neighbouringStack->GetPieceOnTop().GetColor() != currentPlayer.GetColor() && neighbouringStack->GetPieceOnTop().GetType() != PieceType::Obstacle) {
@@ -330,8 +333,8 @@ namespace Hive {
                             break;
                         }
                     }
-                    if (!enemyStackNeighbouring && std::find(deployablePositions.begin(), deployablePositions.end(), neighbouringEmptyPosition) == deployablePositions.end()) {
-                        deployablePositions.push_back(neighbouringEmptyPosition);
+                    if (!enemyStackNeighbouring && std::find(deployablePositions.begin(), deployablePositions.end(), *neighbouringEmptyPosition) == deployablePositions.end()) {
+                        deployablePositions.push_back(*neighbouringEmptyPosition);
                     }
                 }
             }

@@ -27,7 +27,7 @@ namespace Hive {
 
         //std::vector<phmap::node_hash_map<int, PieceStack>> pieceStacks;
 
-        std::vector<std::vector<PieceStack>> pieceStacks;
+        std::vector<PieceStack> pieceStacks;
 
     public:
         //std::vector<AxialPosition> hiveBorderPositions;
@@ -37,7 +37,7 @@ namespace Hive {
         Board();
         Board(const Board& board);
 
-        bool PieceStackExists(const AxialPosition& coordinate);
+        bool PieceStackExists(const AxialPosition& position);
         bool PieceStackExists(int x, int y);
 
         PieceStack& GetPieceStack(const AxialPosition& position);
@@ -55,9 +55,9 @@ namespace Hive {
         std::vector<PieceStack*> GetNeighbouringPieceStacks(const AxialPosition& position);
         std::vector<PieceStack*> GetNeighbouringPieceStacksExceptObstacles(const AxialPosition& position);
 
-        std::vector<AxialPosition> GetEmptyNeighbouringAxialPositions(const AxialPosition& position);
-        std::vector<AxialPosition> GetEmptySlideableNeighbouringAxialPositions(const AxialPosition& position);
-        std::vector<AxialPosition> GetEmptySlideableNeighbouringAxialPositionsExcept(const AxialPosition& position, const std::vector<AxialPosition>& ignoredPositions);
+        std::vector<AxialPosition*> GetEmptyNeighbouringAxialPositions(const AxialPosition& position);
+        std::vector<AxialPosition*> GetEmptySlideableNeighbouringAxialPositions(const AxialPosition& position);
+        std::vector<AxialPosition*> GetEmptySlideableNeighbouringAxialPositionsExcept(const AxialPosition& position, const std::vector<AxialPosition>& ignoredPositions);
 
         void AddPieceOnTop(const Piece& piece, const AxialPosition& position);
         void RemoveUpmostPiece(const AxialPosition& position);
