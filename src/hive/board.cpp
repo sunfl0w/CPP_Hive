@@ -52,15 +52,24 @@ namespace Hive {
     }
 
     std::vector<PieceStack*> Board::GetPieceStacks() {
-        std::vector<PieceStack*> stacks;
+        /*std::vector<PieceStack*> stacks;
         stacks.reserve(25);
         for (int q = -5; q <= 5; q++) {
             int r1 = std::max(-5, -q - 5);
             int r2 = std::min(5, -q + 5);
             for (int r = r1; r <= r2; r++) {
-                //PieceStack stack = pieceStacks[(q + 5) * 11 + (r + 5)];
                 if (!pieceStacks[(q + 5) * 11 + (r + 5)].IsStackEmpty()) {
                     stacks.push_back(&pieceStacks[(q + 5) * 11 + (r + 5)]);
+                }
+            }
+        }
+        return stacks;*/
+        std::vector<PieceStack*> stacks;
+        stacks.reserve(25);
+        for (int x = 0; x < 11; x++) {
+            for (int y = 0; y < 11; y++) {
+                if (!pieceStacks[x * 11 + y].IsStackEmpty()) {
+                    stacks.push_back(&pieceStacks[x * 11 + y]);
                 }
             }
         }
@@ -209,15 +218,19 @@ namespace Hive {
     }
 
     bool Board::IsHiveCoherentIfPieceMovesFromPosition(const AxialPosition& position) {
-        bool isHiveCoherent = false;
         //Replacing moving piece with an obstacle for easy computation.
         std::vector<Piece> pieces = GetPieceStackUnsafe(position).GetPieces();
         std::vector<Piece> obstacle = {Piece(PieceType::Obstacle, Color::Undefined)};
         GetPieceStackUnsafe(position).SetPieces(obstacle);
 
+        std::vector<PieceStack*> pieceStacks = GetPieceStacksWithoutObstacles();
+        if(pieceStacks.size() == 1 || pieceStacks.size() == 0) {
+            return true;
+        }
+
         std::vector<PieceStack*> hive;
         hive.reserve(18);
-        std::vector<PieceStack*> pieceStacks = GetPieceStacksWithoutObstacles();
+
         std::vector<AxialPosition*> neighbouringPositions = neighbourMap.GetNeighbouringPositions(position);
 
         PieceStack* startStack = pieceStacks[0];
@@ -227,14 +240,10 @@ namespace Hive {
         pieceStacksToSearch.push_back(startStack);
 
         int iterator = 0;
-        while (!pieceStacksToSearch.empty() && !isHiveCoherent) {
+        while (!pieceStacksToSearch.empty()) {
             iterator++;
             std::vector<PieceStack*> neighbouringPieceStacks = GetNeighbouringPieceStacksExceptObstacles(pieceStacksToSearch[0]->GetAxialPosition());
             for (PieceStack* neighbouringPieceStack : neighbouringPieceStacks) {
-                /*if (hive.find(neighbouringPieceStack->GetAxialPosition().GetHashValue()) == hive.end()) {
-                    hive.insert({neighbouringPieceStack->GetAxialPosition().GetHashValue(), neighbouringPieceStack});
-                    pieceStacksToSearch.push_back(neighbouringPieceStack);
-                }*/
                 if (std::find(hive.begin(), hive.end(), neighbouringPieceStack) == hive.end()) {
                     hive.push_back(neighbouringPieceStack);
                     pieceStacksToSearch.push_back(neighbouringPieceStack);
@@ -250,7 +259,6 @@ namespace Hive {
                     }
                 }
                 if (allNeighboursInHive) {
-                    isHiveCoherent = true;
                     GetPieceStackUnsafe(position).SetPieces(pieces);
                     return true;
                 }
@@ -258,13 +266,11 @@ namespace Hive {
             pieceStacksToSearch.pop_front();
         }
 
-        if(hive.size() == pieceStacks.size()) {
-            isHiveCoherent = true;
-        }
-
         GetPieceStackUnsafe(position).SetPieces(pieces);
-
-        return isHiveCoherent;
+        if(hive.size() == pieceStacks.size()) {
+            return true;
+        }
+        return false;
     }
 
     bool Board::CanSlide(const AxialPosition& slideStartPos, const AxialPosition& slideEndPos) {

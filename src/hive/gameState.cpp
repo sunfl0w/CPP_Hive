@@ -96,6 +96,7 @@ namespace Hive {
             board.AddPieceOnTop(Piece(move.GetMovedPieceType(), currentPlayer.GetColor()), move.GetDestinationPosition());
             turn++;
         }
+        performedMoves.push_back(Move(move));
 
         Player swap = currentPlayer;
         currentPlayer = pausedPlayer;
@@ -243,7 +244,7 @@ namespace Hive {
                             break;
                         }
                     }*/
-                    if (!board.PieceStackExists(searchPos)) {
+                    if (!board.PieceStackExists(searchPos) && !board.GetNeighbouringPieceStacksExceptObstacles(searchPos).empty()) {
                         possibleGrasshopperDragMoves.push_back(Move(MoveType::DragMove, currentPlayer.GetColor(), grasshopper->GetAxialPosition(), searchPos, PieceType::Grasshopper));
                         break;
                     }
