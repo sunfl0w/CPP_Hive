@@ -1,13 +1,15 @@
 #include "PieceStack.hpp"
 
 namespace Hive {
+    PieceStack::PieceStack() {}
+
     PieceStack::PieceStack(const AxialPosition& position) {
         this->position = position;
         this->pieces = std::vector<Piece>();
         isEmpty = true;
     }
 
-    bool PieceStack::operator==(const PieceStack &pieceStack) const {
+    bool PieceStack::operator==(const PieceStack& pieceStack) const {
         return position == pieceStack.position;
     }
 
@@ -44,6 +46,6 @@ namespace Hive {
 
     void PieceStack::SetPieces(std::vector<Piece> pieces) {
         this->pieces = pieces;
-        isEmpty = pieces.empty(); 
+        isEmpty = pieces.empty();
     }
-}  // namespace Hive::Piece
+}  // namespace Hive

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include <set>
+#include <array>
 #include <algorithm>
 #include <random>
 #include <iostream>
@@ -27,7 +27,7 @@ namespace Hive {
 
         //std::vector<phmap::node_hash_map<int, PieceStack>> pieceStacks;
 
-        std::vector<PieceStack> pieceStacks;
+        std::array<PieceStack, 121> pieceStacks;
 
     public:
         //std::vector<AxialPosition> hiveBorderPositions;

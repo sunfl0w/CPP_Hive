@@ -14,6 +14,7 @@ namespace Hive {
         bool isEmpty = true;
 
     public:
+        PieceStack();
         PieceStack(const AxialPosition& position);
 
         bool operator==(const PieceStack& pieceStack) const;

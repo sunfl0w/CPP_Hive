@@ -4,32 +4,14 @@ namespace Hive {
     //Public Functions
 
     Board::Board() {
-        //pieceStacks = phmap::node_hash_map<int, PieceStack>();
-        //pieceStacks = robin_hood::unordered_map<int, PieceStack>();
-        //pieceStacks = std::unordered_map<int, PieceStack>();
-        //pieceStacks = std::map<int, PieceStack>();
-        //PlaceObstacles();
-
-        pieceStacks = std::vector<PieceStack>();
-
         for (int x = -5; x < 6; x++) {
             for (int y = -5; y < 6; y++) {
-                pieceStacks.push_back(PieceStack(AxialPosition(x, y)));
+                pieceStacks[(x + 5) * 11 + (y + 5)] = PieceStack(AxialPosition(x, y));
             }
         }
     }
 
-    Board::Board(const Board& board) {
-        //pieceStacks = phmap::node_hash_map<int, PieceStack>(board.pieceStacks);
-        //pieceStacks = robin_hood::unordered_map<int, PieceStack>(board.pieceStacks);
-        //pieceStacks = std::unordered_map<int, PieceStack>(board.pieceStacks);
-        //pieceStacks = std::map<int, PieceStack>(board.pieceStacks);
-
-   
-        pieceStacks = std::vector<PieceStack>(board.pieceStacks);
-        
-        //pieceStacks = std::vector<phmap::node_hash_map<int, PieceStack>>(pieceStacks);
-    }
+    Board::Board(const Board& board) : pieceStacks(board.pieceStacks) {}
 
     bool Board::PieceStackExists(const AxialPosition& position) {
         return !pieceStacks[(position.x + 5) * 11 + (position.y + 5)].IsStackEmpty();
@@ -161,13 +143,13 @@ namespace Hive {
 
     std::vector<AxialPosition*> Board::GetEmptySlideableNeighbouringAxialPositionsExcept(const AxialPosition& position, const std::vector<AxialPosition>& ignoredPositions) {
         std::vector<AxialPosition*> emptyNeighbouringSlideablePositions = GetEmptySlideableNeighbouringAxialPositions(position);
-        for (int i = emptyNeighbouringSlideablePositions.size() - 1; i >= 0; i--)  {
-        for (AxialPosition ignoredPosition : ignoredPositions) {
-            auto iterator = std::find_if(emptyNeighbouringSlideablePositions.begin(), emptyNeighbouringSlideablePositions.end(), [&](AxialPosition* pos) {return pos->GetHashValue() == ignoredPosition.GetHashValue();});
-            if (iterator != emptyNeighbouringSlideablePositions.end()) {
-                emptyNeighbouringSlideablePositions.erase(iterator);
+        for (int i = emptyNeighbouringSlideablePositions.size() - 1; i >= 0; i--) {
+            for (AxialPosition ignoredPosition : ignoredPositions) {
+                auto iterator = std::find_if(emptyNeighbouringSlideablePositions.begin(), emptyNeighbouringSlideablePositions.end(), [&](AxialPosition* pos) { return pos->GetHashValue() == ignoredPosition.GetHashValue(); });
+                if (iterator != emptyNeighbouringSlideablePositions.end()) {
+                    emptyNeighbouringSlideablePositions.erase(iterator);
+                }
             }
-        }
         }
 
         return emptyNeighbouringSlideablePositions;
@@ -224,7 +206,7 @@ namespace Hive {
         GetPieceStackUnsafe(position).SetPieces(obstacle);
 
         std::vector<PieceStack*> pieceStacks = GetPieceStacksWithoutObstacles();
-        if(pieceStacks.size() == 1 || pieceStacks.size() == 0) {
+        if (pieceStacks.size() == 1 || pieceStacks.size() == 0) {
             return true;
         }
 
@@ -267,7 +249,7 @@ namespace Hive {
         }
 
         GetPieceStackUnsafe(position).SetPieces(pieces);
-        if(hive.size() == pieceStacks.size()) {
+        if (hive.size() == pieceStacks.size()) {
             return true;
         }
         return false;
