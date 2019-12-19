@@ -34,18 +34,6 @@ namespace Hive {
     }
 
     std::vector<PieceStack*> Board::GetPieceStacks() {
-        /*std::vector<PieceStack*> stacks;
-        stacks.reserve(25);
-        for (int q = -5; q <= 5; q++) {
-            int r1 = std::max(-5, -q - 5);
-            int r2 = std::min(5, -q + 5);
-            for (int r = r1; r <= r2; r++) {
-                if (!pieceStacks[(q + 5) * 11 + (r + 5)].IsStackEmpty()) {
-                    stacks.push_back(&pieceStacks[(q + 5) * 11 + (r + 5)]);
-                }
-            }
-        }
-        return stacks;*/
         std::vector<PieceStack*> stacks;
         stacks.reserve(25);
         for (int x = 0; x < 11; x++) {
@@ -167,9 +155,6 @@ namespace Hive {
 
     void Board::RemoveUpmostPiece(const AxialPosition& position) {
         GetPieceStackUnsafe(position).RemovePieceOnTop();
-        /*if (GetPieceStackUnsafe(position)->IsStackEmpty()) {
-            pieceStacks[position.x + 5][position.y + 5] = nullptr;
-        }*/
     }
 
     bool Board::IsAxialPositionAtBorderOfBoard(AxialPosition& position) const {
@@ -187,12 +172,11 @@ namespace Hive {
     std::vector<AxialPosition> Board::GetEmptyAxialPositionsOnBoard() {
         std::vector<AxialPosition> emptyAxialPositions;
         emptyAxialPositions.reserve(80);
-        for (int q = -5; q <= 5; q++) {
-            int r1 = std::max(-5, -q - 5);
-            int r2 = std::min(5, -q + 5);
-            for (int r = r1; r <= r2; r++) {
-                if (!PieceStackExists(q, r)) {
-                    emptyAxialPositions.push_back(AxialPosition(q, r));
+        for (int x = 0; x < 11; x++) {
+            for (int y = 0; y < 11; y++) {
+                AxialPosition pos = AxialPosition(x, y);
+                if (!PieceStackExists(x, y) && pos.IsOnBoard()) {
+                    emptyAxialPositions.push_back(pos);
                 }
             }
         }
@@ -211,7 +195,7 @@ namespace Hive {
         }
 
         std::vector<PieceStack*> hive;
-        hive.reserve(18);
+        hive.reserve(22);
 
         std::vector<AxialPosition*> neighbouringPositions = neighbourMap.GetNeighbouringPositions(position);
 
@@ -225,8 +209,9 @@ namespace Hive {
         while (!pieceStacksToSearch.empty()) {
             iterator++;
             std::vector<PieceStack*> neighbouringPieceStacks = GetNeighbouringPieceStacksExceptObstacles(pieceStacksToSearch[0]->GetAxialPosition());
+
             for (PieceStack* neighbouringPieceStack : neighbouringPieceStacks) {
-                if (std::find(hive.begin(), hive.end(), neighbouringPieceStack) == hive.end()) {
+                if (std::find(hive.begin(), hive.end(), neighbouringPieceStack) == hive.end()) {      
                     hive.push_back(neighbouringPieceStack);
                     pieceStacksToSearch.push_back(neighbouringPieceStack);
                 }
@@ -234,6 +219,7 @@ namespace Hive {
             if (iterator >= neighbouringPositions.size() + 14) {
                 std::sort(hive.begin(), hive.end());
                 bool allNeighboursInHive = true;
+
                 for (AxialPosition* neighbouringPos : neighbouringPositions) {
                     if (std::find(hive.begin(), hive.end(), &GetPieceStackUnsafe(*neighbouringPos)) == hive.end()) {
                         allNeighboursInHive = false;
@@ -287,12 +273,12 @@ namespace Hive {
     //Private Functions
 
     void Board::PlaceObstacles() {
-        Util::RandomNumberGenerator randomNumberGenerator;
+        srand (time(NULL));
         std::vector<AxialPosition> obstaclePositions;
 
         while (obstaclePositions.size() < 3) {
-            int randXPos = randomNumberGenerator.GetRandomInt(-5, 5);
-            int randYPos = randomNumberGenerator.GetRandomInt(-5, 5);
+            int randXPos = rand() % 11 - 5;
+            int randYPos = rand() % 11 - 5;
             AxialPosition obstaclePosition = AxialPosition(randXPos, randYPos);
 
             if (std::find(obstaclePositions.begin(), obstaclePositions.end(), obstaclePosition) == obstaclePositions.end()) {

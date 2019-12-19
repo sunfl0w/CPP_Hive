@@ -7,7 +7,7 @@
 namespace Hive {
     class NeighbourMap {
     private:
-        std::vector<std::vector<std::vector<AxialPosition>>> neighbourMap;
+        std::vector<std::vector<AxialPosition>> neighbourMap;
     public:
         NeighbourMap();
         std::vector<AxialPosition*> GetNeighbouringPositions(const AxialPosition& position);

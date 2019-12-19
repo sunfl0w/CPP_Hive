@@ -182,7 +182,6 @@ namespace Hive {
                     for(AxialPosition* emptyNeighbouringPosition : emptyNeighbouringPositions) {
                         newSlidePathEndPositions.push_back(*emptyNeighbouringPosition);
                     }
-                    //newSlidePathEndPositions.insert(newSlidePathEndPositions.end(), emptyNeighbouringPositions.begin(), emptyNeighbouringPositions.end());
                 }
                 searchedPositions.insert(searchedPositions.end(), currentSlidePathEndPositions.begin(), currentSlidePathEndPositions.end());
                 currentSlidePathEndPositions = newSlidePathEndPositions;
@@ -214,13 +213,6 @@ namespace Hive {
                         possibleBeetleDragMoves.push_back(Move(MoveType::DragMove, currentPlayer.GetColor(), beetle->GetAxialPosition(), neighbouringPosition, PieceType::Beetle));
                     }
                 }
-                /*if (board.PieceStackExists(neighbouringPosition) && board.GetPieceStack(neighbouringPosition).GetPieceOnTop().GetType() != PieceType::Obstacle) {
-                    possibleBeetleDragMoves.push_back(Move(MoveType::DragMove, currentPlayer.GetColor(), beetle->GetAxialPosition(), neighbouringPosition, PieceType::Beetle));
-                } else {
-                    if (board.CanSlide(beetle->GetAxialPosition(), neighbouringPosition)) {
-                        possibleBeetleDragMoves.push_back(Move(MoveType::DragMove, currentPlayer.GetColor(), beetle->GetAxialPosition(), neighbouringPosition, PieceType::Beetle));
-                    }
-                }*/
             }
         }
         return possibleBeetleDragMoves;
@@ -239,11 +231,6 @@ namespace Hive {
                 AxialPosition searchPos = grasshopper->GetAxialPosition();
                 searchPos = searchPos.Add(translation);
                 while (board.IsPositionOnBoard(searchPos)) {
-                    /*if (board.PieceStackExists(searchPos)) {
-                        if (board.GetPieceStack(searchPos).GetPieceOnTop().GetType() == PieceType::Obstacle) {
-                            break;
-                        }
-                    }*/
                     if (!board.PieceStackExists(searchPos) && !board.GetNeighbouringPieceStacksExceptObstacles(searchPos).empty()) {
                         possibleGrasshopperDragMoves.push_back(Move(MoveType::DragMove, currentPlayer.GetColor(), grasshopper->GetAxialPosition(), searchPos, PieceType::Grasshopper));
                         break;
@@ -274,11 +261,8 @@ namespace Hive {
                     std::vector<AxialPosition*> newEndPositions = board.GetEmptySlideableNeighbouringAxialPositionsExcept(*position, searchedPositions);
                     newSlideEndPositions.insert(newSlideEndPositions.end(), newEndPositions.begin(), newEndPositions.end());
                     searchedPositions.push_back(*position);
-                    //slideEndPositions.erase(std::find(slideEndPositions.begin(), slideEndPositions.end(), position));
                 }
                 slideEndPositions = newSlideEndPositions;
-                //searchedPositions.insert(searchedPositions.end(), slideEndPositions.begin(), slideEndPositions.end());
-                //slideEndPositions = board.GetEmptySlideableNeighbouringAxialPositionsExcept(ant.GetAxialPosition(), searchedPositions);
             }
             board.GetPieceStackUnsafe(ant->GetAxialPosition()).GetPieceOnTop().SetType(PieceType::Ant);
         }

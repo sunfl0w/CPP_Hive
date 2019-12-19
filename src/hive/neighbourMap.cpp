@@ -2,32 +2,32 @@
 
 namespace Hive {
     NeighbourMap::NeighbourMap() {
-        neighbourMap = std::vector<std::vector<std::vector<AxialPosition>>>();
+        neighbourMap = std::vector<std::vector<AxialPosition>>();
         for (int i = 0; i < 11; i++) {
-            neighbourMap.push_back(std::vector<std::vector<AxialPosition>>());
             for (int l = 0; l < 11; l++) {
-                neighbourMap[i].push_back(std::vector<AxialPosition>());
+                neighbourMap.push_back(std::vector<AxialPosition>());
             }
         }
 
         for (int x = -5; x < 6; x++) {
             for (int y = -5; y < 6; y++) {
                 AxialPosition pos(x,y);
-                neighbourMap[x + 5][y + 5] = pos.GetNeighbouringPositions();
+                neighbourMap[(x + 5) * 11 + (y + 5)] = pos.GetNeighbouringPositions();
             }
         }
     }
 
     std::vector<AxialPosition*> NeighbourMap::GetNeighbouringPositions(const AxialPosition& position) {
         std::vector<AxialPosition*> neighbouringPositions;
-        neighbouringPositions.reserve(4);
-        for(int i = 0; i < neighbourMap[position.x + 5][position.y + 5].size(); i++) {
-            neighbouringPositions.push_back(&neighbourMap[position.x + 5][position.y + 5].at(i));
+        neighbouringPositions.reserve(6);
+        int maxNeighbours = neighbourMap[(position.x + 5) * 11 + (position.y + 5)].size();
+        for(int i = 0; i < maxNeighbours; i++) {
+            neighbouringPositions.push_back(&neighbourMap[(position.x + 5) * 11 + (position.y + 5)][i]);
         }
         return neighbouringPositions;
     }
 
     std::vector<AxialPosition>& NeighbourMap::GetNeighbouringPositionsRef(const AxialPosition& position) {
-        return neighbourMap[position.x + 5][position.y + 5];
+        return neighbourMap[(position.x + 5) * 11 + (position.y + 5)];
     }
 }  // namespace Hive
