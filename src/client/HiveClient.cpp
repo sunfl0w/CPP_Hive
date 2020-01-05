@@ -1,7 +1,49 @@
 #include "HiveClient.hpp"
 
+using namespace boost::program_options;
+
 namespace Client {
-    HiveClient::HiveClient(io_service &ioService) : tcpClient(ioService) {}
+    HiveClient::HiveClient(AI::Logic logic) {
+        this->logic = logic;
+    }
+
+    void HiveClient::Start(int argc, char *argv[]) {
+        std::cout << "Hello, World! I am a c++ client!\n";
+        std::cout << "Parsing arguments.\n";
+
+        options_description optionsDesribtion("C++ client");
+        optionsDesribtion.add_options()("host,h", value<std::string>()->default_value("localhost"), "Host")("port,p", value<unsigned short>()->default_value(13050), "Port")("reservation,r", value<std::string>()->default_value(""), "ReservationCode");
+
+        variables_map varibaleMap;
+        store(command_line_parser(argc, argv).options(optionsDesribtion).run(), varibaleMap);
+
+        std::string hostname = "localhost";
+        unsigned short hostPort = 13050;
+        std::string reservationCode;
+
+        if (varibaleMap.count("host")) {
+            hostname = varibaleMap["host"].as<std::string>();
+        }
+        if (varibaleMap.count("port")) {
+            hostPort = varibaleMap["port"].as<unsigned short>();
+        }
+        if (varibaleMap.count("reservation")) {
+            reservationCode = varibaleMap["reservation"].as<std::string>();
+        }
+
+        std::cout << "Parsing complete. Arguments are:\n";
+        std::cout << "HostName: " + hostname + "\n";
+        std::cout << "HostPort: " + std::to_string(hostPort) + "\n";
+        std::cout << "ReservationCode: " + reservationCode + "\n";
+
+        if (reservationCode.size() == 0) {
+            std::cout << "Starting a connection.\n";
+            StartConnection(ip::address::from_string("127.0.0.1"), hostPort);
+        } else {
+            std::cout << "Starting a reserved connection.\n";
+            StartReservedConnection(hostname, hostPort, reservationCode);
+        }
+    }
 
     void HiveClient::ClientLoop() {
         while (!gameOver) {
@@ -9,8 +51,7 @@ namespace Client {
             boost::system::error_code receiveErrorCode;
             std::string inputStream = tcpClient.ReadMessage(receiveErrorCode);
             if (receiveErrorCode) {
-                std::cout << "Receive failed. Shutting down."
-                          << "\n";
+                std::cout << "Receive failed. Shutting down.\n";
                 gameOver = true;
             }
             std::vector<Communication::SC_Message> messages = scMessageHandler.SplitInputMessagesIntoValidSC_Messages(inputStream);
@@ -46,7 +87,7 @@ namespace Client {
                 currentGameState = scMessageHandler.GetGameStateFromGameStateMessage(message);
             } else if (message.messageType == Communication::SC_MessageType::MoveRequest) {
                 if (!gameOver) {
-                    Hive::Move nextMove = GetNextMove();                   
+                    Hive::Move nextMove = GetNextMove();
                     responseMessages.push_back(scMessageHandler.CreateMoveMessage(nextMove, roomID));
                 }
             } else if (message.messageType == Communication::SC_MessageType::Left) {
@@ -63,25 +104,21 @@ namespace Client {
     }
 
     Hive::Move HiveClient::GetNextMove() {
-        //std::vector<Move> possibleMoves = currentGameState.GetPossibleMoves();
-        //return possibleMoves[0];
-        return logic->GetNextMove(currentGameState, ownPlayerColor);
+        return logic.GetNextMove(currentGameState, ownPlayerColor);
     }
 
-    void HiveClient::Start(const ip::address &address, const unsigned short &port) {
+    void HiveClient::StartConnection(const ip::address &address, const unsigned short &port) {
         tcpClient.ConnectWithIP(address, port);
         tcpClient.SendMessage("<protocol>");
         tcpClient.SendMessage(scMessageHandler.CreateJoinRequestMessage().content);
         ClientLoop();
         Shutdown();
-        std::cout << "Disconnect complete. Bye."
-                  << "\n";
+        std::cout << "Disconnect complete. Bye.\n";
     }
 
-    void HiveClient::StartReserved(const std::string &hostname, const unsigned short &port, const std::string &reservationCode) {
+    void HiveClient::StartReservedConnection(const std::string &hostname, const unsigned short &port, const std::string &reservationCode) {
         if (hostname == "localhost") {
             tcpClient.ConnectWithIP(ip::address::from_string("127.0.0.1"), port);
-            //tcpClient.ConnectWithIP(tcpClient.ResolveHostnameToIP(hostname), port);
         } else {
             tcpClient.ConnectWithIP(tcpClient.ResolveHostnameToIP(hostname), port);
         }
@@ -89,7 +126,6 @@ namespace Client {
         tcpClient.SendMessage(scMessageHandler.CreateJoinReservedRequestMessage(reservationCode).content);
         ClientLoop();
         Shutdown();
-        std::cout << "Disconnect complete. Bye."
-                  << "\n";
+        std::cout << "Disconnect complete. Bye.\n";
     }
 }  // namespace Client

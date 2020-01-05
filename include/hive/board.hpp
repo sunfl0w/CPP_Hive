@@ -7,7 +7,6 @@
 #include <iostream>
 #include <deque>
 
-#include "RandomNumberGenerator.hpp"
 #include "Piece.hpp"
 #include "PieceStack.hpp"
 #include "Move.hpp"

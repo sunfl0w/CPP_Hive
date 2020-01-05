@@ -91,6 +91,27 @@
         "queue": "cpp",
         "stack": "cpp",
         "coroutine": "cpp",
-        "shared_mutex": "cpp"
+        "shared_mutex": "cpp",
+        "*.ipp": "cpp",
+        "logic.hpp": "c",
+        "axialposition.hpp": "c",
+        "direction.hpp": "c",
+        "gamestate.hpp": "c",
+        "hiveclient.hpp": "c",
+        "tcp_client.hpp": "c",
+        "sc_message.hpp": "c",
+        "sc_messagehandler.hpp": "c",
+        "sc_messagetype.hpp": "c",
+        "benchmark.hpp": "c",
+        "board.hpp": "c",
+        "color.hpp": "c",
+        "globals.hpp": "c",
+        "move.hpp": "c",
+        "movetype.hpp": "c",
+        "neighbourmap.hpp": "c",
+        "piece.hpp": "c",
+        "piecestack.hpp": "c",
+        "piecetype.hpp": "c",
+        "player.hpp": "c"
     }
 }

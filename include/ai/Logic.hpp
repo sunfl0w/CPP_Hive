@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <random>
 
 #include "gameState.hpp"
 #include "Move.hpp"
@@ -8,11 +9,11 @@
 #include "Color.hpp"
 
 namespace AI {
-    class HiveLogic {
+    class Logic {
     protected:
 
     public:
-        HiveLogic();
-        Hive::Move GetNextMove(Hive::GameState currentGameState, Hive::Color ownPlayerColor);
+        Logic();
+        virtual Hive::Move GetNextMove(Hive::GameState currentGameState, Hive::Color ownPlayerColor);
     };
 } // namespace Piranhas::Logic

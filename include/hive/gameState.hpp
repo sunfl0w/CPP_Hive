@@ -18,10 +18,12 @@ namespace Hive {
 
     public:
         GameState();
-        GameState(GameState& gameState);
+        GameState(const GameState& gameState);
 
         unsigned int GetTurn() const;
         void SetTurn(unsigned int turn);
+
+        Move& GetLastPerformedMove();
 
         Board& GetBoard();
 

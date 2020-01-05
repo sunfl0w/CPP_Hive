@@ -9,7 +9,7 @@ namespace Hive {
         performedMoves = std::vector<Move>();
     }
 
-    GameState::GameState(GameState& gameState) : board(gameState.board), currentPlayer(gameState.GetCurrentPlayer()), pausedPlayer(gameState.GetPausedPlayer()), performedMoves(gameState.performedMoves) {
+    GameState::GameState(const GameState& gameState) : board(gameState.board), currentPlayer(gameState.currentPlayer), pausedPlayer(gameState.pausedPlayer), performedMoves(gameState.performedMoves) {
         turn = gameState.turn;
     }
 
@@ -19,6 +19,10 @@ namespace Hive {
 
     void GameState::SetTurn(unsigned int turn) {
         this->turn = turn;
+    }
+
+    Move& GameState::GetLastPerformedMove() {
+        return performedMoves[performedMoves.size() - 1];
     }
 
     Board& GameState::GetBoard() {

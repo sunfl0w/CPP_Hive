@@ -38,14 +38,8 @@ namespace Communication {
         for (pugi::xml_node scMessageNode : scMessageDoc.children()) {
             for (pugi::xml_node childNode : scMessageNode.children()) {
                 SC_MessageType scMessageType;
-                /*std::cout << childNode.name() << "\n";
-            xmlStringWriter xmlStringWriter;
-            childNode.print(xmlStringWriter, " ", pugi::format_default);
-            std::cout << xmlStringWriter.stringData << "\n";*/
+                
                 std::string childNodeName(childNode.name());
-
-                //childNodeName.erase(childNodeName.find_last_not_of("\n\r") + 1);
-                //childNodeName.erase(std::remove(childNodeName.begin(), childNodeName.end(), ' '), childNodeName.end());
 
                 if (childNodeName == "join") {
                     scMessageType = SC_MessageType::JoinRequest;

@@ -11,11 +11,10 @@ set(sources ${sources}
     src/hive/benchmark/benchmark.cpp
     src/hive/neighbourMap.cpp
     src/hive/globals.cpp
-    src/starter/Starter.cpp
-    src/util/RandomNumberGenerator.cpp
     src/communication/SC_Message.cpp
     src/communication/SC_MessageHandler.cpp
     src/client/HiveClient.cpp
     src/client/TCP_Client.cpp
-    src/ai/HiveLogic.cpp
+    src/ai/Logic.cpp
+    src/starter/starter.cpp
 )

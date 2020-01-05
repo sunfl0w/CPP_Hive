@@ -6,5 +6,3 @@ include/client
 include/ai
 include/logic
 deps/libs/pugiXML
-deps/libs/robin-hood-hashing
-deps/libs/parallelHashMap

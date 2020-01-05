@@ -2,7 +2,8 @@
 
 using namespace Client;
 
-TCP_Client::TCP_Client(io_service &ioService) : ioService(ioService), socket(ioService) {}
+TCP_Client::TCP_Client() {
+}
 
 void TCP_Client::ConnectWithIP(ip::address address, unsigned short port) {
     socket.connect(tcp::endpoint(address, port));
@@ -32,7 +33,6 @@ void TCP_Client::SendMessage(std::string message) {
 std::string TCP_Client::ReadMessage(boost::system::error_code &errorCode) {
     streambuf receiveBuffer;
     read_until(socket, receiveBuffer, "</room>", errorCode);
-    //read(socket, receiveBuffer, transfer_at_least(1000), errorCode);
     if (errorCode) {
         std::cout << "Receiving failed: " << errorCode.message() << "\n";
         return "";

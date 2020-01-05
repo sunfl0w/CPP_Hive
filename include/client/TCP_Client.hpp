@@ -9,11 +9,11 @@ using boost::asio::ip::tcp;
 
 namespace Client {
     class TCP_Client {
-        io_service &ioService;
-        tcp::socket socket;
+        io_service ioService;
+        tcp::socket socket {ioService};
 
-        public:
-        TCP_Client(io_service &ioService);
+    public:
+        TCP_Client();
 
         void ConnectWithIP(ip::address address, unsigned short port);
 
@@ -25,4 +25,4 @@ namespace Client {
 
         std::string ReadMessage(boost::system::error_code &errorCode);
     };
-} // namespace TCP_Client
+}  // namespace Client
