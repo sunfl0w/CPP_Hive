@@ -1,4 +1,7 @@
 set(sources ${sources}
+    src/ai/Logic.cpp
+    src/client/HiveClient.cpp
+    src/client/TCP_Client.cpp
     src/hive/AxialPosition.cpp
     src/hive/board.cpp
     src/hive/color.cpp
@@ -13,8 +16,5 @@ set(sources ${sources}
     src/hive/globals.cpp
     src/communication/SC_Message.cpp
     src/communication/SC_MessageHandler.cpp
-    src/client/HiveClient.cpp
-    src/client/TCP_Client.cpp
-    src/ai/Logic.cpp
-    src/starter/starter.cpp
+    swig_wrap.cxx
 )

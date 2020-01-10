@@ -15,6 +15,7 @@ namespace Hive {
         PieceType movedPieceType;
 
     public:
+        Move();
         Move(const MoveType &moveType, const Color &color, const AxialPosition &startPosition, const AxialPosition &destinationPosition, const PieceType &movedPieceType);
 
         MoveType GetMoveType() const;

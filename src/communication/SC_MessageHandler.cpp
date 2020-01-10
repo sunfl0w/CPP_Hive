@@ -1,5 +1,6 @@
 #include "SC_MessageHandler.hpp"
-namespace Communication {
+
+namespace SC_Communication {
     SC_MessageHandler::SC_MessageHandler() {}
 
     std::vector<SC_Message> SC_MessageHandler::FilterProtocolMessages(std::string &inputStream) {
@@ -131,7 +132,7 @@ namespace Communication {
 
     Hive::Color SC_MessageHandler::GetPlayerColorFromWelcomeMessage(const SC_Message &message) {
         pugi::xml_document scMessageDoc;
-        scMessageDoc.load_string(message.content.data());
+        scMessageDoc.load_string(message.GetContent().data());
         std::string color(scMessageDoc.child("room").child("data").attribute("color").value());
 
         if (color == "red") {
@@ -142,14 +143,14 @@ namespace Communication {
     }
     std::string SC_MessageHandler::GetRoomIDFromJoinedMessage(const SC_Message &message) {
         pugi::xml_document scMessageDoc;
-        scMessageDoc.load_string(message.content.data());
+        scMessageDoc.load_string(message.GetContent().data());
         std::string roomID(scMessageDoc.child("joined").attribute("roomId").value());
         return roomID;
     }
     Hive::GameState SC_MessageHandler::GetGameStateFromGameStateMessage(const SC_Message &message) {
         Hive::GameState gameState;
         pugi::xml_document scMessageDoc;
-        scMessageDoc.load_string(message.content.data());
+        scMessageDoc.load_string(message.GetContent().data());
         pugi::xml_node roomNode = scMessageDoc.child("room");
 
         for (pugi::xml_attribute stateAttribute : roomNode.child("data").child("state").attributes()) {

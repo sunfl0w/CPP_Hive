@@ -15,7 +15,7 @@ namespace Client {
     public:
         TCP_Client();
 
-        void ConnectWithIP(ip::address address, unsigned short port);
+        void ConnectWithIP(std::string ipAddress, unsigned short port);
 
         void Disconnect();
 
@@ -23,6 +23,6 @@ namespace Client {
 
         void SendMessage(std::string message);
 
-        std::string ReadMessage(boost::system::error_code &errorCode);
+        std::string ReadMessage();
     };
 }  // namespace Client

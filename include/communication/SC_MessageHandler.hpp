@@ -18,7 +18,7 @@
 #include "SC_Message.hpp"
 #include "XmlStringWriter.hpp"
 
-namespace Communication {
+namespace SC_Communication {
     class SC_MessageHandler {
     private:
         std::vector<SC_Message> FilterProtocolMessages(std::string& inputStream);

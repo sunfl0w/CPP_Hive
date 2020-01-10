@@ -54,16 +54,16 @@ namespace Client {
                 std::cout << "Receive failed. Shutting down.\n";
                 gameOver = true;
             }
-            std::vector<Communication::SC_Message> messages = scMessageHandler.SplitInputMessagesIntoValidSC_Messages(inputStream);
-            for (Communication::SC_Message message : messages) {
-                std::cout << message.content << "\n";
+            std::vector<SC_Communication::SC_Message> messages = scMessageHandler.SplitInputMessagesIntoValidSC_Messages(inputStream);
+            for (SC_Communication::SC_Message message : messages) {
+                std::cout << message.GetContent() << "\n";
                 //std::cerr << message.content << "\n";
             }
-            std::vector<Communication::SC_Message> responses = HandleIncomingMessagesAndGenerateRespones(messages);
-            for (Communication::SC_Message response : responses) {
-                std::cout << response.content << "\n";
+            std::vector<SC_Communication::SC_Message> responses = HandleIncomingMessagesAndGenerateRespones(messages);
+            for (SC_Communication::SC_Message response : responses) {
+                std::cout << response.GetContent() << "\n";
                 //std::cerr << response.content << "\n";
-                tcpClient.SendMessage(response.content);
+                tcpClient.SendMessage(response.GetContent());
             }
             //std::cout << "Message: " << tcpClient.ReadMessage() << "\n";
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -71,32 +71,32 @@ namespace Client {
     }
 
     void HiveClient::Shutdown() {
-        tcpClient.SendMessage(scMessageHandler.CreateProtocolEndMessage().content);
+        tcpClient.SendMessage(scMessageHandler.CreateProtocolEndMessage().GetContent());
     }
 
-    std::vector<Communication::SC_Message> HiveClient::HandleIncomingMessagesAndGenerateRespones(const std::vector<Communication::SC_Message> &incomingMessages) {
-        std::vector<Communication::SC_Message> responseMessages;
-        for (Communication::SC_Message message : incomingMessages) {
-            if (message.messageType == Communication::SC_MessageType::Joined) {
+    std::vector<SC_Communication::SC_Message> HiveClient::HandleIncomingMessagesAndGenerateRespones(const std::vector<SC_Communication::SC_Message> &incomingMessages) {
+        std::vector<SC_Communication::SC_Message> responseMessages;
+        for (SC_Communication::SC_Message message : incomingMessages) {
+            if (message.GetMessageType() == SC_Communication::SC_MessageType::Joined) {
                 std::string roomId = scMessageHandler.GetRoomIDFromJoinedMessage(message);
                 roomID = roomId;
-            } else if (message.messageType == Communication::SC_MessageType::Welcome) {
+            } else if (message.GetMessageType() == SC_Communication::SC_MessageType::Welcome) {
                 ownPlayerColor = scMessageHandler.GetPlayerColorFromWelcomeMessage(message);
-            } else if (message.messageType == Communication::SC_MessageType::GameState) {
+            } else if (message.GetMessageType() == SC_Communication::SC_MessageType::GameState) {
                 //Hive::GameState gameState = scMessageHandler.GetGameStateFromGameStateMessage(message);
                 currentGameState = scMessageHandler.GetGameStateFromGameStateMessage(message);
-            } else if (message.messageType == Communication::SC_MessageType::MoveRequest) {
+            } else if (message.GetMessageType() == SC_Communication::SC_MessageType::MoveRequest) {
                 if (!gameOver) {
                     Hive::Move nextMove = GetNextMove();
                     responseMessages.push_back(scMessageHandler.CreateMoveMessage(nextMove, roomID));
                 }
-            } else if (message.messageType == Communication::SC_MessageType::Left) {
+            } else if (message.GetMessageType() == SC_Communication::SC_MessageType::Left) {
                 //gameOver = true;
-            } else if (message.messageType == Communication::SC_MessageType::Result) {
+            } else if (message.GetMessageType() == SC_Communication::SC_MessageType::Result) {
                 gameOver = true;
-            } else if (message.messageType == Communication::SC_MessageType::Error) {
+            } else if (message.GetMessageType() == SC_Communication::SC_MessageType::Error) {
                 gameOver = true;
-            } else if (message.messageType == Communication::SC_MessageType::ProtocolEnd) {
+            } else if (message.GetMessageType() == SC_Communication::SC_MessageType::ProtocolEnd) {
                 gameOver = true;
             }
         }
@@ -110,7 +110,7 @@ namespace Client {
     void HiveClient::StartConnection(const ip::address &address, const unsigned short &port) {
         tcpClient.ConnectWithIP(address, port);
         tcpClient.SendMessage("<protocol>");
-        tcpClient.SendMessage(scMessageHandler.CreateJoinRequestMessage().content);
+        tcpClient.SendMessage(scMessageHandler.CreateJoinRequestMessage().GetContent());
         ClientLoop();
         Shutdown();
         std::cout << "Disconnect complete. Bye.\n";
@@ -123,7 +123,7 @@ namespace Client {
             tcpClient.ConnectWithIP(tcpClient.ResolveHostnameToIP(hostname), port);
         }
         tcpClient.SendMessage("<protocol>");
-        tcpClient.SendMessage(scMessageHandler.CreateJoinReservedRequestMessage(reservationCode).content);
+        tcpClient.SendMessage(scMessageHandler.CreateJoinReservedRequestMessage(reservationCode).GetContent());
         ClientLoop();
         Shutdown();
         std::cout << "Disconnect complete. Bye.\n";

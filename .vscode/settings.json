@@ -113,5 +113,10 @@
         "piecestack.hpp": "c",
         "piecetype.hpp": "c",
         "player.hpp": "c"
-    }
+    },
+    "python.pythonPath": "/usr/bin/python",
+    "python.linting.enabled": true,
+    "python.linting.pylintEnabled": true,
+    "python.linting.mypyEnabled": false,
+    "python.linting.flake8Enabled": false
 }

@@ -7,8 +7,8 @@ set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/build)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
 
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -g")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Ofast -flto -mpopcnt -fwhole-program -march=native")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -g -static")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Ofast -march=native -static")
 
 find_package(Boost COMPONENTS system thread program_options)
 find_package(PythonLibs REQUIRED)
@@ -16,11 +16,13 @@ find_package(PythonLibs REQUIRED)
 file(STRINGS "includelist.cmake" includes)
 
 include_directories(${includes})
+include_directories(${PYTHON_INCLUDE_DIRS})
 include(sourcelist.cmake)
 
 find_library(pugiXML pugi)
 
-add_executable(CPP_Hive_Client ${sources})
+add_library(CPP_Hive SHARED ${sources})
 
-target_link_libraries(CPP_Hive_Client ${Boost_LIBRARIES})
-target_link_libraries(CPP_Hive_Client "${pugi}")
+target_link_libraries(CPP_Hive ${Boost_LIBRARIES})
+target_link_libraries(CPP_Hive "${pugi}")
+target_link_libraries(CPP_Hive ${PythonLibs})

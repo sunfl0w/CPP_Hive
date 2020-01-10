@@ -21,7 +21,7 @@
 namespace Client {
     class HiveClient {
         Client::TCP_Client tcpClient;
-        Communication::SC_MessageHandler scMessageHandler;
+        SC_Communication::SC_MessageHandler scMessageHandler;
         std::string roomID;
         Hive::Color ownPlayerColor;
         Hive::GameState currentGameState;
@@ -33,7 +33,7 @@ namespace Client {
         void Start(int argc, char *argv[]);
 
     private:
-        std::vector<Communication::SC_Message> HandleIncomingMessagesAndGenerateRespones(const std::vector<Communication::SC_Message> &incomingMessages);
+        std::vector<SC_Communication::SC_Message> HandleIncomingMessagesAndGenerateRespones(const std::vector<SC_Communication::SC_Message> &incomingMessages);
         Hive::Move GetNextMove();
         void ClientLoop();
         void Shutdown();

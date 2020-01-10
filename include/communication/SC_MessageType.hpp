@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Communication {
+namespace SC_Communication {
     enum class SC_MessageType
     {
         Protocol,

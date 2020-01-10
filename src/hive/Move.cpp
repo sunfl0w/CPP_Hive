@@ -1,6 +1,8 @@
 #include "Move.hpp"
 
 namespace Hive {
+    Move::Move() {}
+
     Move::Move(const MoveType &moveType, const Color &color, const AxialPosition &startPosition, const AxialPosition &destinationPosition, const PieceType &movedPieceType) : startPosition(startPosition), destinationPosition(destinationPosition) {
         this->moveType = moveType;
         this->color = color;

@@ -4,11 +4,17 @@
 
 #include "SC_MessageType.hpp"
 
-namespace Communication {
-    struct SC_Message {
+namespace SC_Communication {
+    class SC_Message {
+        private:
         std::string content;
         SC_MessageType messageType;
 
+        public:
+        SC_Message();
         SC_Message(const std::string &messageString, const SC_MessageType &messageType);
+        
+        std::string GetContent() const;
+        SC_MessageType GetMessageType() const;
     };
 }
