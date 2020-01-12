@@ -1,4 +1,5 @@
-import Hive, HiveClient
+import Hive, HiveLogic, sys
 
-hiveClient = HiveClient.HiveClient()
-hiveClient.Start()
+hiveLogic = HiveLogic.HiveLogic()
+hiveClient = Hive.HiveClient(hiveLogic)
+hiveClient.Start(len(sys.argv), str(sys.argv))

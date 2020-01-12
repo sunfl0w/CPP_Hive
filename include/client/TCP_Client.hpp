@@ -4,13 +4,10 @@
 #include <iostream>
 #include <string>
 
-using namespace boost::asio;
-using boost::asio::ip::tcp;
-
 namespace Client {
     class TCP_Client {
-        io_service ioService;
-        tcp::socket socket {ioService};
+        boost::asio::io_service ioService;
+        boost::asio::ip::tcp::socket socket {ioService};
 
     public:
         TCP_Client();
@@ -19,7 +16,7 @@ namespace Client {
 
         void Disconnect();
 
-        ip::address ResolveHostnameToIP(std::string hostname);
+        std::string ResolveHostnameToIPAddress(std::string hostname);
 
         void SendMessage(std::string message);
 

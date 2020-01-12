@@ -14,6 +14,7 @@ namespace AI {
 
     public:
         Logic();
+        virtual ~Logic();
         virtual Hive::Move GetNextMove(Hive::GameState currentGameState, Hive::Color ownPlayerColor);
     };
 } // namespace Piranhas::Logic

@@ -1,6 +1,5 @@
 %module(directors="1") Hive
 %feature("director") AI::Logic;
-%feature("director") Client::TCP_Client;
     %{
     #define SWIG_FILE_WITH_INIT
     #include <boost/asio.hpp>

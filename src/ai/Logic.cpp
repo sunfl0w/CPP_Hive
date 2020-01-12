@@ -5,6 +5,8 @@ using namespace Hive;
 
 Logic::Logic() {}
 
+Logic::~Logic() {}
+
 Hive::Move Logic::GetNextMove(Hive::GameState currentGameState, Hive::Color ownPlayerColor) {
     srand(time(NULL));
     std::vector<Move> possibleMoves = currentGameState.GetPossibleMoves();
