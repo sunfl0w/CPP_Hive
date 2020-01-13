@@ -2,7 +2,6 @@
 %feature("director") AI::Logic;
     %{
     #define SWIG_FILE_WITH_INIT
-    #include <boost/asio.hpp>
     #include "include/ai/Logic.hpp"
     #include "include/client/HiveClient.hpp"
     #include "include/client/TCP_Client.hpp"
