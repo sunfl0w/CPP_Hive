@@ -16,5 +16,4 @@ set(sources ${sources}
     src/hive/globals.cpp
     src/communication/SC_Message.cpp
     src/communication/SC_MessageHandler.cpp
-    swig_wrap.cxx
 )
