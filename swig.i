@@ -23,6 +23,12 @@
     %}
 %feature("director") AI::Logic;
 
+%include <argcargv.i>
+
+%apply (int ARGC, char **ARGV) { (int argc, char *argv[]) }
+
+void Hive::HiveClient::Start(int argc, char *argv[]);
+
 %include "typemaps.i"
 %include "std_string.i"
 %include "std_array.i"
