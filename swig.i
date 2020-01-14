@@ -1,5 +1,4 @@
 %module(directors="1") Hive
-%feature("director") AI::Logic;
     %{
     #define SWIG_FILE_WITH_INIT
     #include "include/ai/Logic.hpp"
@@ -22,6 +21,8 @@
     #include "include/communication/SC_MessageHandler.hpp"
     #include "include/hive/benchmark/benchmark.hpp"
     %}
+%feature("director") AI::Logic;
+
 %include "typemaps.i"
 %include "std_string.i"
 %include "std_array.i"
@@ -49,3 +50,6 @@
 
 %template(SC_Message_Vector) std::vector<SC_Communication::SC_Message>;
 %template(Move_Vector) std::vector<Hive::Move>;
+%template(Position_Vector) std::vector<Hive::AxialPosition>;
+%template(Piece_Vector) std::vector<Hive::Piece>;
+%template(PieceStack_Vector) std::vector<Hive::PieceStack>;

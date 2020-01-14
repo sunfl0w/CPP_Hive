@@ -6,3 +6,4 @@ include/ai
 include/communication
 deps/libs/pugiXML
 include/
+/

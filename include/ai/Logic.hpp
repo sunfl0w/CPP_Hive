@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <random>
+#include <iostream>
 
 #include "gameState.hpp"
 #include "Move.hpp"
@@ -10,8 +11,6 @@
 
 namespace AI {
     class Logic {
-    protected:
-
     public:
         Logic();
         virtual ~Logic();

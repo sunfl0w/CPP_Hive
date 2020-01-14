@@ -3,12 +3,11 @@
 using namespace boost::program_options;
 
 namespace Client {
-    HiveClient::HiveClient(AI::Logic& logic) {
+    HiveClient::HiveClient(AI::Logic* logic) {
         this->logic = logic;
     }
 
     void HiveClient::Start(int argc, char argv[]) {
-        std::cout << "Hello, World! I am a c++ client!\n";
         std::cout << "Parsing arguments.\n";
 
         options_description optionsDesribtion("C++ client");
@@ -51,12 +50,12 @@ namespace Client {
             std::string inputStream = tcpClient.ReadMessage();
             std::vector<SC_Communication::SC_Message> messages = scMessageHandler.SplitInputMessagesIntoValidSC_Messages(inputStream);
             for (SC_Communication::SC_Message message : messages) {
-                std::cout << message.GetContent() << "\n";
+                //std::cout << message.GetContent() << "\n";
                 //std::cerr << message.content << "\n";
             }
             std::vector<SC_Communication::SC_Message> responses = HandleIncomingMessagesAndGenerateRespones(messages);
             for (SC_Communication::SC_Message response : responses) {
-                std::cout << response.GetContent() << "\n";
+                //std::cout << response.GetContent() << "\n";
                 //std::cerr << response.content << "\n";
                 tcpClient.SendMessage(response.GetContent());
             }
@@ -82,7 +81,7 @@ namespace Client {
                 currentGameState = scMessageHandler.GetGameStateFromGameStateMessage(message);
             } else if (message.GetMessageType() == SC_Communication::SC_MessageType::MoveRequest) {
                 if (!gameOver) {
-                    Hive::Move nextMove = GetNextMove();
+                    Hive::Move nextMove = GetNextMove(currentGameState, ownPlayerColor);
                     responseMessages.push_back(scMessageHandler.CreateMoveMessage(nextMove, roomID));
                 }
             } else if (message.GetMessageType() == SC_Communication::SC_MessageType::Left) {
@@ -98,8 +97,8 @@ namespace Client {
         return responseMessages;
     }
 
-    Hive::Move HiveClient::GetNextMove() {
-        return logic.GetNextMove(currentGameState, ownPlayerColor);
+    Hive::Move HiveClient::GetNextMove(Hive::GameState currentGameState, Hive::Color ownPlayerColor) {
+        return logic->GetNextMove(currentGameState, ownPlayerColor);
     }
 
     void HiveClient::StartConnection(const std::string &address, const unsigned short &port) {

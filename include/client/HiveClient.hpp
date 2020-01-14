@@ -26,17 +26,17 @@ namespace Client {
         Hive::Color ownPlayerColor;
         Hive::GameState currentGameState;
         bool gameOver = false;
-        AI::Logic logic;
+        AI::Logic* logic;
 
     public:
-        HiveClient(AI::Logic& logic);
+        HiveClient(AI::Logic* logic);
         void Start(int argc, char argv[]);
 
     private:
         std::vector<SC_Communication::SC_Message> HandleIncomingMessagesAndGenerateRespones(const std::vector<SC_Communication::SC_Message> &incomingMessages);
-        Hive::Move GetNextMove();
         void ClientLoop();
         void Shutdown();
+        Hive::Move GetNextMove(Hive::GameState currentGameState, Hive::Color ownPlayerColor);
         void StartConnection(const std::string &address, const unsigned short &port);
         void StartReservedConnection(const std::string &hostanme, const unsigned short &port, const std::string &reservationCode);
     };

@@ -1,6 +1,8 @@
 #include "Piece.hpp"
 
 namespace Hive {
+    Piece::Piece() {}
+    
     Piece::Piece(const PieceType& type, const Color& color) {
         this->type = type;
         this->color = color;
