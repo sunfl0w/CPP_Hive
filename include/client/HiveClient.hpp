@@ -27,10 +27,11 @@ namespace Client {
         Hive::GameState currentGameState;
         bool gameOver = false;
         AI::Logic* logic;
+        bool verboseOutputEnabled = false;
 
     public:
         HiveClient(AI::Logic* logic);
-        void Start(int argc, char argv[]);
+        void Start(int argc, char *argv[]);
 
     private:
         std::vector<SC_Communication::SC_Message> HandleIncomingMessagesAndGenerateRespones(const std::vector<SC_Communication::SC_Message> &incomingMessages);

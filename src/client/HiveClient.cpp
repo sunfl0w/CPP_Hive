@@ -3,18 +3,18 @@
 using namespace boost::program_options;
 
 namespace Client {
-    HiveClient::HiveClient(AI::Logic* logic) {
+    HiveClient::HiveClient(AI::Logic *logic) {
         this->logic = logic;
     }
 
-    void HiveClient::Start(int argc, char argv[]) {
+    void HiveClient::Start(int argc, char *argv[]) {
         std::cout << "Parsing arguments.\n";
 
         options_description optionsDesribtion("C++ client");
-        optionsDesribtion.add_options()("host,h", value<std::string>()->default_value("localhost"), "Host")("port,p", value<unsigned short>()->default_value(13050), "Port")("reservation,r", value<std::string>()->default_value(""), "ReservationCode");
+        optionsDesribtion.add_options()("host,h", value<std::string>()->default_value("localhost"), "Host")("port,p", value<unsigned short>()->default_value(13050), "Port")("reservation,r", value<std::string>()->default_value(""), "ReservationCode")("verbose,v", "Verbosity");
 
         variables_map varibaleMap;
-        store(command_line_parser(argc, &argv).options(optionsDesribtion).run(), varibaleMap);
+        store(command_line_parser(argc, argv).options(optionsDesribtion).run(), varibaleMap);
 
         std::string hostname = "localhost";
         unsigned short hostPort = 13050;
@@ -28,6 +28,9 @@ namespace Client {
         }
         if (varibaleMap.count("reservation")) {
             reservationCode = varibaleMap["reservation"].as<std::string>();
+        }
+        if (varibaleMap.count("verbose")) {
+            verboseOutputEnabled = true;
         }
 
         std::cout << "Parsing complete. Arguments are:\n";
@@ -46,20 +49,23 @@ namespace Client {
 
     void HiveClient::ClientLoop() {
         while (!gameOver) {
-            //std::cout << "Listening" << "\n";
+            if (verboseOutputEnabled) {
+                std::cout << "Listening.\n";
+            }
             std::string inputStream = tcpClient.ReadMessage();
             std::vector<SC_Communication::SC_Message> messages = scMessageHandler.SplitInputMessagesIntoValidSC_Messages(inputStream);
             for (SC_Communication::SC_Message message : messages) {
-                //std::cout << message.GetContent() << "\n";
-                //std::cerr << message.content << "\n";
+                if (verboseOutputEnabled) {
+                    std::cout << message.GetContent() + "\n";
+                }
             }
             std::vector<SC_Communication::SC_Message> responses = HandleIncomingMessagesAndGenerateRespones(messages);
             for (SC_Communication::SC_Message response : responses) {
-                //std::cout << response.GetContent() << "\n";
-                //std::cerr << response.content << "\n";
+                if (verboseOutputEnabled) {
+                    std::cout << response.GetContent() + "\n";
+                }
                 tcpClient.SendMessage(response.GetContent());
             }
-            //std::cout << "Message: " << tcpClient.ReadMessage() << "\n";
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
     }
@@ -77,7 +83,6 @@ namespace Client {
             } else if (message.GetMessageType() == SC_Communication::SC_MessageType::Welcome) {
                 ownPlayerColor = scMessageHandler.GetPlayerColorFromWelcomeMessage(message);
             } else if (message.GetMessageType() == SC_Communication::SC_MessageType::GameState) {
-                //Hive::GameState gameState = scMessageHandler.GetGameStateFromGameStateMessage(message);
                 currentGameState = scMessageHandler.GetGameStateFromGameStateMessage(message);
             } else if (message.GetMessageType() == SC_Communication::SC_MessageType::MoveRequest) {
                 if (!gameOver) {
@@ -85,7 +90,7 @@ namespace Client {
                     responseMessages.push_back(scMessageHandler.CreateMoveMessage(nextMove, roomID));
                 }
             } else if (message.GetMessageType() == SC_Communication::SC_MessageType::Left) {
-                //gameOver = true;
+                gameOver = true;
             } else if (message.GetMessageType() == SC_Communication::SC_MessageType::Result) {
                 gameOver = true;
             } else if (message.GetMessageType() == SC_Communication::SC_MessageType::Error) {
@@ -107,7 +112,7 @@ namespace Client {
         tcpClient.SendMessage(scMessageHandler.CreateJoinRequestMessage().GetContent());
         ClientLoop();
         Shutdown();
-        std::cout << "Disconnect complete. Bye.\n";
+        std::cout << "Disconnected. Bye.\n";
     }
 
     void HiveClient::StartReservedConnection(const std::string &hostname, const unsigned short &port, const std::string &reservationCode) {
@@ -120,6 +125,6 @@ namespace Client {
         tcpClient.SendMessage(scMessageHandler.CreateJoinReservedRequestMessage(reservationCode).GetContent());
         ClientLoop();
         Shutdown();
-        std::cout << "Disconnect complete. Bye.\n";
+        std::cout << "Disconnected. Bye.\n";
     }
 }  // namespace Client
