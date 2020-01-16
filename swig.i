@@ -59,3 +59,9 @@ void Hive::HiveClient::Start(int argc, char *argv[]);
 %template(Position_Vector) std::vector<Hive::AxialPosition>;
 %template(Piece_Vector) std::vector<Hive::Piece>;
 %template(PieceStack_Vector) std::vector<Hive::PieceStack>;
+
+%template(SC_MessagePointer_Vector) std::vector<SC_Communication::SC_Message*>;
+%template(MovePointer_Vector) std::vector<Hive::Move*>;
+%template(PositionPointer_Vector) std::vector<Hive::AxialPosition*>;
+%template(PiecePointer_Vector) std::vector<Hive::Piece*>;
+%template(PieceStackPointer_Vector) std::vector<Hive::PieceStack*>;
