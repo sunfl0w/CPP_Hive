@@ -3,6 +3,12 @@
 namespace Hive {
     PieceStack::PieceStack() {}
 
+    PieceStack::PieceStack(const PieceStack& pieceStack) {
+        this->position = AxialPosition(pieceStack.position);
+        this->pieces = std::vector<Piece>(pieceStack.pieces);
+        this->isEmpty = pieceStack.isEmpty;
+    }
+
     PieceStack::PieceStack(const AxialPosition& position) {
         this->position = position;
         this->pieces = std::vector<Piece>();
@@ -13,10 +19,10 @@ namespace Hive {
         return position == pieceStack.position;
     }
 
-    /*bool& PieceStack::IsStackEmpty() {
+    bool PieceStack::IsStackEmpty() const {
         //return pieces.empty();
         return isEmpty;
-    }*/
+    }
 
     const AxialPosition& PieceStack::GetAxialPosition() const {
         return position;

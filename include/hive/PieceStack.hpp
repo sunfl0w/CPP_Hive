@@ -15,13 +15,14 @@ namespace Hive {
 
     public:
         PieceStack();
+        PieceStack(const PieceStack& pieceStack);
         PieceStack(const AxialPosition& position);
 
         bool operator==(const PieceStack& pieceStack) const;
-        inline bool& IsStackEmpty() {
+        /*inline bool& IsStackEmpty() {
             return isEmpty;
-        }
-
+        }*/
+        bool IsStackEmpty() const;
         const AxialPosition& GetAxialPosition() const;
         void AddPieceOnTop(const Piece& piece);
         void RemovePieceOnTop();

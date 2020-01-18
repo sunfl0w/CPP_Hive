@@ -9,6 +9,11 @@ namespace Hive {
         this->y = 0;
     }
 
+    AxialPosition::AxialPosition(const AxialPosition &axialPosition) {
+        this->x = axialPosition.x;
+        this->y = axialPosition.y;
+    }
+
     AxialPosition::AxialPosition(int x, int y) {
         this->x = x;
         this->y = y;

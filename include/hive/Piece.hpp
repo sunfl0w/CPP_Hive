@@ -11,6 +11,7 @@ namespace Hive {
 
     public:
         Piece();
+        Piece(const Piece& piece);
         Piece(const PieceType& pieceType, const Color& pieceColor);
 
         PieceType GetType() const;

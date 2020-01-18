@@ -1,9 +1,9 @@
 #pragma once
 
 #include "AxialPosition.hpp"
+#include "Color.hpp"
 #include "MoveType.hpp"
 #include "PieceType.hpp"
-#include "Color.hpp"
 
 namespace Hive {
     class Move {
@@ -16,6 +16,7 @@ namespace Hive {
 
     public:
         Move();
+        Move(const Move &move);
         Move(const MoveType &moveType, const Color &color, const AxialPosition &startPosition, const AxialPosition &destinationPosition, const PieceType &movedPieceType);
 
         MoveType GetMoveType() const;
@@ -24,4 +25,4 @@ namespace Hive {
         AxialPosition GetStartPosition() const;
         AxialPosition GetDestinationPosition() const;
     };
-}  // namespace Hive::Move
+}  // namespace Hive

@@ -2,6 +2,11 @@
 
 namespace Hive {
     Piece::Piece() {}
+
+    Piece::Piece(const Piece& piece) {
+        this->type = piece.type;
+        this->color = piece.color;
+    }
     
     Piece::Piece(const PieceType& type, const Color& color) {
         this->type = type;

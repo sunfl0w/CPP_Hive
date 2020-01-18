@@ -8,6 +8,7 @@ namespace Hive {
         int x, y;
 
         AxialPosition();
+        AxialPosition(const AxialPosition &axialPosition);
         AxialPosition(int x, int y);
 
         bool operator==(const AxialPosition &axialPosition) const;
