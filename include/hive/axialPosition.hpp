@@ -6,6 +6,7 @@ namespace Hive {
     class AxialPosition {
     public:
         int x, y;
+        unsigned int id;
 
         AxialPosition();
         AxialPosition(const AxialPosition &axialPosition);
@@ -15,6 +16,7 @@ namespace Hive {
         bool operator!=(const AxialPosition &axialPosition) const;
 
         int GetHashValue() const;
+        unsigned int GetID() const;
         int GetZCoordinate() const;
         int GetDistanceTo(const AxialPosition& otherPosition) const;
         bool IsNeighbourTo(const AxialPosition& otherPosition) const;

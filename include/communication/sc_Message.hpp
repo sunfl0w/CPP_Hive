@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "SC_MessageType.hpp"
+#include "sc_MessageType.hpp"
 
 namespace SC_Communication {
     class SC_Message {

@@ -1,4 +1,4 @@
-#include "PieceStack.hpp"
+#include "pieceStack.hpp"
 
 namespace Hive {
     PieceStack::PieceStack() {}
@@ -20,11 +20,10 @@ namespace Hive {
     }
 
     bool PieceStack::IsStackEmpty() const {
-        //return pieces.empty();
         return isEmpty;
     }
 
-    const AxialPosition& PieceStack::GetAxialPosition() const {
+    AxialPosition& PieceStack::GetAxialPosition() {
         return position;
     }
 

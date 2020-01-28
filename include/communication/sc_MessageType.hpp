@@ -15,5 +15,6 @@ namespace SC_Communication {
         Left,
         Result,
         Error,
+        Undefined,
     };
 }

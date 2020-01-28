@@ -5,9 +5,9 @@
 #include <iostream>
 
 #include "gameState.hpp"
-#include "Move.hpp"
-#include "Player.hpp"
-#include "Color.hpp"
+#include "move.hpp"
+#include "player.hpp"
+#include "color.hpp"
 
 namespace AI {
     class Logic {
@@ -15,5 +15,6 @@ namespace AI {
         Logic();
         virtual ~Logic();
         virtual Hive::Move GetNextMove(Hive::GameState currentGameState, Hive::Color ownPlayerColor);
+        virtual void OnGameEnd(Hive::Color colorOfWinningPlayer);
     };
 } // namespace Piranhas::Logic

@@ -1,4 +1,4 @@
-#include "AxialPosition.hpp"
+#include "axialPosition.hpp"
 
 #include <math.h>
 #include <vector>
@@ -7,16 +7,19 @@ namespace Hive {
     AxialPosition::AxialPosition() {
         this->x = 0;
         this->y = 0;
+        id = 0;
     }
 
     AxialPosition::AxialPosition(const AxialPosition &axialPosition) {
         this->x = axialPosition.x;
         this->y = axialPosition.y;
+        id = (x + 5) * 11 + (y + 5);
     }
 
     AxialPosition::AxialPosition(int x, int y) {
         this->x = x;
         this->y = y;
+        id = (x + 5) * 11 + (y + 5);
     }
 
     bool AxialPosition::operator==(const AxialPosition& axialPosition) const {
@@ -28,12 +31,12 @@ namespace Hive {
     }
 
     int AxialPosition::GetHashValue() const {
-        int hashValue = (x * 31) + (y * 37); //<== Note to myself: Is slow but reliable
-        //int hashValue = (x + 5) << 16 | ((y + 5) & 0xFFFF);
-        //int hashValue = ((x * 0x1f1f1f1f) ^ y);
-        //int hashValue = ((y << 16) ^ x);
-        //int hashValue = x | (y << 15);
+        int hashValue = (x * 31) + (y * 37);
         return hashValue;
+    }
+
+    unsigned int AxialPosition::GetID() const {
+        return id;
     }
 
     int AxialPosition::GetZCoordinate() const {

@@ -8,15 +8,15 @@
 #include <cstring>
 
 #include "pugixml.hpp"
-#include "Color.hpp"
+#include "color.hpp"
 #include "gameState.hpp"
-#include "Move.hpp"
-#include "MoveType.hpp"
-#include "AxialPosition.hpp"
-#include "Piece.hpp"
-#include "PieceType.hpp"
-#include "SC_Message.hpp"
-#include "XmlStringWriter.hpp"
+#include "move.hpp"
+#include "moveType.hpp"
+#include "axialPosition.hpp"
+#include "piece.hpp"
+#include "pieceType.hpp"
+#include "sc_Message.hpp"
+#include "xmlStringWriter.hpp"
 
 namespace SC_Communication {
     class SC_MessageHandler {
@@ -37,5 +37,6 @@ namespace SC_Communication {
         Hive::Color GetPlayerColorFromWelcomeMessage(const SC_Message &message);
         std::string GetRoomIDFromJoinedMessage(const SC_Message &message);
         Hive::GameState GetGameStateFromGameStateMessage(const SC_Message &message);
+        Hive::Color GetColorOfWinningPlayerFromResultMessage(const SC_Message &message);
     };
 }  // namespace Communication

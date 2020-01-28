@@ -1,4 +1,4 @@
-#include "Player.hpp"
+#include "player.hpp"
 
 namespace Hive {
     Player::Player() {
@@ -8,7 +8,6 @@ namespace Hive {
     Player::Player(Color color) {
         this->color = color;
         undeployedPieces = std::vector<Piece>();
-        //InitializeUndeployedPieces();
     }
 
     Color Player::GetColor() const {

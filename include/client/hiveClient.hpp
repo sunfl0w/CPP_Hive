@@ -8,14 +8,14 @@
 #include <thread>
 #include <vector>
 
-#include "Logic.hpp"
-#include "SC_Message.hpp"
-#include "SC_MessageHandler.hpp"
-#include "SC_MessageType.hpp"
-#include "TCP_Client.hpp"
+#include "logic.hpp"
+#include "sc_Message.hpp"
+#include "sc_MessageHandler.hpp"
+#include "sc_MessageType.hpp"
+#include "tcp_Client.hpp"
 
-#include "Color.hpp"
-#include "Move.hpp"
+#include "color.hpp"
+#include "move.hpp"
 #include "gameState.hpp"
 
 namespace Client {

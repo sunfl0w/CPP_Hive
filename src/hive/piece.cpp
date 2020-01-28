@@ -1,4 +1,4 @@
-#include "Piece.hpp"
+#include "piece.hpp"
 
 namespace Hive {
     Piece::Piece() {}

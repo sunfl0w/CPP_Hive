@@ -1,20 +1,19 @@
 set(sources ${sources}
-    src/ai/Logic.cpp
-    src/client/HiveClient.cpp
-    src/client/TCP_Client.cpp
-    src/hive/AxialPosition.cpp
+    src/ai/logic.cpp
+    src/client/hiveClient.cpp
+    src/client/tcp_Client.cpp
+    src/hive/axialPosition.cpp
     src/hive/board.cpp
     src/hive/color.cpp
     src/hive/gameState.cpp
-    src/hive/Move.cpp
-    src/hive/Piece.cpp
-    src/hive/PieceStack.cpp
-    src/hive/PieceType.cpp
-    src/hive/Player.cpp
+    src/hive/move.cpp
+    src/hive/piece.cpp
+    src/hive/pieceStack.cpp
+    src/hive/pieceType.cpp
+    src/hive/player.cpp
     src/hive/benchmark/benchmark.cpp
     src/hive/neighbourMap.cpp
     src/hive/globals.cpp
-    src/communication/SC_Message.cpp
-    src/communication/SC_MessageHandler.cpp
-    swig_wrap.cxx
+    src/communication/sc_Message.cpp
+    src/communication/sc_MessageHandler.cpp
 )

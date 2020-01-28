@@ -1,11 +1,11 @@
 #pragma once
 
-#include <vector>
 #include <algorithm>
+#include <vector>
 
-#include "Move.hpp"
-#include "Player.hpp"
 #include "board.hpp"
+#include "move.hpp"
+#include "player.hpp"
 
 namespace Hive {
     class GameState {

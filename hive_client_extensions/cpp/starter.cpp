@@ -1,4 +1,4 @@
-#include "HiveClient.hpp"
+#include "hiveClient.hpp"
 #include "hiveLogic.hpp"
 
 int main(int argc, char *argv[]) {

@@ -1,4 +1,4 @@
-#include "PieceType.hpp"
+#include "pieceType.hpp"
 
 namespace Hive {
     std::string PieceTypeToString(Hive::PieceType type) {

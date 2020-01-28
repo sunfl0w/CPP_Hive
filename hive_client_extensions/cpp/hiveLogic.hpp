@@ -2,8 +2,8 @@
 #include <random>
 #include <vector>
 
-#include "Logic.hpp"
-#include "Move.hpp"
+#include "logic.hpp"
+#include "move.hpp"
 
 namespace AI {
     class HiveLogic : public Logic {
@@ -11,5 +11,6 @@ namespace AI {
         HiveLogic();
         ~HiveLogic();
         Hive::Move GetNextMove(Hive::GameState currentGameState, Hive::Color ownPlayerColor);
+        void OnGameEnd(Hive::Color colorOfWinningPlayer);
     };
 }  // namespace AI

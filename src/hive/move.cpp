@@ -1,4 +1,4 @@
-#include "Move.hpp"
+#include "move.hpp"
 
 namespace Hive {
     Move::Move() {}

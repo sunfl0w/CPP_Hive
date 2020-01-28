@@ -2,8 +2,8 @@
 
 #include <vector>
 
-#include "Color.hpp"
-#include "Piece.hpp"
+#include "color.hpp"
+#include "piece.hpp"
 
 namespace Hive {
     class Player {

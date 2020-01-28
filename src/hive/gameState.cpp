@@ -171,9 +171,9 @@ namespace Hive {
         std::vector<Move> possibleSpiderDragMoves;
         std::vector<PieceStack*> spidersOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayer.GetColor(), PieceType::Spider);
         for (PieceStack* spider : spidersOfCurrentPlayer) {
-            board.GetPieceStackUnsafe(spider->GetAxialPosition()).GetPieceOnTop().SetType(PieceType::Undefined);
+            board.GetPieceStack(spider->GetAxialPosition()).GetPieceOnTop().SetType(PieceType::Undefined);
             if (!board.IsHiveCoherentIfPieceMovesFromPosition(AxialPosition(spider->GetAxialPosition()))) {
-                board.GetPieceStackUnsafe(spider->GetAxialPosition()).GetPieceOnTop().SetType(PieceType::Spider);
+                board.GetPieceStack(spider->GetAxialPosition()).GetPieceOnTop().SetType(PieceType::Spider);
                 continue;
             }
             std::vector<AxialPosition> searchedPositions = std::vector<AxialPosition>();
@@ -183,14 +183,14 @@ namespace Hive {
                 std::vector<AxialPosition> newSlidePathEndPositions;
                 for (AxialPosition currentSlidePathEndPosition : currentSlidePathEndPositions) {
                     std::vector<AxialPosition*> emptyNeighbouringPositions = board.GetEmptySlideableNeighbouringAxialPositionsExcept(currentSlidePathEndPosition, searchedPositions);
-                    for(AxialPosition* emptyNeighbouringPosition : emptyNeighbouringPositions) {
+                    for (AxialPosition* emptyNeighbouringPosition : emptyNeighbouringPositions) {
                         newSlidePathEndPositions.push_back(*emptyNeighbouringPosition);
                     }
                 }
                 searchedPositions.insert(searchedPositions.end(), currentSlidePathEndPositions.begin(), currentSlidePathEndPositions.end());
                 currentSlidePathEndPositions = newSlidePathEndPositions;
             }
-            board.GetPieceStackUnsafe(spider->GetAxialPosition()).GetPieceOnTop().SetType(PieceType::Spider);
+            board.GetPieceStack(spider->GetAxialPosition()).GetPieceOnTop().SetType(PieceType::Spider);
             for (AxialPosition validEndPosition : currentSlidePathEndPositions) {
                 possibleSpiderDragMoves.push_back(Move(MoveType::DragMove, currentPlayer.GetColor(), spider->GetAxialPosition(), validEndPosition, PieceType::Spider));
             }
@@ -234,7 +234,7 @@ namespace Hive {
                 AxialPosition translation = grasshopper->GetAxialPosition().GetTranslationToOtherPosition(neighbouringPieceStack->GetAxialPosition());
                 AxialPosition searchPos = grasshopper->GetAxialPosition();
                 searchPos = searchPos.Add(translation);
-                while (board.IsPositionOnBoard(searchPos)) {
+                while (searchPos.IsOnBoard()) {
                     if (!board.PieceStackExists(searchPos) && !board.GetNeighbouringPieceStacksExceptObstacles(searchPos).empty()) {
                         possibleGrasshopperDragMoves.push_back(Move(MoveType::DragMove, currentPlayer.GetColor(), grasshopper->GetAxialPosition(), searchPos, PieceType::Grasshopper));
                         break;
@@ -250,9 +250,9 @@ namespace Hive {
         std::vector<Move> possibleAntDragMoves;
         std::vector<PieceStack*> antsOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayer.GetColor(), PieceType::Ant);
         for (PieceStack* ant : antsOfCurrentPlayer) {
-            board.GetPieceStackUnsafe(ant->GetAxialPosition()).GetPieceOnTop().SetType(PieceType::Undefined);
+            board.GetPieceStack(ant->GetAxialPosition()).GetPieceOnTop().SetType(PieceType::Undefined);
             if (!board.IsHiveCoherentIfPieceMovesFromPosition(AxialPosition(ant->GetAxialPosition()))) {
-                board.GetPieceStackUnsafe(ant->GetAxialPosition()).GetPieceOnTop().SetType(PieceType::Ant);
+                board.GetPieceStack(ant->GetAxialPosition()).GetPieceOnTop().SetType(PieceType::Ant);
                 continue;
             }
             std::vector<AxialPosition> searchedPositions;
@@ -268,7 +268,7 @@ namespace Hive {
                 }
                 slideEndPositions = newSlideEndPositions;
             }
-            board.GetPieceStackUnsafe(ant->GetAxialPosition()).GetPieceOnTop().SetType(PieceType::Ant);
+            board.GetPieceStack(ant->GetAxialPosition()).GetPieceOnTop().SetType(PieceType::Ant);
         }
         return possibleAntDragMoves;
     }
@@ -338,7 +338,7 @@ namespace Hive {
             std::vector<AxialPosition> neighbouringPositions = queenBee->GetAxialPosition().GetNeighbouringPositionsIncludingOutsideBoardPositions();
             int numberOfBlockingNeighbours = 0;
             for (AxialPosition neighbouringPosition : neighbouringPositions) {
-                if (!board.IsPositionOnBoard(neighbouringPosition)) {
+                if (!neighbouringPosition.IsOnBoard()) {
                     numberOfBlockingNeighbours++;
                 } else if (board.PieceStackExists(neighbouringPosition)) {
                     numberOfBlockingNeighbours++;

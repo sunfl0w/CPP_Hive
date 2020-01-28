@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "AxialPosition.hpp"
+#include "axialPosition.hpp"
 
 namespace Hive {
     class NeighbourMap {

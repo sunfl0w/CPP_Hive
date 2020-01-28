@@ -1,4 +1,4 @@
-#include "Color.hpp"
+#include "color.hpp"
 
 namespace Hive {
     std::string ColorToString(Hive::Color color) {

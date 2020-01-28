@@ -1,4 +1,4 @@
-#include "Logic.hpp"
+#include "logic.hpp"
 
 namespace AI {
     Logic::Logic() {}
@@ -10,5 +10,10 @@ namespace AI {
         srand(time(NULL));
         std::vector<Hive::Move> possibleMoves = currentGameState.GetPossibleMoves();
         return possibleMoves[rand() % possibleMoves.size()];
+    }
+
+    void Logic::OnGameEnd(Hive::Color colorOfWinningPlayer) {
+        std::cout << "Using C++ fallback OnGameEnd(). Probably no logic was defined.\n";
+        std::cout << "Winning player has the color: " + Hive::ColorToString(colorOfWinningPlayer) + "\n";
     }
 }  // namespace AI

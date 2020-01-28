@@ -1,4 +1,4 @@
-#include "HiveClient.hpp"
+#include "hiveClient.hpp"
 
 using namespace boost::program_options;
 
@@ -92,10 +92,12 @@ namespace Client {
             } else if (message.GetMessageType() == SC_Communication::SC_MessageType::Left) {
                 gameOver = true;
             } else if (message.GetMessageType() == SC_Communication::SC_MessageType::Result) {
-                gameOver = true;
+                logic->OnGameEnd(scMessageHandler.GetColorOfWinningPlayerFromResultMessage(message));
             } else if (message.GetMessageType() == SC_Communication::SC_MessageType::Error) {
                 gameOver = true;
             } else if (message.GetMessageType() == SC_Communication::SC_MessageType::ProtocolEnd) {
+                gameOver = true;
+            } else if (message.GetMessageType() == SC_Communication::SC_MessageType::Undefined) {
                 gameOver = true;
             }
         }

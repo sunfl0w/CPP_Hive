@@ -1,4 +1,4 @@
-#include "SC_Message.hpp"
+#include "sc_Message.hpp"
 
 namespace SC_Communication {
     SC_Message::SC_Message() {}

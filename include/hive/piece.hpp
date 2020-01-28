@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Color.hpp"
-#include "PieceType.hpp"
+#include "color.hpp"
+#include "pieceType.hpp"
 
 namespace Hive {
     class Piece {

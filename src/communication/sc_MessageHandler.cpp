@@ -1,4 +1,4 @@
-#include "SC_MessageHandler.hpp"
+#include "sc_MessageHandler.hpp"
 
 namespace SC_Communication {
     SC_MessageHandler::SC_MessageHandler() {}
@@ -38,7 +38,7 @@ namespace SC_Communication {
         scMessageDoc.load_string(inputStream.data());
         for (pugi::xml_node scMessageNode : scMessageDoc.children()) {
             for (pugi::xml_node childNode : scMessageNode.children()) {
-                SC_MessageType scMessageType;
+                SC_MessageType scMessageType = SC_MessageType::Undefined;
                 
                 std::string childNodeName(childNode.name());
 
@@ -218,5 +218,14 @@ namespace SC_Communication {
         }
 
         return gameState;
+    }
+
+    Hive::Color SC_MessageHandler::GetColorOfWinningPlayerFromResultMessage(const SC_Message &message) {
+        Hive::Color colorOfWinningPlayer;
+        pugi::xml_document scMessageDoc;
+        scMessageDoc.load_string(message.GetContent().data());
+        pugi::xml_node roomNode = scMessageDoc.child("room");
+        colorOfWinningPlayer = Hive::ColorFromString(roomNode.child("data").child("winner").attribute("color").value());
+        return colorOfWinningPlayer;
     }
 }  // namespace Communication
