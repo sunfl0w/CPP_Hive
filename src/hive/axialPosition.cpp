@@ -30,11 +30,6 @@ namespace Hive {
         return x != axialPosition.x || y != axialPosition.y;
     }
 
-    int AxialPosition::GetHashValue() const {
-        int hashValue = (x * 31) + (y * 37);
-        return hashValue;
-    }
-
     unsigned int AxialPosition::GetID() const {
         return id;
     }
@@ -44,8 +39,6 @@ namespace Hive {
     }
 
     int AxialPosition::GetDistanceTo(const AxialPosition& otherPosition) const {
-        //int z = 0 - x - y;
-        //int zOther = 0 - otherPosition.x - otherPosition.y;
         return (std::abs(x - otherPosition.x) + std::abs(y - otherPosition.y) + std::abs(0 - x - y + 0 + otherPosition.x + otherPosition.y)) >> 1;
     }
 

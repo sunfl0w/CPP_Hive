@@ -12,6 +12,7 @@ namespace Hive {
     PieceStack::PieceStack(const AxialPosition& position) {
         this->position = position;
         this->pieces = std::vector<Piece>();
+        pieces.reserve(2);
         isEmpty = true;
     }
 
