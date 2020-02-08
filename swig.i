@@ -29,7 +29,7 @@
 
 %apply (int ARGC, char **ARGV) { (int argc, char *argv[]) }
 
-void Hive::HiveClient::Start(int argc, char *argv[]);
+void Client::HiveClient::Start(int argc, char *argv[]);
 
 
 %include "typemaps.i"

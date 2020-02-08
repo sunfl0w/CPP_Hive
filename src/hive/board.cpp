@@ -127,7 +127,7 @@ namespace Hive {
         std::vector<AxialPosition*> emptyNeighbouringSlideablePositions = GetEmptySlideableNeighbouringAxialPositions(position);
         for (int i = emptyNeighbouringSlideablePositions.size() - 1; i >= 0; i--) {
             for (AxialPosition ignoredPosition : ignoredPositions) {
-                auto iterator = std::find_if(emptyNeighbouringSlideablePositions.begin(), emptyNeighbouringSlideablePositions.end(), [&](AxialPosition* pos) { return pos->GetHashValue() == ignoredPosition.GetHashValue(); });
+                auto iterator = std::find_if(emptyNeighbouringSlideablePositions.begin(), emptyNeighbouringSlideablePositions.end(), [&](AxialPosition* pos) { return pos->GetID() == ignoredPosition.GetID(); });
                 if (iterator != emptyNeighbouringSlideablePositions.end()) {
                     emptyNeighbouringSlideablePositions.erase(iterator);
                 }
