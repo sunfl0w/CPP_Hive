@@ -235,9 +235,11 @@ namespace Hive {
                 AxialPosition searchPos = grasshopper->GetAxialPosition();
                 searchPos = searchPos.Add(translation);
                 while (searchPos.IsOnBoard()) {
-                    if (!board.PieceStackExists(searchPos) && board.GetPieceStack(searchPos).GetPieceOnTop().GetType() != PieceType::Obstacle && !board.GetNeighbouringPieceStacksExceptObstacles(searchPos).empty()) {
+                    if (!board.PieceStackExists(searchPos) && !board.GetNeighbouringPieceStacksExceptObstacles(searchPos).empty()) {
                         possibleGrasshopperDragMoves.push_back(Move(MoveType::DragMove, currentPlayer.GetColor(), grasshopper->GetAxialPosition(), searchPos, PieceType::Grasshopper));
                         break;
+                    } else if (board.PieceStackExists(searchPos) && board.GetPieceStack(searchPos).GetPieceOnTop().GetType() == PieceType::Obstacle) {
+                        break;  //All moves going further are blocked by obstacle.
                     }
                     searchPos = searchPos.Add(translation);
                 }
