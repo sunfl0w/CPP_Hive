@@ -24,12 +24,6 @@ namespace Hive {
          */
         std::vector<Piece> pieces;
 
-        /**
-         * @brief Defines whether a PieceStack is empty.
-         * 
-         */
-        bool isEmpty = true;
-
     public:
         /**
          * @brief Constructs a new and empty PieceStack.
@@ -61,7 +55,7 @@ namespace Hive {
         bool operator==(const PieceStack& pieceStack) const;
 
         /**
-         * @brief Checks whether a PieceSTack is empty.
+         * @brief Checks whether a PieceStack is empty.
          * 
          * @return true If the PieceStack is empty.
          * @return false If the PieceStack is not empty.
@@ -108,7 +102,7 @@ namespace Hive {
          * 
          * @return A vector of the Pieces of the PieceStack.
          */
-        std::vector<Piece> GetPieces();
+        std::vector<Piece>& GetPieces();
 
         /**
          * @brief Sets the Pieces of the PieceStack.

@@ -163,11 +163,12 @@ namespace Hive {
     }
 
     bool Board::IsHiveCoherentIfPieceMovesFromPosition(const AxialPosition& position) {
-        //Replacing moving piece with an obstacle for easy computation.
         std::vector<Piece> pieces = GetPieceStack(position).GetPieces();
         if(pieces.size() > 1) {
             return true;
         }
+
+        //Replacing moving piece with an obstacle for easy computation.
         std::vector<Piece> obstacle = {Piece(PieceType::Obstacle, Color::Undefined)};
         GetPieceStack(position).SetPieces(obstacle);
 
@@ -185,11 +186,8 @@ namespace Hive {
         std::deque<PieceStack*> pieceStacksToSearch;
         pieceStacksToSearch.push_back(startStack);
 
-        int iterator = 0;
         while (!pieceStacksToSearch.empty()) {
-            iterator++;
             std::vector<PieceStack*> neighbouringPieceStacks = GetNeighbouringPieceStacksExceptObstacles(pieceStacksToSearch[0]->GetAxialPosition());
-
             for (PieceStack* neighbouringPieceStack : neighbouringPieceStacks) {
                 if (std::find(hive.begin(), hive.end(), neighbouringPieceStack) == hive.end()) {      
                     hive.push_back(neighbouringPieceStack);
