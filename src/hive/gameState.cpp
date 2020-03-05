@@ -238,6 +238,8 @@ namespace Hive {
                     if (!board.PieceStackExists(searchPos) && !board.GetNeighbouringPieceStacksExceptObstacles(searchPos).empty()) {
                         possibleGrasshopperDragMoves.push_back(Move(MoveType::DragMove, currentPlayer.GetColor(), grasshopper->GetAxialPosition(), searchPos, PieceType::Grasshopper));
                         break;
+                    } else if (board.PieceStackExists(searchPos) && board.GetPieceStack(searchPos).GetPieceOnTop().GetType() == PieceType::Obstacle) {
+                        break;  //All moves going further are blocked by obstacle.
                     }
                     searchPos = searchPos.Add(translation);
                 }
@@ -275,13 +277,13 @@ namespace Hive {
 
     bool GameState::IsGameOver() {
         if (currentPlayer.GetColor() == Color::Red) {
-            if (board.GetPieceStacksByColorAndType(Color::Red, PieceType::QueenBee).empty() && turn > 6) {
+            if (board.GetPieceStacksContainingPieceByColorAndType(Color::Red, PieceType::QueenBee).empty() && turn > 6) {
                 return true;
             } else if (IsQueenBeeBlocked(Color::Red)) {
                 return true;
             }
         } else if (currentPlayer.GetColor() == Color::Blue) {
-            if (board.GetPieceStacksByColorAndType(Color::Blue, PieceType::QueenBee).empty() && turn > 7) {
+            if (board.GetPieceStacksContainingPieceByColorAndType(Color::Blue, PieceType::QueenBee).empty() && turn > 7) {
                 return true;
             } else if (IsQueenBeeBlocked(Color::Blue) && turn % 2 == 0) {
                 return true;

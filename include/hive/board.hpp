@@ -86,14 +86,14 @@ namespace Hive {
         std::vector<PieceStack*> GetPieceStacks();
 
         /**
-         * @brief Gets all PieceStacks on the board except obstacles.
+         * @brief Gets all PieceStacks on the board except obstacles. Only the upmost Piece counts.
          * 
          * @return A vector of pointers to PieceStacks.
          */
         std::vector<PieceStack*> GetPieceStacksWithoutObstacles();
 
         /**
-         * @brief Gets all PieceStacks on the board by a Color.
+         * @brief Gets all PieceStacks on the board by a Color. Only the upmost Piece counts.
          * 
          * @param color The Color used to filter the PieceStacks.
          * @return A vector of pointers to PieceStacks.
@@ -101,13 +101,22 @@ namespace Hive {
         std::vector<PieceStack*> GetPieceStacksByColor(Color color);
 
         /**
-         * @brief Gets all PieceStacks on the board by a Color and PieceType.
+         * @brief Gets all PieceStacks on the board by a Color and PieceType. Only the upmost Piece counts.
          * 
          * @param color The Color used to filter the PieceStacks.
          * @param pieceType The PieceType used to filter the PieceStacks.
          * @return A vector of pointers to PieceStacks.
          */
         std::vector<PieceStack*> GetPieceStacksByColorAndType(Color color, PieceType pieceType);
+
+        /**
+         * @brief Get the Piece Stacks Containing Piece By Color And Type. All Pieces in a PieceStack will be evaluated.
+         * 
+         * @param color The Color used to filter the PieceStacks.
+         * @param pieceType The PieceType used to filter the PieceStacks.
+         * @return A vector of pointers to PieceStacks.
+         */
+        std::vector<PieceStack*> GetPieceStacksContainingPieceByColorAndType(Color color, PieceType pieceType);
 
         /**
          * @brief Gets the neighbouring PieceStacks of a given Position.
