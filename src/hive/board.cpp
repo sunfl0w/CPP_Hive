@@ -30,11 +30,9 @@ namespace Hive {
     std::vector<PieceStack*> Board::GetPieceStacks() {
         std::vector<PieceStack*> stacks;
         stacks.reserve(25);
-        for (int x = 0; x < 11; x++) {
-            for (int y = 0; y < 11; y++) {
-                if (!pieceStacks[x * 11 + y].IsStackEmpty()) {
-                    stacks.push_back(&pieceStacks[x * 11 + y]);
-                }
+        for (int i = 0; i < 121; i++) {
+            if (!pieceStacks[i].IsStackEmpty()) {
+                stacks.push_back(&pieceStacks[i]);
             }
         }
         return stacks;
@@ -43,11 +41,9 @@ namespace Hive {
     std::vector<PieceStack*> Board::GetPieceStacksWithoutObstacles() {
         std::vector<PieceStack*> stacks;
         stacks.reserve(22);
-        for (int x = 0; x < 11; x++) {
-            for (int y = 0; y < 11; y++) {
-                if (!pieceStacks[x * 11 + y].IsStackEmpty() && pieceStacks[x * 11 + y].GetPieceOnTop().GetType() != PieceType::Obstacle) {
-                    stacks.push_back(&pieceStacks[x * 11 + y]);
-                }
+        for (int i = 0; i < 121; i++) {
+            if (!pieceStacks[i].IsStackEmpty() && pieceStacks[i].GetPieceOnTop().GetType() != PieceType::Obstacle) {
+                stacks.push_back(&pieceStacks[i]);
             }
         }
         return stacks;
@@ -56,11 +52,9 @@ namespace Hive {
     std::vector<PieceStack*> Board::GetPieceStacksByColor(Color color) {
         std::vector<PieceStack*> stacks;
         stacks.reserve(11);
-        for (int x = 0; x < 11; x++) {
-            for (int y = 0; y < 11; y++) {
-                if (!pieceStacks[x * 11 + y].IsStackEmpty() && pieceStacks[x * 11 + y].GetPieceOnTop().GetColor() == color) {
-                    stacks.push_back(&pieceStacks[x * 11 + y]);
-                }
+        for (int i = 0; i < 121; i++) {
+            if (!pieceStacks[i].IsStackEmpty() && pieceStacks[i].GetPieceOnTop().GetColor() == color) {
+                stacks.push_back(&pieceStacks[i]);
             }
         }
         return stacks;
@@ -69,11 +63,9 @@ namespace Hive {
     std::vector<PieceStack*> Board::GetPieceStacksByColorAndType(Color color, PieceType pieceType) {
         std::vector<PieceStack*> stacks;
         stacks.reserve(3);
-        for (int x = 0; x < 11; x++) {
-            for (int y = 0; y < 11; y++) {
-                if (!pieceStacks[x * 11 + y].IsStackEmpty() && pieceStacks[x * 11 + y].GetPieceOnTop().GetColor() == color && pieceStacks[x * 11 + y].GetPieceOnTop().GetType() == pieceType) {
-                    stacks.push_back(&pieceStacks[x * 11 + y]);
-                }
+        for (int i = 0; i < 121; i++) {
+            if (!pieceStacks[i].IsStackEmpty() && pieceStacks[i].GetPieceOnTop().GetColor() == color && pieceStacks[i].GetPieceOnTop().GetType() == pieceType) {
+                stacks.push_back(&pieceStacks[i]);
             }
         }
         return stacks;
@@ -83,13 +75,11 @@ namespace Hive {
         std::vector<PieceStack*> stacks;
         stacks.reserve(3);
 
-        for (int x = 0; x < 11; x++) {
-            for (int y = 0; y < 11; y++) {
-                for (Piece piece : pieceStacks[x * 11 + y].GetPieces()) {
-                    if (piece.GetColor() == color && piece.GetType() == pieceType) {
-                        stacks.push_back(&pieceStacks[x * 11 + y]);
-                        break; //Not counting PieceStacks twice.
-                    }
+        for (int i = 0; i < 121; i++) {
+            for (Piece piece : pieceStacks[i].GetPieces()) {
+                if (piece.GetColor() == color && piece.GetType() == pieceType) {
+                    stacks.push_back(&pieceStacks[i]);
+                    break;  //Not counting PieceStacks twice.
                 }
             }
         }
@@ -185,7 +175,6 @@ namespace Hive {
             return true;
         }
 
-        //Replacing moving piece with an obstacle for easy computation.
         std::vector<Piece> obstacle = {Piece(PieceType::Obstacle, Color::Undefined)};
         GetPieceStack(position).SetPieces(obstacle);
 
@@ -206,7 +195,8 @@ namespace Hive {
         while (!pieceStacksToSearch.empty()) {
             std::vector<PieceStack*> neighbouringPieceStacks = GetNeighbouringPieceStacksExceptObstacles(pieceStacksToSearch[0]->GetAxialPosition());
             for (PieceStack* neighbouringPieceStack : neighbouringPieceStacks) {
-                if (std::find(hive.begin(), hive.end(), neighbouringPieceStack) == hive.end()) {
+                if (!neighbouringPieceStack->visited) {
+                    neighbouringPieceStack->visited = true;
                     hive.push_back(neighbouringPieceStack);
                     pieceStacksToSearch.push_back(neighbouringPieceStack);
                 }
@@ -215,6 +205,9 @@ namespace Hive {
         }
 
         GetPieceStack(position).SetPieces(pieces);
+        for (PieceStack* pieceStack : pieceStacks) {
+            pieceStack->visited = false;
+        }
         if (hive.size() == pieceStacks.size()) {
             return true;
         }
