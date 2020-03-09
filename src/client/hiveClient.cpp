@@ -1,4 +1,5 @@
 #include "hiveClient.hpp"
+#include "sc_MessageType.hpp"
 
 using namespace boost::program_options;
 
@@ -52,21 +53,22 @@ namespace Client {
             if (verboseOutputEnabled) {
                 std::cout << "Listening.\n";
             }
+
             std::string inputStream = tcpClient.ReadMessage();
+
             std::vector<SC_Communication::SC_Message> messages = scMessageHandler.SplitInputMessagesIntoValidSC_Messages(inputStream);
             for (SC_Communication::SC_Message message : messages) {
                 if (verboseOutputEnabled) {
-                    std::cout << message.GetContent() + "\n";
+                    std::cout << "RECV: " <<message.GetContent() + "\n";
                 }
             }
             std::vector<SC_Communication::SC_Message> responses = HandleIncomingMessagesAndGenerateRespones(messages);
             for (SC_Communication::SC_Message response : responses) {
                 if (verboseOutputEnabled) {
-                    std::cout << response.GetContent() + "\n";
+                    std::cout << "SEND: " << response.GetContent() + "\n";
                 }
                 tcpClient.SendMessage(response.GetContent());
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
     }
 
@@ -93,6 +95,7 @@ namespace Client {
                 gameOver = true;
             } else if (message.GetMessageType() == SC_Communication::SC_MessageType::Result) {
                 logic->OnGameEnd(scMessageHandler.GetColorOfWinningPlayerFromResultMessage(message));
+                gameOver = true;
             } else if (message.GetMessageType() == SC_Communication::SC_MessageType::Error) {
                 gameOver = true;
             } else if (message.GetMessageType() == SC_Communication::SC_MessageType::ProtocolEnd) {
