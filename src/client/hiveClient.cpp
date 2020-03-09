@@ -87,7 +87,7 @@ namespace Client {
             } else if (message.GetMessageType() == SC_Communication::SC_MessageType::MoveRequest) {
                 if (!gameOver) {
                     Hive::Move nextMove = GetNextMove(currentGameState, ownPlayerColor);
-                    responseMessages.push_back(scMessageHandler.CreateMoveMessage(nextMove, roomID));
+                    responseMessages.push_back(scMessageHandler.CreateMoveMessage(nextMove, roomID));   
                 }
             } else if (message.GetMessageType() == SC_Communication::SC_MessageType::Left) {
                 gameOver = true;

@@ -36,7 +36,8 @@ std::string TCP_Client::ReadMessage() {
     boost::asio::read_until(socket, receiveBuffer, "</room>", errorCode);
     if (errorCode) {
         std::cout << "Receiving failed: " << errorCode.message() << "\n";
-        return "";
+        throw "Receiving failed";
+        //return "";
     } else {
         const char *message = boost::asio::buffer_cast<const char *>(receiveBuffer.data());
         return std::string(message);

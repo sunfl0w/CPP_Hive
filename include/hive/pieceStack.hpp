@@ -24,20 +24,6 @@ namespace Hive {
          */
         std::vector<Piece> pieces;
 
-        /**
-         * @brief Flag that indicates whether the stack is empty-
-         * 
-         */
-        bool isEmpty = true;
-
-    public:
-
-        /**
-         * @brief Public flag that is used for internal methods. Do not use this unless you know what you do.
-         * 
-         */
-        bool visited = false;
-
     public:
         /**
          * @brief Constructs a new and empty PieceStack.

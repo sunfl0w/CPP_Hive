@@ -195,8 +195,7 @@ namespace Hive {
         while (!pieceStacksToSearch.empty()) {
             std::vector<PieceStack*> neighbouringPieceStacks = GetNeighbouringPieceStacksExceptObstacles(pieceStacksToSearch[0]->GetAxialPosition());
             for (PieceStack* neighbouringPieceStack : neighbouringPieceStacks) {
-                if (!neighbouringPieceStack->visited) {
-                    neighbouringPieceStack->visited = true;
+                if (std::find(hive.begin(), hive.end(), neighbouringPieceStack) == hive.end()) {
                     hive.push_back(neighbouringPieceStack);
                     pieceStacksToSearch.push_back(neighbouringPieceStack);
                 }
@@ -205,9 +204,6 @@ namespace Hive {
         }
 
         GetPieceStack(position).SetPieces(pieces);
-        for (PieceStack* pieceStack : pieceStacks) {
-            pieceStack->visited = false;
-        }
         if (hive.size() == pieceStacks.size()) {
             return true;
         }
