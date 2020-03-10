@@ -22,6 +22,12 @@ namespace Client {
          */
         boost::asio::ip::tcp::socket socket {ioService};
 
+        /**
+         * @brief The data in this buffer is set when receiving messages.
+         * 
+         */
+        boost::asio::streambuf receiveBuffer;
+
     public:
         /**
          * @brief Constructs a new TCP_Client.

@@ -31,15 +31,18 @@ void TCP_Client::SendMessage(std::string message) {
 }
 
 std::string TCP_Client::ReadMessage() {
+    //The fix to this code was provided by Coronon. Thanks!
     boost::system::error_code errorCode;
-    boost::asio::streambuf receiveBuffer;
-
-    boost::asio::read_until(socket, receiveBuffer, "</room>", errorCode);
+    std::size_t bytes_transferred = boost::asio::read_until(socket, receiveBuffer, "</room>", errorCode);
     if (errorCode) {
         std::cout << "Receiving failed: " << errorCode.message() << "\n";
         throw "Receiving failed";
     } else {
-        const char *message = boost::asio::buffer_cast<const char *>(receiveBuffer.data());
-        return std::string(message);
+        std::string message{
+            boost::asio::buffers_begin(receiveBuffer.data()),
+            boost::asio::buffers_begin(receiveBuffer.data()) + bytes_transferred - 7
+        };
+        receiveBuffer.consume(bytes_transferred);
+        return message;
     }
 }
