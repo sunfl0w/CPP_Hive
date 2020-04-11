@@ -180,6 +180,7 @@ namespace Hive {
 
         std::vector<PieceStack*> pieceStacks = GetPieceStacksWithoutObstacles();
         if (pieceStacks.size() == 1 || pieceStacks.size() == 0) {
+            GetPieceStack(position).SetPieces(pieces);
             return true;
         }
 
