@@ -7,14 +7,14 @@ namespace Hive {
      * @brief All different types of Pieces are defined here.
      * 
      */
-    enum class PieceType {
-        QueenBee,
-        Spider,
-        Beetle,
-        Grasshopper,
-        Ant,
-        Obstacle,
-        Undefined,
+    enum class PieceType : int {
+        QueenBee = 0,
+        Spider = 1,
+        Beetle = 2,
+        Grasshopper = 3,
+        Ant = 4,
+        Obstacle = 5,
+        Undefined = 6,
     };
 
     /**

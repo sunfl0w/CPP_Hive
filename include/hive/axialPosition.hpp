@@ -10,12 +10,6 @@ namespace Hive {
     class AxialPosition {
     public:
         /**
-         * @brief The x and y positions.
-         * 
-         */
-        int x, y;
-
-        /**
          * @brief The unique ID of this Position ranging from 0 to 120 under normal circumstances.
          * 
          */
@@ -43,6 +37,13 @@ namespace Hive {
         AxialPosition(int x, int y);
 
         /**
+         * @brief Constructs a new Position with a given ID.
+         * 
+         * @param id ID of position.
+         */
+        AxialPosition(unsigned int id);
+
+        /**
          * @brief Compares two Positions.
          * 
          * @param axialPosition The Position to compare against.
@@ -61,18 +62,32 @@ namespace Hive {
         bool operator!=(const AxialPosition &axialPosition) const;
 
         /**
-         * @brief Gets the unique ID of the Position.
+         * @brief Gets the x-position of the position.
          * 
-         * @return The unique ID of the Position.
+         * @return The x-position.
          */
-        unsigned int GetID() const;
+        int GetX() const;
+
+        /**
+         * @brief Gets the y-position of the position.
+         * 
+         * @return The y-position.
+         */
+        int GetY() const;
 
         /**
          * @brief Gets the z-position of the Position.
          * 
          * @return The z-position.
          */
-        int GetZCoordinate() const;
+        int GetZ() const;
+
+        /**
+         * @brief Gets the unique ID of the Position.
+         * 
+         * @return The unique ID of the Position.
+         */
+        unsigned int GetID() const;
 
         /**
          * @brief Gets the distance to a given Position.

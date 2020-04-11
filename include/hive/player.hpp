@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <algorithm>
 
 #include "color.hpp"
 #include "piece.hpp"
@@ -22,7 +23,7 @@ namespace Hive {
          * @brief The undeployed Pieces of this Player.
          * 
          */
-        std::vector<Piece> undeployedPieces;
+        std::vector<int> undeployedPieceCounts;
     public:
         /**
          * @brief Constructs a new and empty Player.
@@ -52,25 +53,25 @@ namespace Hive {
         void SetColor(Color color);
 
         /**
-         * @brief Gets the undeployed Pieces of the Player.
+         * @brief Gets the undeployed Pieces of the Player. At position 0 int he vector the amount of QueenBees are stored. For reference look at PieceType.
          * 
-         * @return The Pieces that are undeployed in a vector reference.
+         * @return The PieceType amounts that are undeployed in a vector reference.
          */
-        const std::vector<Piece>& GetUndeployedPieces() const;
+        const std::vector<int>& GetUndeployedPieceTypeCounts() const;
 
         /**
-         * @brief Adds a new undeployed Piece to the Player.
+         * @brief Adds a new undeployed PieceType to the Player.
          * 
-         * @param piece The Piece to add.
+         * @param piece The PieceType to add.
          */
-        void AddUndeployedPiece(Piece piece);
+        void AddUndeployedPieceType(PieceType type);
 
         /**
-         * @brief Removes an undeployed Piece from the Player by PieceType.
+         * @brief Removes an undeployed PieceType from the Player by PieceType.
          * 
          * @param type The PieceType that controls which Piece should be removed.
          */
-        void RemoveUndeployedPiece(PieceType type);
+        void RemoveUndeployedPieceType(PieceType type);
 
         /**
          * @brief Initialized the undeployed Pieces of this Player according to the games rules. Use only when you know what you are doing.

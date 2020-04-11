@@ -2,12 +2,12 @@
 
 namespace Hive {
     Player::Player() {
-        undeployedPieces = std::vector<Piece>();
+        undeployedPieceCounts = std::vector<int>(5);
     }
 
     Player::Player(Color color) {
         this->color = color;
-        undeployedPieces = std::vector<Piece>();
+        undeployedPieceCounts = std::vector<int>(5);
     }
 
     Color Player::GetColor() const {
@@ -18,37 +18,33 @@ namespace Hive {
         this->color = color;
     }
 
-    const std::vector<Piece>& Player::GetUndeployedPieces() const {
-        return undeployedPieces;
+    const std::vector<int>& Player::GetUndeployedPieceTypeCounts() const {
+        return undeployedPieceCounts;
     }
 
-    void Player::AddUndeployedPiece(Piece piece) {
-        undeployedPieces.push_back(piece);
+    void Player::AddUndeployedPieceType(PieceType type) {
+        undeployedPieceCounts[static_cast<int>(type)] += 1;
     }
 
-    void Player::RemoveUndeployedPiece(PieceType type) {
-        for(int i = 0; i < undeployedPieces.size(); i++) {
-            if(undeployedPieces[i].GetType() == type) {
-                undeployedPieces.erase(undeployedPieces.begin() + i);
-            }
-        }
+    void Player::RemoveUndeployedPieceType(PieceType type) {
+        undeployedPieceCounts[static_cast<int>(type)] -= 1;
     }
 
     void Player::InitializeUndeployedPieces() {
-        undeployedPieces.push_back(Piece(PieceType::QueenBee, color));
+        AddUndeployedPieceType(PieceType::QueenBee);
 
-        undeployedPieces.push_back(Piece(PieceType::Spider, color));
-        undeployedPieces.push_back(Piece(PieceType::Spider, color));
+        AddUndeployedPieceType(PieceType::Spider);
+        AddUndeployedPieceType(PieceType::Spider);
 
-        undeployedPieces.push_back(Piece(PieceType::Beetle, color));
-        undeployedPieces.push_back(Piece(PieceType::Beetle, color));
+        AddUndeployedPieceType(PieceType::Beetle);
+        AddUndeployedPieceType(PieceType::Beetle);
 
-        undeployedPieces.push_back(Piece(PieceType::Grasshopper, color));
-        undeployedPieces.push_back(Piece(PieceType::Grasshopper, color));
-        undeployedPieces.push_back(Piece(PieceType::Grasshopper, color));
+        AddUndeployedPieceType(PieceType::Grasshopper);
+        AddUndeployedPieceType(PieceType::Grasshopper);
+        AddUndeployedPieceType(PieceType::Grasshopper);
 
-        undeployedPieces.push_back(Piece(PieceType::Ant, color));
-        undeployedPieces.push_back(Piece(PieceType::Ant, color));
-        undeployedPieces.push_back(Piece(PieceType::Ant, color));
+        AddUndeployedPieceType(PieceType::Ant);
+        AddUndeployedPieceType(PieceType::Ant);
+        AddUndeployedPieceType(PieceType::Ant);
     }
 }  // namespace Hive

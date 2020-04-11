@@ -103,22 +103,22 @@ namespace SC_Communication {
             pieceNode.append_attribute("type").set_value(Hive::PieceTypeToString(move.GetMovedPieceType()).c_str());
 
             pugi::xml_node destinationNode = dataNode.append_child("destination");
-            destinationNode.append_attribute("x").set_value(move.GetDestinationPosition().x);
-            destinationNode.append_attribute("y").set_value(move.GetDestinationPosition().y);
-            destinationNode.append_attribute("z").set_value(move.GetDestinationPosition().GetZCoordinate());
+            destinationNode.append_attribute("x").set_value(move.GetDestinationPosition().GetX());
+            destinationNode.append_attribute("y").set_value(move.GetDestinationPosition().GetY());
+            destinationNode.append_attribute("z").set_value(move.GetDestinationPosition().GetZ());
         } else if (move.GetMoveType() == Hive::MoveType::DragMove) {
             pugi::xml_node dataNode = roomNode.append_child("data");
             dataNode.append_attribute("class").set_value("dragmove");
 
             pugi::xml_node startNode = dataNode.append_child("start");
-            startNode.append_attribute("x").set_value(move.GetStartPosition().x);
-            startNode.append_attribute("y").set_value(move.GetStartPosition().y);
-            startNode.append_attribute("z").set_value(move.GetStartPosition().GetZCoordinate());
+            startNode.append_attribute("x").set_value(move.GetStartPosition().GetX());
+            startNode.append_attribute("y").set_value(move.GetStartPosition().GetY());
+            startNode.append_attribute("z").set_value(move.GetStartPosition().GetZ());
 
             pugi::xml_node destinationNode = dataNode.append_child("destination");
-            destinationNode.append_attribute("x").set_value(move.GetDestinationPosition().x);
-            destinationNode.append_attribute("y").set_value(move.GetDestinationPosition().y);
-            destinationNode.append_attribute("z").set_value(move.GetDestinationPosition().GetZCoordinate());
+            destinationNode.append_attribute("x").set_value(move.GetDestinationPosition().GetX());
+            destinationNode.append_attribute("y").set_value(move.GetDestinationPosition().GetY());
+            destinationNode.append_attribute("z").set_value(move.GetDestinationPosition().GetZ());
         } else if (move.GetMoveType() == Hive::MoveType::PassMove) {
             pugi::xml_node dataNode = roomNode.append_child("data");
             dataNode.append_attribute("class").set_value("missmove");
@@ -167,29 +167,28 @@ namespace SC_Communication {
                 }
 
                 if(currentPlayerColor == "RED") {
-                    gameState.SetCurrentPlayer(Hive::Player(Hive::Color::Red));
-                    gameState.SetPausedPlayer(Hive::Player(Hive::Color::Blue));
+                    gameState.SetCurrentPlayerColor(Hive::Color::Red);
                 } else {
-                    gameState.SetCurrentPlayer(Hive::Player(Hive::Color::Blue));
-                    gameState.SetPausedPlayer(Hive::Player(Hive::Color::Red));
+                    gameState.SetCurrentPlayerColor(Hive::Color::Blue);
                 }
             }
         }
 
         for (pugi::xml_node fieldsNode : roomNode.child("data").child("state").child("board").children()) {
             for (pugi::xml_node fieldNode : fieldsNode.children("field")) {
-                Hive::AxialPosition position;
+                int x = 0;
+                int y = 0;
                 for (pugi::xml_attribute fieldAttribute : fieldNode.attributes()) {
                     std::string fieldAttributeName(fieldAttribute.name());
                     if (fieldAttributeName == "x") {
-                        std::string x = std::string(fieldAttribute.value());
-                        position.x = std::stoi(x);
+                        std::string xString = std::string(fieldAttribute.value());
+                        x = std::stoi(xString);
                     } else if (fieldAttributeName == "y") {
-                        std::string y = std::string(fieldAttribute.value());
-                        position.y = std::stoi(y);
+                        std::string yString = std::string(fieldAttribute.value());
+                        y = std::stoi(yString);
                     } else if(fieldAttributeName == "isObstructed") {
                         if(std::strcmp(fieldAttribute.value(), "true") == 0) {
-                            gameState.GetBoard().AddPieceOnTop(Hive::Piece(Hive::PieceType::Obstacle, Hive::Color::Undefined), position);
+                            gameState.GetBoard().AddPieceOnTop(Hive::Piece(Hive::PieceType::Obstacle, Hive::Color::Undefined), Hive::AxialPosition(x, y));
                         }
                     }
                 }
@@ -198,7 +197,7 @@ namespace SC_Communication {
                     std::string pieceColor = pieceNode.attribute("owner").value();
                     std::string pieceType = pieceNode.attribute("type").value();
 
-                    gameState.GetBoard().AddPieceOnTop(Hive::Piece(Hive::PieceTypeFromString(pieceType), Hive::ColorFromString(pieceColor)), position);
+                    gameState.GetBoard().AddPieceOnTop(Hive::Piece(Hive::PieceTypeFromString(pieceType), Hive::ColorFromString(pieceColor)), Hive::AxialPosition(x, y));
                 }
             }
         }
@@ -207,14 +206,14 @@ namespace SC_Communication {
             std::string pieceColor = pieceNode.attribute("owner").value();
             std::string pieceType = pieceNode.attribute("type").value();
 
-            gameState.GetPlayer(Hive::Color::Red).AddUndeployedPiece(Hive::Piece(Hive::PieceTypeFromString(pieceType), Hive::ColorFromString(pieceColor)));
+            gameState.GetPlayer(Hive::Color::Red).AddUndeployedPieceType(Hive::PieceTypeFromString(pieceType));
         }
 
         for (pugi::xml_node pieceNode : roomNode.child("data").child("state").child("undeployedBluePieces").children("piece")) {
             std::string pieceColor = pieceNode.attribute("owner").value();
             std::string pieceType = pieceNode.attribute("type").value();
 
-            gameState.GetPlayer(Hive::Color::Blue).AddUndeployedPiece(Hive::Piece(Hive::PieceTypeFromString(pieceType), Hive::ColorFromString(pieceColor)));
+            gameState.GetPlayer(Hive::Color::Blue).AddUndeployedPieceType(Hive::PieceTypeFromString(pieceType));
         }
 
         return gameState;

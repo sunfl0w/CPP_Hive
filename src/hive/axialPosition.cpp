@@ -1,45 +1,52 @@
 #include "axialPosition.hpp"
 
 #include <math.h>
+
 #include <vector>
 
 namespace Hive {
     AxialPosition::AxialPosition() {
-        this->x = 0;
-        this->y = 0;
-        id = 0;
+        id = -1;
     }
 
-    AxialPosition::AxialPosition(const AxialPosition &axialPosition) {
-        this->x = axialPosition.x;
-        this->y = axialPosition.y;
-        id = (x + 5) * 11 + (y + 5);
+    AxialPosition::AxialPosition(const AxialPosition& axialPosition) {
+        id = axialPosition.id;
     }
 
     AxialPosition::AxialPosition(int x, int y) {
-        this->x = x;
-        this->y = y;
         id = (x + 5) * 11 + (y + 5);
     }
 
+    AxialPosition::AxialPosition(unsigned int id) {
+        this->id = id;
+    }
+
     bool AxialPosition::operator==(const AxialPosition& axialPosition) const {
-        return !(x != axialPosition.x || y != axialPosition.y);
+        return id == axialPosition.id;
     }
 
     bool AxialPosition::operator!=(const AxialPosition& axialPosition) const {
-        return x != axialPosition.x || y != axialPosition.y;
+        return id != axialPosition.id;
+    }
+
+    int AxialPosition::GetX() const {
+        return id / 11 - 5;
+    }
+
+    int AxialPosition::GetY() const {
+        return id % 11 - 5;
+    }
+
+    int AxialPosition::GetZ() const {
+        return 0 - GetX() - GetY();
     }
 
     unsigned int AxialPosition::GetID() const {
         return id;
     }
 
-    int AxialPosition::GetZCoordinate() const {
-        return 0 - x - y;
-    }
-
     int AxialPosition::GetDistanceTo(const AxialPosition& otherPosition) const {
-        return (std::abs(x - otherPosition.x) + std::abs(y - otherPosition.y) + std::abs(0 - x - y + 0 + otherPosition.x + otherPosition.y)) >> 1;
+        return (std::abs(GetX() - otherPosition.GetX()) + std::abs(GetY() - otherPosition.GetY()) + std::abs(0 - GetX() - GetY() + 0 + otherPosition.GetX() + otherPosition.GetY())) >> 1;
     }
 
     bool AxialPosition::IsNeighbourTo(const AxialPosition& otherPosition) const {
@@ -47,17 +54,18 @@ namespace Hive {
     }
 
     AxialPosition AxialPosition::Add(const AxialPosition& otherPosition) const {
-        return AxialPosition(x + otherPosition.x, y + otherPosition.y);
+        return AxialPosition(GetX() + otherPosition.GetX(), GetY() + otherPosition.GetY());
     }
 
     AxialPosition AxialPosition::Subtract(const AxialPosition& otherPosition) const {
-        return AxialPosition(x - otherPosition.x, y - otherPosition.y);
+        return AxialPosition(GetX() - otherPosition.GetX(), GetY() - otherPosition.GetY());
     }
 
     std::vector<AxialPosition> AxialPosition::GetNeighbouringPositions() const {
         std::vector<AxialPosition> neighbouringAxialPositions = std::vector<AxialPosition>();
         neighbouringAxialPositions.reserve(6);
-
+        int x = GetX();
+        int y = GetY();
         neighbouringAxialPositions.push_back(AxialPosition(x + 1, y));
         neighbouringAxialPositions.push_back(AxialPosition(x + 1, y - 1));
         neighbouringAxialPositions.push_back(AxialPosition(x, y - 1));
@@ -74,8 +82,9 @@ namespace Hive {
     }
 
     std::vector<AxialPosition> AxialPosition::GetNeighbouringPositionsIncludingOutsideBoardPositions() const {
-         std::vector<AxialPosition> neighbouringAxialPositions = std::vector<AxialPosition>();
-
+        std::vector<AxialPosition> neighbouringAxialPositions = std::vector<AxialPosition>();
+        int x = GetX();
+        int y = GetY();
         neighbouringAxialPositions.push_back(AxialPosition(x + 1, y));
         neighbouringAxialPositions.push_back(AxialPosition(x + 1, y - 1));
         neighbouringAxialPositions.push_back(AxialPosition(x, y - 1));
@@ -87,11 +96,11 @@ namespace Hive {
     }
 
     bool AxialPosition::IsAtBorderOfBoard() const {
-        return std::abs(x) + std::abs(y) + std::abs(0 - x - y) == 10;
+        return std::abs(GetX()) + std::abs(GetY()) + std::abs(0 - GetX() - GetY()) == 10;
     }
 
     bool AxialPosition::IsOnBoard() const {
-        return std::abs(x) + std::abs(y) + std::abs(0 - x - y) <= 10;
+        return std::abs(GetX()) + std::abs(GetY()) + std::abs(0 - GetX() - GetY()) <= 10;
     }
 
     AxialPosition AxialPosition::GetTranslationToOtherPosition(const AxialPosition& otherPosition) const {

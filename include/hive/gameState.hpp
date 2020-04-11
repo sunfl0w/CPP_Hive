@@ -30,13 +30,15 @@ namespace Hive {
          * @brief The current Player of the GameState.
          * 
          */
-        Player currentPlayer;
+        Player redPlayer;
 
         /**
          * @brief The pausing Player of the GameState.
          * 
          */
-        Player pausedPlayer;
+        Player bluePlayer;
+
+        Color currentPlayerColor;
 
         /**
          * @brief The Moves that were performed on this GameState previously.
@@ -106,7 +108,7 @@ namespace Hive {
          * 
          * @param player The Player the current Player should be set to.
          */
-        void SetCurrentPlayer(Player player);
+        void SetCurrentPlayerColor(Color color);
 
         /**
          * @brief Gets the paused Player.
@@ -116,13 +118,6 @@ namespace Hive {
         Player& GetPausedPlayer();
 
         /**
-         * @brief Sets the paused Player.
-         * 
-         * @param player The Player the paused Player should be set to.
-         */
-        void SetPausedPlayer(Player player);
-
-        /**
          * @brief Gets the Moves that could be performed on the GameState.
          * 
          * @return The valid Moves that could be perfomed on the GameState in a vector.
@@ -130,11 +125,17 @@ namespace Hive {
         std::vector<Move> GetPossibleMoves();
 
         /**
-         * @brief Perfomrs a Move on the GameState. THIS DOES NOT CHECK THE MOVES VALIDITY FOR PERFORMANCE REASONS, YOU WERE WARNED!
+         * @brief Performs a Move on the GameState. THIS DOES NOT CHECK THE MOVES VALIDITY FOR PERFORMANCE REASONS, YOU WERE WARNED!
          * 
          * @param move The Move to perform.
          */
         void PerformMove(const Move& move);
+
+        /**
+         * @brief Reverts that Move that was last performed.
+         * 
+         */
+        void UndoLastMove();
 
         /**
          * @brief Gets all valid deploy Moves for the GameState.

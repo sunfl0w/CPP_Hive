@@ -14,4 +14,20 @@ namespace Hive::Benchmark {
      * @param benchmarkingTimeInMs The time to benchmark for in milliseconds.
      */
     void BenchmarkGetPossibleMoves(unsigned int benchmarkingTimeInMs);
+    
+    /**
+     * @brief Runs a perft benchmark to a given depth.
+     * 
+     * @param depth The depth to reach.
+     */
+    void PerftBenchmark(int depth);
+
+    /**
+     * @brief Recursive perft method for the perft benchmark.
+     * 
+     * @param depth The depth to reach.
+     * @param baseState The GameState for a given depth.
+     * @return unsigned long The nodes that were discovered.
+     */
+    unsigned long Perft(int depth, GameState& baseState);
 }

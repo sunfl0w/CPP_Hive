@@ -6,6 +6,7 @@
 #include <iostream>
 #include <random>
 #include <vector>
+#include <bitset>
 
 #include "axialPosition.hpp"
 #include "color.hpp"
@@ -27,6 +28,12 @@ namespace Hive {
          * 
          */
         std::array<PieceStack, 121> pieceStacks;
+
+        /**
+         * @brief A bitset representing non empty positions. A 1 at a given ID would represent a PieceStack with Pieces at that ID.
+         * 
+         */
+        std::bitset<121> emptySet;
 
     public:
         /**

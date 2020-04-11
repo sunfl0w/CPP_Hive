@@ -4,13 +4,15 @@ namespace Hive {
     GameState::GameState() {
         turn = 0;
         board = Board();
-        currentPlayer = Player(Color::Red);
-        pausedPlayer = Player(Color::Blue);
+        redPlayer = Player(Color::Red);
+        bluePlayer = Player(Color::Blue);
+        currentPlayerColor = Color::Red;
         performedMoves = std::vector<Move>();
     }
 
-    GameState::GameState(const GameState& gameState) : board(gameState.board), currentPlayer(gameState.currentPlayer), pausedPlayer(gameState.pausedPlayer), performedMoves(gameState.performedMoves) {
+    GameState::GameState(const GameState& gameState) : board(gameState.board), redPlayer(gameState.redPlayer), bluePlayer(gameState.bluePlayer), performedMoves(gameState.performedMoves) {
         turn = gameState.turn;
+        currentPlayerColor = gameState.currentPlayerColor;
     }
 
     unsigned int GameState::GetTurn() const {
@@ -30,27 +32,31 @@ namespace Hive {
     }
 
     Player& GameState::GetPlayer(Color color) {
-        if (currentPlayer.GetColor() == color) {
-            return currentPlayer;
-        } else if (pausedPlayer.GetColor() == color) {
-            return pausedPlayer;
+        if (color == Color::Red) {
+            return redPlayer;
+        } else {
+            return bluePlayer;
         }
     }
 
     Player& GameState::GetCurrentPlayer() {
-        return currentPlayer;
+        if (currentPlayerColor == Color::Red) {
+            return redPlayer;
+        } else {
+            return bluePlayer;
+        }
     }
 
-    void GameState::SetCurrentPlayer(Player player) {
-        currentPlayer = player;
+    void GameState::SetCurrentPlayerColor(Color color) {
+        currentPlayerColor = color;
     }
 
     Player& GameState::GetPausedPlayer() {
-        return pausedPlayer;
-    }
-
-    void GameState::SetPausedPlayer(Player player) {
-        pausedPlayer = player;
+        if (currentPlayerColor == Color::Red) {
+            return bluePlayer;
+        } else {
+            return redPlayer;
+        }
     }
 
     std::vector<Move> GameState::GetPossibleMoves() {
@@ -61,7 +67,7 @@ namespace Hive {
         bool isQueenBeeOfCurrentPlayerOnBoard = false;
         for (PieceStack* pieceStack : pieceStacksOnBoard) {
             for (Piece piece : pieceStack->GetPieces()) {
-                if (piece.GetType() == PieceType::QueenBee && piece.GetColor() == currentPlayer.GetColor()) {
+                if (piece.GetType() == PieceType::QueenBee && piece.GetColor() == currentPlayerColor) {
                     isQueenBeeOfCurrentPlayerOnBoard = true;
                 }
             }
@@ -82,7 +88,7 @@ namespace Hive {
         }
 
         if (possibleMoves.empty()) {
-            possibleMoves.push_back(Move(MoveType::PassMove, Color::Undefined, AxialPosition(0, 0), AxialPosition(0, 0), PieceType::Obstacle));
+            possibleMoves.emplace_back(Move(MoveType::PassMove, Color::Undefined, AxialPosition(0, 0), AxialPosition(0, 0), PieceType::Obstacle));
         }
 
         return possibleMoves;
@@ -90,21 +96,59 @@ namespace Hive {
 
     void GameState::PerformMove(const Move& move) {
         if (move.GetMoveType() == MoveType::PassMove) {
-            turn++;
         } else if (move.GetMoveType() == MoveType::DeployMove) {
-            currentPlayer.RemoveUndeployedPiece(move.GetMovedPieceType());
-            board.AddPieceOnTop(Piece(move.GetMovedPieceType(), currentPlayer.GetColor()), move.GetDestinationPosition());
-            turn++;
+            if (currentPlayerColor == Color::Red) {
+                redPlayer.RemoveUndeployedPieceType(move.GetMovedPieceType());
+                board.AddPieceOnTop(Piece(move.GetMovedPieceType(), redPlayer.GetColor()), move.GetDestinationPosition());
+            } else {
+                bluePlayer.RemoveUndeployedPieceType(move.GetMovedPieceType());
+                board.AddPieceOnTop(Piece(move.GetMovedPieceType(), bluePlayer.GetColor()), move.GetDestinationPosition());
+            }
         } else if (move.GetMoveType() == MoveType::DragMove) {
-            board.RemoveUpmostPiece(move.GetStartPosition());
-            board.AddPieceOnTop(Piece(move.GetMovedPieceType(), currentPlayer.GetColor()), move.GetDestinationPosition());
-            turn++;
+            if (currentPlayerColor == Color::Red) {
+                board.RemoveUpmostPiece(move.GetStartPosition());
+                board.AddPieceOnTop(Piece(move.GetMovedPieceType(), redPlayer.GetColor()), move.GetDestinationPosition());
+            } else {
+                board.RemoveUpmostPiece(move.GetStartPosition());
+                board.AddPieceOnTop(Piece(move.GetMovedPieceType(), bluePlayer.GetColor()), move.GetDestinationPosition());
+            }
         }
         performedMoves.push_back(Move(move));
+        turn++;
+        if (currentPlayerColor == Color::Red) {
+            currentPlayerColor = Color::Blue;
+        } else {
+            currentPlayerColor = Color::Red;
+        }
+    }
 
-        Player swap = currentPlayer;
-        currentPlayer = pausedPlayer;
-        pausedPlayer = swap;
+    void GameState::UndoLastMove() {
+        Move lastMove = performedMoves.back();
+        if (lastMove.GetMoveType() == MoveType::PassMove) {
+        } else if (lastMove.GetMoveType() == MoveType::DeployMove) {
+            if (currentPlayerColor == Color::Red) {
+                bluePlayer.AddUndeployedPieceType(lastMove.GetMovedPieceType());
+                board.RemoveUpmostPiece(lastMove.GetDestinationPosition());
+            } else {
+                redPlayer.AddUndeployedPieceType(lastMove.GetMovedPieceType());
+                board.RemoveUpmostPiece(lastMove.GetDestinationPosition());
+            }
+        } else if (lastMove.GetMoveType() == MoveType::DragMove) {
+            if (currentPlayerColor == Color::Red) {
+                board.AddPieceOnTop(Piece(lastMove.GetMovedPieceType(), bluePlayer.GetColor()), lastMove.GetStartPosition());
+                board.RemoveUpmostPiece(lastMove.GetDestinationPosition());
+            } else {
+                board.AddPieceOnTop(Piece(lastMove.GetMovedPieceType(), redPlayer.GetColor()), lastMove.GetStartPosition());
+                board.RemoveUpmostPiece(lastMove.GetDestinationPosition());
+            }
+        }
+        performedMoves.pop_back();
+        turn--;
+        if (currentPlayerColor == Color::Red) {
+            currentPlayerColor = Color::Blue;
+        } else {
+            currentPlayerColor = Color::Red;
+        }
     }
 
     //Private
@@ -113,8 +157,18 @@ namespace Hive {
         std::vector<Move> possibleDeployMoves;
         std::vector<AxialPosition> deployablePositions = GetDeployablePositions();
         for (AxialPosition deployablePosition : deployablePositions) {
-            for (Piece piece : currentPlayer.GetUndeployedPieces()) {
-                possibleDeployMoves.push_back(Move(MoveType::DeployMove, currentPlayer.GetColor(), AxialPosition(0, 0), deployablePosition, piece.GetType()));
+            if (currentPlayerColor == Color::Red) {
+                for(int type = 0; type < 5; type++) {
+                    if(redPlayer.GetUndeployedPieceTypeCounts()[type] > 0) {
+                        possibleDeployMoves.emplace_back(Move(MoveType::DeployMove, Color::Red, AxialPosition(0, 0), deployablePosition, static_cast<PieceType>(type)));
+                    }
+                }
+            } else {
+                for(int type = 0; type < 5; type++) {
+                    if(bluePlayer.GetUndeployedPieceTypeCounts()[type] > 0) {
+                        possibleDeployMoves.emplace_back(Move(MoveType::DeployMove, Color::Blue, AxialPosition(0, 0), deployablePosition, static_cast<PieceType>(type)));
+                    }
+                }
             }
         }
         return possibleDeployMoves;
@@ -124,7 +178,7 @@ namespace Hive {
         std::vector<Move> possibleDeployMoves;
         std::vector<AxialPosition> deployablePositions = GetDeployablePositions();
         for (AxialPosition deployablePosition : deployablePositions) {
-            possibleDeployMoves.push_back(Move(MoveType::DeployMove, currentPlayer.GetColor(), AxialPosition(0, 0), deployablePosition, PieceType::QueenBee));
+            possibleDeployMoves.emplace_back(Move(MoveType::DeployMove, currentPlayerColor, AxialPosition(0, 0), deployablePosition, PieceType::QueenBee));
         }
         return possibleDeployMoves;
     }
@@ -152,14 +206,14 @@ namespace Hive {
 
     std::vector<Move> GameState::GetPossibleQueenBeeDragMoves() {
         std::vector<Move> possibleQueenBeeDragMoves;
-        std::vector<PieceStack*> queenBeesOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayer.GetColor(), PieceType::QueenBee);
+        std::vector<PieceStack*> queenBeesOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayerColor, PieceType::QueenBee);
         for (PieceStack* queenBeeOfCurrentPlayer : queenBeesOfCurrentPlayer) {
             if (board.IsHiveCoherentIfPieceMovesFromPosition(AxialPosition(queenBeeOfCurrentPlayer->GetAxialPosition()))) {
                 std::vector<AxialPosition*> emptyNeighbouringPositions = board.GetEmptyNeighbouringAxialPositions(queenBeeOfCurrentPlayer->GetAxialPosition());
 
                 for (AxialPosition* emptyNeighbouringPosition : emptyNeighbouringPositions) {
                     if (board.CanSlide(queenBeeOfCurrentPlayer->GetAxialPosition(), *emptyNeighbouringPosition)) {
-                        possibleQueenBeeDragMoves.push_back(Move(MoveType::DragMove, currentPlayer.GetColor(), queenBeeOfCurrentPlayer->GetAxialPosition(), *emptyNeighbouringPosition, PieceType::QueenBee));
+                        possibleQueenBeeDragMoves.emplace_back(Move(MoveType::DragMove, currentPlayerColor, queenBeeOfCurrentPlayer->GetAxialPosition(), *emptyNeighbouringPosition, PieceType::QueenBee));
                     }
                 }
             }
@@ -169,7 +223,7 @@ namespace Hive {
 
     std::vector<Move> GameState::GetPossibleSpiderDragMoves() {
         std::vector<Move> possibleSpiderDragMoves;
-        std::vector<PieceStack*> spidersOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayer.GetColor(), PieceType::Spider);
+        std::vector<PieceStack*> spidersOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayerColor, PieceType::Spider);
         for (PieceStack* spider : spidersOfCurrentPlayer) {
             board.GetPieceStack(spider->GetAxialPosition()).GetPieceOnTop().SetType(PieceType::Undefined);
             if (!board.IsHiveCoherentIfPieceMovesFromPosition(AxialPosition(spider->GetAxialPosition()))) {
@@ -192,7 +246,7 @@ namespace Hive {
             }
             board.GetPieceStack(spider->GetAxialPosition()).GetPieceOnTop().SetType(PieceType::Spider);
             for (AxialPosition validEndPosition : currentSlidePathEndPositions) {
-                possibleSpiderDragMoves.push_back(Move(MoveType::DragMove, currentPlayer.GetColor(), spider->GetAxialPosition(), validEndPosition, PieceType::Spider));
+                possibleSpiderDragMoves.emplace_back(Move(MoveType::DragMove, currentPlayerColor, spider->GetAxialPosition(), validEndPosition, PieceType::Spider));
             }
         }
         return possibleSpiderDragMoves;
@@ -200,7 +254,7 @@ namespace Hive {
 
     std::vector<Move> GameState::GetPossibleBeetleDragMoves() {
         std::vector<Move> possibleBeetleDragMoves;
-        std::vector<PieceStack*> beetlesOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayer.GetColor(), PieceType::Beetle);
+        std::vector<PieceStack*> beetlesOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayerColor, PieceType::Beetle);
         for (PieceStack* beetle : beetlesOfCurrentPlayer) {
             if (!board.IsHiveCoherentIfPieceMovesFromPosition(AxialPosition(beetle->GetAxialPosition()))) {
                 continue;
@@ -210,11 +264,11 @@ namespace Hive {
             for (AxialPosition neighbouringPosition : neighbouringPositions) {
                 if (board.PieceStackExists(neighbouringPosition)) {
                     if (board.GetPieceStack(neighbouringPosition).GetPieceOnTop().GetType() != PieceType::Obstacle) {
-                        possibleBeetleDragMoves.push_back(Move(MoveType::DragMove, currentPlayer.GetColor(), beetle->GetAxialPosition(), neighbouringPosition, PieceType::Beetle));
+                        possibleBeetleDragMoves.emplace_back(Move(MoveType::DragMove, currentPlayerColor, beetle->GetAxialPosition(), neighbouringPosition, PieceType::Beetle));
                     }
                 } else {
                     if (board.CanSlide(beetle->GetAxialPosition(), neighbouringPosition)) {
-                        possibleBeetleDragMoves.push_back(Move(MoveType::DragMove, currentPlayer.GetColor(), beetle->GetAxialPosition(), neighbouringPosition, PieceType::Beetle));
+                        possibleBeetleDragMoves.emplace_back(Move(MoveType::DragMove, currentPlayerColor, beetle->GetAxialPosition(), neighbouringPosition, PieceType::Beetle));
                     }
                 }
             }
@@ -224,7 +278,7 @@ namespace Hive {
 
     std::vector<Move> GameState::GetPossibleGrasshopperDragMoves() {
         std::vector<Move> possibleGrasshopperDragMoves;
-        std::vector<PieceStack*> grasshoppersOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayer.GetColor(), PieceType::Grasshopper);
+        std::vector<PieceStack*> grasshoppersOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayerColor, PieceType::Grasshopper);
         for (PieceStack* grasshopper : grasshoppersOfCurrentPlayer) {
             if (!board.IsHiveCoherentIfPieceMovesFromPosition(AxialPosition(grasshopper->GetAxialPosition()))) {
                 continue;
@@ -236,7 +290,7 @@ namespace Hive {
                 searchPos = searchPos.Add(translation);
                 while (searchPos.IsOnBoard()) {
                     if (!board.PieceStackExists(searchPos) && !board.GetNeighbouringPieceStacksExceptObstacles(searchPos).empty()) {
-                        possibleGrasshopperDragMoves.push_back(Move(MoveType::DragMove, currentPlayer.GetColor(), grasshopper->GetAxialPosition(), searchPos, PieceType::Grasshopper));
+                        possibleGrasshopperDragMoves.emplace_back(Move(MoveType::DragMove, currentPlayerColor, grasshopper->GetAxialPosition(), searchPos, PieceType::Grasshopper));
                         break;
                     } else if (board.PieceStackExists(searchPos) && board.GetPieceStack(searchPos).GetPieceOnTop().GetType() == PieceType::Obstacle) {
                         break;  //All moves going further are blocked by obstacle.
@@ -250,7 +304,7 @@ namespace Hive {
 
     std::vector<Move> GameState::GetPossibleAntDragMoves() {
         std::vector<Move> possibleAntDragMoves;
-        std::vector<PieceStack*> antsOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayer.GetColor(), PieceType::Ant);
+        std::vector<PieceStack*> antsOfCurrentPlayer = board.GetPieceStacksByColorAndType(currentPlayerColor, PieceType::Ant);
         for (PieceStack* ant : antsOfCurrentPlayer) {
             board.GetPieceStack(ant->GetAxialPosition()).GetPieceOnTop().SetType(PieceType::Undefined);
             if (!board.IsHiveCoherentIfPieceMovesFromPosition(AxialPosition(ant->GetAxialPosition()))) {
@@ -263,7 +317,7 @@ namespace Hive {
             while (!slideEndPositions.empty()) {
                 std::vector<AxialPosition*> newSlideEndPositions;
                 for (AxialPosition* position : slideEndPositions) {
-                    possibleAntDragMoves.push_back(Move(MoveType::DragMove, currentPlayer.GetColor(), ant->GetAxialPosition(), *position, PieceType::Ant));
+                    possibleAntDragMoves.push_back(Move(MoveType::DragMove, currentPlayerColor, ant->GetAxialPosition(), *position, PieceType::Ant));
                     std::vector<AxialPosition*> newEndPositions = board.GetEmptySlideableNeighbouringAxialPositionsExcept(*position, searchedPositions);
                     newSlideEndPositions.insert(newSlideEndPositions.end(), newEndPositions.begin(), newEndPositions.end());
                     searchedPositions.push_back(*position);
@@ -276,13 +330,13 @@ namespace Hive {
     }
 
     bool GameState::IsGameOver() {
-        if (currentPlayer.GetColor() == Color::Red) {
+        if (currentPlayerColor == Color::Red) {
             if (board.GetPieceStacksContainingPieceByColorAndType(Color::Red, PieceType::QueenBee).empty() && turn > 6) {
                 return true;
             } else if (IsQueenBeeBlocked(Color::Red)) {
                 return true;
             }
-        } else if (currentPlayer.GetColor() == Color::Blue) {
+        } else if (currentPlayerColor == Color::Blue) {
             if (board.GetPieceStacksContainingPieceByColorAndType(Color::Blue, PieceType::QueenBee).empty() && turn > 7) {
                 return true;
             } else if (IsQueenBeeBlocked(Color::Blue) && turn % 2 == 0) {
@@ -312,20 +366,20 @@ namespace Hive {
                 deployablePositions.push_back(*neighbouringEmptyPosition);
             }
         } else {
-            std::vector<PieceStack*> pieceStacksOfCurrentPlayer = board.GetPieceStacksByColor(currentPlayer.GetColor());
+            std::vector<PieceStack*> pieceStacksOfCurrentPlayer = board.GetPieceStacksByColor(currentPlayerColor);
             for (PieceStack* gameSpieceStack : pieceStacksOfCurrentPlayer) {
                 std::vector<AxialPosition*> neighbouringEmptyPositions = board.GetEmptyNeighbouringAxialPositions(gameSpieceStack->GetAxialPosition());
                 for (AxialPosition* neighbouringEmptyPosition : neighbouringEmptyPositions) {
                     std::vector<PieceStack*> neighbouringStacks = board.GetNeighbouringPieceStacks(*neighbouringEmptyPosition);
                     bool enemyStackNeighbouring = false;
                     for (PieceStack* neighbouringStack : neighbouringStacks) {
-                        if (neighbouringStack->GetPieceOnTop().GetColor() != currentPlayer.GetColor() && neighbouringStack->GetPieceOnTop().GetType() != PieceType::Obstacle) {
+                        if (neighbouringStack->GetPieceOnTop().GetColor() != currentPlayerColor && neighbouringStack->GetPieceOnTop().GetType() != PieceType::Obstacle) {
                             enemyStackNeighbouring = true;
                             break;
                         }
                     }
                     if (!enemyStackNeighbouring && std::find(deployablePositions.begin(), deployablePositions.end(), *neighbouringEmptyPosition) == deployablePositions.end()) {
-                        deployablePositions.push_back(*neighbouringEmptyPosition);
+                        deployablePositions.emplace_back(*neighbouringEmptyPosition);
                     }
                 }
             }

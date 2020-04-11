@@ -1,7 +1,9 @@
 #include "pieceStack.hpp"
 
 namespace Hive {
-    PieceStack::PieceStack() {}
+    PieceStack::PieceStack() {
+        this->pieces = std::vector<Piece>();
+    }
 
     PieceStack::PieceStack(const PieceStack& pieceStack) {
         this->position = AxialPosition(pieceStack.position);
@@ -26,11 +28,11 @@ namespace Hive {
     }
 
     void PieceStack::AddPieceOnTop(const Piece& piece) {
-        pieces.push_back(piece);
+        pieces.emplace_back(piece);
     }
 
     void PieceStack::RemovePieceOnTop() {
-        pieces.erase(pieces.begin() + pieces.size() - 1);
+        pieces.pop_back();
     }
 
     Piece& PieceStack::GetPieceByLayer(int layer) {
