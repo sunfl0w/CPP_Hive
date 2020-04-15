@@ -10,6 +10,18 @@ namespace Hive {
     class AxialPosition {
     public:
         /**
+         * @brief X coordinate of the position.
+         * 
+         */
+        int x;
+
+        /**
+         * @brief Y coordinate of the position.
+         * 
+         */
+        int y;
+
+        /**
          * @brief The unique ID of this Position ranging from 0 to 120 under normal circumstances.
          * 
          */
@@ -26,7 +38,7 @@ namespace Hive {
          * 
          * @param axialPosition The Position to deep copy.
          */
-        AxialPosition(const AxialPosition &axialPosition);
+        AxialPosition(const AxialPosition& axialPosition);
 
         /**
          * @brief Constructs a new Position with a given x- and y-position.
@@ -37,20 +49,13 @@ namespace Hive {
         AxialPosition(int x, int y);
 
         /**
-         * @brief Constructs a new Position with a given ID.
-         * 
-         * @param id ID of position.
-         */
-        AxialPosition(unsigned int id);
-
-        /**
          * @brief Compares two Positions.
          * 
          * @param axialPosition The Position to compare against.
          * @return true If the Positions are equal.
          * @return false If the Positions are not equal.
          */
-        bool operator==(const AxialPosition &axialPosition) const;
+        bool operator==(const AxialPosition& axialPosition) const;
 
         /**
          * @brief Compares two Positions.
@@ -59,7 +64,7 @@ namespace Hive {
          * @return true If the Positions are not equal.
          * @return false If the Positions are equal.
          */
-        bool operator!=(const AxialPosition &axialPosition) const;
+        bool operator!=(const AxialPosition& axialPosition) const;
 
         /**
          * @brief Gets the x-position of the position.
