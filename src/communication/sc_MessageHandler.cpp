@@ -121,7 +121,7 @@ namespace SC_Communication {
             destinationNode.append_attribute("z").set_value(move.GetDestinationPosition().GetZ());
         } else if (move.GetMoveType() == Hive::MoveType::PassMove) {
             pugi::xml_node dataNode = roomNode.append_child("data");
-            dataNode.append_attribute("class").set_value("missmove");
+            dataNode.append_attribute("class").set_value("skipmove");
         }
 
         Util::XMLStringWriter xmlStringWriter;
